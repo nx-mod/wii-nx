@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+"""How much of the engine is still tied to one game?
+
+    scripts/audit [path/to/wiicompiled-nx/runtime/src] [--list]
+
+Every native replacement in the runtime stands in for a guest function at a
+fixed address. Sorted by what the function is:
+
+  SDK          Nintendo's own libraries (GX, OS, DVD, NAND, AX, VI, PAD, ...).
+               Every Wii game uses these, so each one should be found per game
+               rather than hard-coded.
+  middleware   EGG, NW4R: shared by many Nintendo games.
+  game         genuinely specific to one game.
+
+The first two are the work of making the engine universal: the code is already
+shared, the addresses are not. The third is the number that should stay small as
+games are added. --list prints the game-specific ones.
+"""
+
+import collections
+import os
+import re
+import sys
+
+PATTERNS = [
+    re.compile(r"REGISTER_NATIVE_FUNCTION(?:_AS)?\s*\(\s*0x([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+    re.compile(r"REGISTER_TRANSLATED_FUNCTION\s*\(\s*0x([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+    re.compile(r"PPC_NATIVE_OVERRIDE(?:_VOID)?\s*\(\s*([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+    re.compile(r"GX_FATAL_STUB\s*\(\s*([0-9A-Fa-f]{8})()"),
+]
+
+# Nintendo SDK libraries, by the prefix their functions carry.
+SDK = re.compile(
+    r"^(GX|gx_|OS|PPC|AI|DSP|AX|DVD|NAND|ISFS|IOS|ES|ESP|VI|PAD|WPAD|KPAD|WUD|SC|CARD|EXI|SI|IPC"
+    r"|NWC24|SO|NCD|NHTTP|NSSL|SSL|MTX|PSMTX|PSVEC|C_MTX|MEM|RFL|HBM|TPL|CX|ENC|WENC|VF|SYS"
+    r"|DC|LC|GKI|BTM|content|Cache_|SelectThread|SetInterruptMask|SetExiInterruptMask|ConsoleWrite"
+    r"|Stub_|Exit_|HLE_|__)")
+MIDDLEWARE = re.compile(r"^(nw4r|NW4R|EGG|egg|DWC|dwc|RVL|TaskThread|SoundPlayer)")
+
+
+def scan(root):
+    registrations = collections.defaultdict(set)
+    for directory, _, files in os.walk(root):
+        for name in files:
+            if not name.endswith((".cpp", ".h", ".hpp", ".inc")):
+                continue
+            path = os.path.join(directory, name)
+            with open(path, errors="replace") as handle:
+                text = handle.read()
+            for pattern in PATTERNS:
+                for match in pattern.finditer(text):
+                    symbol = match.group(2) or "GX_FATAL_STUB"
+                    registrations[match.group(1).upper()].add((symbol, os.path.relpath(path, root)))
+    return registrations
+
+
+def classify(symbol):
+    if MIDDLEWARE.match(symbol):
+        return "middleware"
+    if SDK.match(symbol):
+        return "SDK"
+    return "game"
+
+
+def main(argv):
+    paths = [a for a in argv if not a.startswith("-")]
+    root = paths[0] if paths else os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "..", "wiicompiled-nx", "runtime", "src")
+    root = os.path.abspath(root)
+    if not os.path.isdir(root):
+        print(f"no runtime sources at {root}", file=sys.stderr)
+        return 1
+
+    registrations = scan(root)
+    counts = collections.Counter()
+    game_specific = []
+    for address, entries in sorted(registrations.items()):
+        symbol, source = sorted(entries)[0]
+        kind = classify(symbol)
+        counts[kind] += 1
+        if kind == "game":
+            game_specific.append((address, symbol, source))
+
+    total = sum(counts.values())
+    print(f"{root}\n  {total} guest addresses replaced by native code")
+    for kind in ("SDK", "middleware", "game"):
+        share = 100.0 * counts[kind] / total if total else 0.0
+        print(f"    {kind:<11} {counts[kind]:>4}  {share:5.1f}%")
+    if "--list" in argv:
+        print("\n  game-specific:")
+        for address, symbol, source in game_specific:
+            print(f"    0x{address}  {symbol}  ({source})")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

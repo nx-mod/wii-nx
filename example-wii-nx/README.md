@@ -51,7 +51,7 @@ your disc dump            open-source homebrew
 | `package` | Lay out `games/<game>/` for the SD card, with NACP and icon | planned |
 | `make-forwarder` | NSP forwarder for the home menu | planned |
 | `deploy` | Copy to a Switch over FTP | planned |
-| `audit` | Count what is still game-specific, per game | planned |
+| `audit` | Sort the engine's native replacements into SDK / middleware / game-specific, the measure of how universal the engine is | **works** (today: 98.1% SDK, 1.5% middleware, 0.3% game) |
 | `build-dol` | Build the open-source example's DOL with devkitPPC | planned |
 
 ## Adding a game
