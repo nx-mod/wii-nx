@@ -6,8 +6,8 @@ Wii games running natively on Nintendo Switch — statically recompiled from you
 
 | Game | Status |
 |---|---|
-| Mario Kart Wii (PAL) | Boots, menus and races playable; not full speed yet |
-| New Super Mario Bros. Wii | Bring-up |
+| Mario Kart Wii (PAL, `RMCP01`) | Boots, menus and races playable; not full speed yet |
+| New Super Mario Bros. Wii (NTSC-U, `SMNE01`, Rev 2) | Bring-up |
 
 ## Components
 
