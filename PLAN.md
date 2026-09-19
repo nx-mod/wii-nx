@@ -8,6 +8,7 @@ Working notes: where things stand, what was decided and why, and what is next.
 |---|---|
 | Mario Kart Wii (PAL `RMCP01`) | Boots, menus, save data, races playable. **~4x too slow**; no audio |
 | New Super Mario Bros. Wii (NTSC-U `SMNE01`, Rev 2) | Project skeleton only (`wiicompiled-nx/projects/nsmbwii`). Bring-up targets the NTSC-U disc; Mario Kart is PAL, so the two also prove the engine is not region-locked |
+| Super Paper Mario (`spmwii-nx`) | Planned alongside NSMBW; the [spm-decomp](https://github.com/SeekyCt/spm-decomp) symbol maps feed bind-by-symbol |
 | wiicompiled-nx | Engine + Switch platform; `switch` branch, v1.0.0 released (runtime-only zip) |
 | aurora-nx | Forked, `switch` branch created; still stock upstream - the Switch backend has not moved here yet |
 | dawn-nx | Horizon port: native surface, static Vulkan from NVK, platform gaps |
@@ -48,6 +49,26 @@ Next levers, in order:
 4. PGO + LTO (devkitA64 GCC 16.1 has libgcov and the LTO plugin).
 5. Native replacements for hot game routines (nw4r math, decompression, THP decode).
 6. Direct guest RAM access (Switch forces the checked page-table path today).
+
+## Found 2026-09-19
+
+- **Everything was compiled -fPIC.** devkitPro's NintendoSwitch CMake platform file turns
+  CMAKE_POSITION_INDEPENDENT_CODE on for every project. In one translated shard 8249 of 8349
+  global accesses went through the GOT, and GCC could not inline or use interprocedural register
+  allocation across functions. Off on Switch now (Dawn, Aurora, runtime); rebuild pending test.
+- **-mcpu=native** in the translated code meant generic ARMv8 tuning (the cross compiler cannot
+  detect a CPU). Now -mcpu=cortex-a57+crc+crypto.
+- **Region is hard-coded to Europe** (setting.txt AREA/MODEL/VIDEO/GAME, SYSCONF). With one NAND
+  shared by every game, generate the region-dependent settings at launch from the disc ID's
+  region letter (P/E/J/K). Needed for NSMBW (NTSC-U).
+- **SD layout** is now sdmc:/wii-nx/{config,system,games/<game>}/ (runtime/include/switch_layout.h),
+  migrated automatically from sdmc:/WiiCompiled/. Launcher planned at sdmc:/switch/wii-nx/wii-nx.nro:
+  finds games, per-game settings, launches, installs NSP forwarders.
+- **Per-library config files** in sdmc:/wii-nx/config/ (Dawn toggles, NVK/Mesa options, Aurora).
+- **add-game script**: ISO -> disc/ + main.dol -> ID, entry, SDA bases -> recomp.yml -> translate
+  -> build -> games/<name>/.
+- nxvk: fixed the window being left broken after a Vulkan swapchain is destroyed (stale
+  preallocated buffer slots). dawn-nx: full demo NRO, 10/10 on hardware at 60 fps.
 
 ## Work queue
 
