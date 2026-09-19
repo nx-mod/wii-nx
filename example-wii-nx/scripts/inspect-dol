@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""Report everything a wii-nx project needs from a game's main.dol.
+
+    scripts/inspect-dol path/to/main.dol [--yaml]
+
+Prints the entry point, the sections, the BSS range and the two small-data base
+registers (r13 = _SDA_BASE_, r2 = _SDA2_BASE_) that a project's recomp.yml must
+declare. --yaml prints the memory/translation block ready to paste.
+
+The SDA bases are set once in the startup code as a lis/ori (or lis/addi) pair
+into r13 and r2; the first such pair for each register after the entry point is
+the one. Verified against Mario Kart Wii (RMCP01): 0x8038CC00 and 0x8038EFA0.
+"""
+
+import struct
+import sys
+
+SECTION_COUNT = 18
+TEXT_SECTIONS = 7
+
+
+class Dol:
+    def __init__(self, data: bytes):
+        if len(data) < 0x100:
+            raise ValueError("too small to be a DOL")
+        self.data = data
+        self.offsets = struct.unpack(">18I", data[0x00:0x48])
+        self.addresses = struct.unpack(">18I", data[0x48:0x90])
+        self.sizes = struct.unpack(">18I", data[0x90:0xD8])
+        self.bss_address, self.bss_size, self.entry = struct.unpack(">3I", data[0xD8:0xE4])
+        if not any(self.sizes):
+            raise ValueError("no sections: not a DOL?")
+
+    def sections(self):
+        for index in range(SECTION_COUNT):
+            if self.sizes[index]:
+                yield ("text" if index < TEXT_SECTIONS else "data", index, self.addresses[index],
+                       self.sizes[index], self.offsets[index])
+
+    def read32(self, address):
+        for _, _, start, size, offset in self.sections():
+            if start <= address < start + size:
+                position = offset + (address - start)
+                return struct.unpack(">I", self.data[position:position + 4])[0]
+        return None
+
+    # The lowest mapped address and the highest, including BSS: what the guest
+    # memory region has to cover.
+    def span(self):
+        lowest = min(address for _, _, address, _, _ in self.sections())
+        highest = max(address + size for _, _, address, size, _ in self.sections())
+        if self.bss_size:
+            highest = max(highest, self.bss_address + self.bss_size)
+        return lowest, highest
+
+    def sda_bases(self):
+        """{13: _SDA_BASE_, 2: _SDA2_BASE_} from the startup code."""
+        found = {}
+        address = self.entry
+        for _ in range(4096):
+            instruction = self.read32(address)
+            following = self.read32(address + 4)
+            if instruction is None or following is None:
+                break
+            opcode, target, source = instruction >> 26, (instruction >> 21) & 31, (instruction >> 16) & 31
+            if opcode == 15 and source == 0 and target in (2, 13) and target not in found:
+                # lis rX, hi
+                high = instruction & 0xFFFF
+                next_opcode = following >> 26
+                next_target, next_source = (following >> 21) & 31, (following >> 16) & 31
+                if next_opcode in (14, 24) and next_target == target and next_source == target:
+                    # addi rX, rX, lo (signed) or ori rX, rX, lo (unsigned)
+                    low = following & 0xFFFF
+                    if next_opcode == 14 and low >= 0x8000:
+                        low -= 0x10000
+                    found[target] = ((high << 16) + low) & 0xFFFFFFFF
+                    if len(found) == 2:
+                        break
+            address += 4
+        return found
+
+
+def main(argv):
+    if not argv or argv[0] in ("-h", "--help"):
+        print(__doc__)
+        return 2
+    path = argv[0]
+    as_yaml = "--yaml" in argv[1:]
+    dol = Dol(open(path, "rb").read())
+    bases = dol.sda_bases()
+    lowest, highest = dol.span()
+
+    if as_yaml:
+        print("memory:")
+        print("  base: 0x80000000")
+        print("  size: 0x01800000")
+        for register, name in ((13, "sda_base"), (2, "sda2_base")):
+            value = bases.get(register)
+            print(f"  {name}: " + (f"0x{value:08X}" if value else "TODO  # not found; check the startup code"))
+        print("\ntranslation:")
+        print("  entry_points:")
+        print(f"    - 0x{dol.entry:08X}")
+        return 0
+
+    print(f"{path}: {len(dol.data)} bytes")
+    print(f"  entry point   0x{dol.entry:08X}")
+    print(f"  BSS           0x{dol.bss_address:08X} + 0x{dol.bss_size:X}")
+    print(f"  mapped range  0x{lowest:08X} - 0x{highest:08X}")
+    for kind, index, address, size, offset in dol.sections():
+        print(f"  {kind}{index:<2} file 0x{offset:06X}  addr 0x{address:08X}  size 0x{size:X}")
+    for register, name in ((13, "sda_base (r13, _SDA_BASE_)"), (2, "sda2_base (r2, _SDA2_BASE_)")):
+        value = bases.get(register)
+        print(f"  {name}: " + (f"0x{value:08X}" if value else "NOT FOUND - check the startup code"))
+    if len(bases) != 2:
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
