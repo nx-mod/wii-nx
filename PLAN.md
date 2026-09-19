@@ -9,14 +9,14 @@ Working notes: where things stand, what was decided and why, and what is next.
 | Mario Kart Wii (PAL `RMCP01`) | Boots, menus, save data, races playable. **~4x too slow**; no audio |
 | New Super Mario Bros. Wii (NTSC-U `SMNE01`, Rev 2) | Project skeleton only (`wiicompiled-nx/projects/nsmbwii`). Bring-up targets the NTSC-U disc; Mario Kart is PAL, so the two also prove the engine is not region-locked |
 | wiicompiled-nx | Engine + Switch platform; `switch` branch, v1.0.0 released (runtime-only zip) |
-| aurora-nx | Forked; still stock upstream, no `switch` branch yet |
+| aurora-nx | Forked, `switch` branch created; still stock upstream - the Switch backend has not moved here yet |
 | dawn-nx | Horizon port: native surface, static Vulkan from NVK, platform gaps |
 | nxvk | Used unmodified |
-| sqlite-nx | Has `nx-vfs.c` (libnx `fsFile*` VFS); not wired in yet |
+| sqlite-nx | Has `nx-vfs.c` (libnx `fsFile*` VFS); submodule of wii-nx, not wired into the build yet |
 
 ## Architecture
 
-- **wii-nx** is the workspace: one clone, four submodules, one top-level build. It also removes the
+- **wii-nx** is the workspace: one clone, five submodules, one top-level build. It also removes the
   current inversion where the game compiles inside Dawn's CMake project.
 - **Games are folders**, not repos: `wiicompiled-nx/projects/<game>/` holds the translator project,
   symbol map, game-only native code and that game's README.
