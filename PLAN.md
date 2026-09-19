@@ -12,7 +12,7 @@ Working notes: where things stand, what was decided and why, and what is next.
 | aurora-nx | Forked, `switch` branch created; still stock upstream - the Switch backend has not moved here yet |
 | dawn-nx | Horizon port: native surface, static Vulkan from NVK, platform gaps |
 | nxvk | Used unmodified |
-| sqlite-nx | Switch VFS complete: in-process locking, every journal mode but WAL; demo NRO passes 21/21 on hardware; CI green. Not wired into Aurora yet |
+| sqlite-nx | Switch VFS complete: in-process locking, every journal mode but WAL; demo NRO passes 21/21 on hardware; CI green. Wired into Aurora: shader caches persist (2859/2860 hits on second launch) |
 
 ## Architecture
 
@@ -55,7 +55,7 @@ Next levers, in order:
 |---|---|---|
 | CI building the NRO | 1 session | High |
 | dawn-nx as a prebuilt artifact | 1 session | High |
-| sqlite-nx wired in (fixes the shader cache) | 1/2 session | High |
+| ~~sqlite-nx wired in (fixes the shader cache)~~ | done | - |
 | Portlibs + build flip + umbrella CMake | 1-2 | High |
 | PGO + LTO | 1 + two long builds | Medium |
 | Direct guest RAM mapping | 1 | Medium |
