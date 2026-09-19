@@ -70,6 +70,31 @@ Next levers, in order:
 - nxvk: fixed the window being left broken after a Vulkan swapchain is destroyed (stale
   preallocated buffer slots). dawn-nx: full demo NRO, 10/10 on hardware at 60 fps.
 
+## Launcher, NAND tools and example-wii-nx (planned)
+
+- **Launcher** `sdmc:/switch/wii-nx/wii-nx.nro` (open source, CI release): finds games under
+  sdmc:/wii-nx/games/, per-game and shared settings, launches (envSetNextLoad), installs NSP
+  forwarders (as sphaira does; needs sigpatches).
+- **NAND tools** in the launcher: Mii manager (import/export, Dolphin NAND, .mii), Switch Mii ->
+  Wii Mii (libnx Mii database), save manager (backup/restore/import), NAND import (Dolphin NAND,
+  BootMii nand.bin + keys.bin), system settings.
+- **System Update** from Nintendo's update servers (NUS), as Dolphin does: Wii Menu, IOS, channels
+  including the Mii Channel, installed into system/nand. Decision: follow Dolphin's precedent and
+  embed the Wii common key; the user's own keys.bin is an optional alternative. Nothing
+  Nintendo-owned in any repo or release.
+- **Mii Channel** as a recompiled title: the first title loaded from the NAND instead of a disc.
+- **example-wii-nx**: open-source Wii homebrew (libogc) through the whole pipeline in public CI:
+  DOL (devkitPPC container) -> translate -> NRO against the lib releases -> package -> NSP ->
+  release. Tests the translator, core runtime and packaging, not the Nintendo SDK layer; start
+  with a tiny console program (needs a small libogc layer). Its scripts are the template for
+  every game (extract-disc, inspect-dol, make-project, resolve-symbols, translate, build-nro,
+  package, make-forwarder, deploy, audit).
+- **Distribution check** (2026-09-19): the v1.0.0 zip's dsp_coef.bin and wii_bootstrap files are
+  byte-identical to Dolphin's published Data/Sys copies.
+- **Native replacement audit**: 583 addresses; ~570 Nintendo SDK, ~8 EGG/NW4R, ~3 Mario Kart only.
+  The code is already universal; the addresses are not. Next: register by name, resolve per game
+  from symbol maps or SDK signatures.
+
 ## Work queue
 
 | Work | Size | Confidence |
