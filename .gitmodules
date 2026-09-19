@@ -13,3 +13,7 @@
 	path = nxvk
 	url = https://github.com/nx-mod/nxvk.git
 	branch = switch
+[submodule "sqlite-nx"]
+	path = sqlite-nx
+	url = https://github.com/nx-mod/sqlite-nx.git
+	branch = switch

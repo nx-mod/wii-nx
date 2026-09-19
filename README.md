@@ -17,6 +17,7 @@ Wii games running natively on Nintendo Switch — statically recompiled from you
 | [aurora-nx](https://github.com/nx-mod/aurora-nx) | GameCube/Wii SDK layer: GX graphics on WebGPU, Switch backend |
 | [dawn-nx](https://github.com/nx-mod/dawn-nx) | WebGPU on Switch (Horizon) |
 | [nxvk](https://github.com/nx-mod/nxvk) | Vulkan driver for the Switch GPU |
+| [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | SQLite with a native Switch VFS (shader caches) |
 
 ## Getting started
 
