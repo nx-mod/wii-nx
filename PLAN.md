@@ -12,7 +12,7 @@ Working notes: where things stand, what was decided and why, and what is next.
 | aurora-nx | Forked, `switch` branch created; still stock upstream - the Switch backend has not moved here yet |
 | dawn-nx | Horizon port: native surface, static Vulkan from NVK, platform gaps |
 | nxvk | Used unmodified |
-| sqlite-nx | Has `nx-vfs.c` (libnx `fsFile*` VFS); submodule of wii-nx, not wired into the build yet |
+| sqlite-nx | Switch VFS complete: in-process locking, every journal mode but WAL; demo NRO passes 21/21 on hardware; CI green. Not wired into Aurora yet |
 
 ## Architecture
 
@@ -80,4 +80,6 @@ Builds take 2+ hours on the phone, which is why CI comes first.
 
 - Every commit in every nx-mod repo is authored and committed as nx-mod.
 - No game code, assets or data in any repo or release - players build from their own dump.
+- Every sample/smoke-test NRO writes its report to `sdmc:/` as well as the screen, so results can be fetched over FTP
+  (sqlite-nx: `sdmc:/switch/sqlite-nx-demo.log`; dawn-nx: `sdmc:/dawn_smoke_log.txt`; nxvk: `sdmc:/<test>.log`).
 - Public claims stay honest: "playable, not full speed" until it is.
