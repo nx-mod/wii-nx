@@ -6,8 +6,8 @@ Working notes: where things stand, what was decided and why, and what is next.
 
 | Part | State |
 |---|---|
-| Mario Kart Wii | Boots, menus, save data, races playable. **~4x too slow**; no audio |
-| New Super Mario Bros. Wii | Project skeleton only (`wiicompiled-nx/projects/nsmbwii`) |
+| Mario Kart Wii (PAL `RMCP01`) | Boots, menus, save data, races playable. **~4x too slow**; no audio |
+| New Super Mario Bros. Wii (NTSC-U `SMNE01`, Rev 2) | Project skeleton only (`wiicompiled-nx/projects/nsmbwii`). Bring-up targets the NTSC-U disc; Mario Kart is PAL, so the two also prove the engine is not region-locked |
 | wiicompiled-nx | Engine + Switch platform; `switch` branch, v1.0.0 released (runtime-only zip) |
 | aurora-nx | Forked; still stock upstream, no `switch` branch yet |
 | dawn-nx | Horizon port: native surface, static Vulkan from NVK, platform gaps |
