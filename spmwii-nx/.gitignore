@@ -1,0 +1,4 @@
+# Game code and data are never committed: build from your own disc.
+/disc/
+/generated/
+/build/

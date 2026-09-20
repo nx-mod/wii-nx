@@ -1,2 +1,5 @@
 # Nintendo system titles downloaded for reference (fetch-nand); never committed.
 /nand/
+
+# Python bytecode from the scripts.
+__pycache__/
