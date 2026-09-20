@@ -137,6 +137,18 @@ Builds take 2+ hours on the phone, which is why CI comes first.
 - 60 fps at stock clocks is the target. Whether it is reachable depends on what the attribution profile
   says about game code versus runtime overhead.
 
+## Releases
+
+Every library publishes prebuilt packages so a project links them instead of rebuilding: tagged
+`<upstream version>-nx-mod-v<n>`, one convention across all of them.
+
+| Library | Release |
+|---|---|
+| nxvk | `v26.2.2-nx-mod-v1`: Vulkan and OpenGL portlibs, 36 smoke-test NROs |
+| sqlite-nx | CI green; needs a tag |
+| dawn-nx | needs CI, then a tag |
+| wiinand-nx | when it has more than SYSCONF and Miis |
+
 ## Rules
 
 - Every commit in every nx-mod repo is authored and committed as nx-mod.
