@@ -1,0 +1,38 @@
+schema_version: 1
+workspace_root: ..
+
+# Punch-Out!! (Wii). The TODO values come from your own disc: run
+# scripts/extract <image> --dol and copy what it prints.
+project:
+  id: punchout-TODO
+  display_name: Punch-Out!!
+  game_id: TODO               # RPBE01 NTSC-U, RPBP01 PAL, RPBJ01 Japan
+  region: TODO                # the disc ID's fourth character
+
+memory:
+  base: 0x80000000
+  size: 0x01800000
+  sda_base: TODO              # _SDA_BASE_  (r13), from inspect-dol
+  sda2_base: TODO             # _SDA2_BASE_ (r2),  from inspect-dol
+
+inputs:
+  dol:
+    path: disc/sys/main.dol
+    sha256: TODO
+
+translation:
+  entry_points:
+    - TODO                    # the DOL header's entry point
+  allow_unsupported_instructions: false
+
+runtime:
+  native_registration_root: ../wiicompiled-nx/runtime/src
+  native_abi_directories:
+    - ../wiicompiled-nx/runtime/src/hle/gx
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: build/base/punchout_base_manifest.json
