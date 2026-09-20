@@ -41,5 +41,7 @@ resolve by hand. For scale, the source game itself scores 97.7%.
 
 ## Status
 
-All projects are ready; none are translated yet. They wait on the engine change
-that binds replacements by name instead of by Mario Kart's addresses.
+All projects are ready and bound: each folder's `bindings.json` holds the engine
+replacements found in that game, and its `recomp.yml` points the build at it.
+Mario Kart Wii aside, none are translated yet - that is the next step for each,
+and `../example-wii-nx/scripts/manual-adds <game>` lists what stays manual.
