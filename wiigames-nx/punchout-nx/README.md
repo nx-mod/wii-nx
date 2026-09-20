@@ -29,8 +29,9 @@ The first form prints everything `recomp.yml` needs. Fill in the `TODO`s from it
 ```
 
 How much of the engine is found in this game by matching code is the cheapest
-predictor of how much work it needs. For comparison: Mario Kart Wii 97.7% (itself),
-Mii Channel 85.5%, Super Paper Mario 80.9%, New Super Mario Bros. Wii 65.1%.
+predictor of how much work it needs. Of 574 replacements: Super Paper Mario 70.2%,
+Pikmin 2 69.0%, Metroid Prime 3 68.6%, this game 67.2%, New Super Mario Bros. Wii
+59.6%, Wii Sports 55.9%.
 
 ## What came from the disc
 
@@ -41,8 +42,9 @@ Mii Channel 85.5%, Super Paper Mario 80.9%, New Super Mario Bros. Wii 65.1%.
 | `_SDA_BASE_` (r13) | `0x804178A0` |
 | `_SDA2_BASE_` (r2) | `0x8041C8C0` |
 
-**353 of 470 (75.1%)** of the engine's native replacements were located in this
-game automatically, third of the titles tried.
+**386 of 574 (67.2%)** of the engine's native replacements were located in this
+game automatically; `bindings.json` holds them, and `recomp.yml` points the build
+at it.
 
 ## Status
 

@@ -29,9 +29,9 @@ scripts/extract "/path/to/Super Paper Mario (USA) (Rev 2).iso"         # the dis
 `example-wii-nx/scripts/resolve-symbols` locates the engine's native
 replacements in this game by matching their code:
 
-**380 of 470 (80.9%)** - the best of any title tried so far, better than New
-Super Mario Bros. Wii's 65%, which is what "its own engine on a plain SDK" looks
-like.
+**403 of 574 (70.2%)** - the best of any title tried so far, ahead of New Super
+Mario Bros. Wii's 59.6%, which is what "its own engine on a plain SDK" looks like.
+`bindings.json` holds them, and `recomp.yml` points the build at it.
 
 ## Symbols
 
