@@ -9,6 +9,20 @@ Wii games running natively on Nintendo Switch — statically recompiled from you
 | Mario Kart Wii (PAL, `RMCP01`) | Boots, menus and races playable; not full speed yet |
 | New Super Mario Bros. Wii (NTSC-U, `SMNE01`, Rev 2) | Bring-up |
 
+## Layout
+
+```
+wii-nx/
+├── wiigames-nx/     one folder per game: nsmbwii-nx, spmwii-nx, punchout-nx, wiisports-nx
+├── wiinand-nx/      the Wii's system side: its shared NAND, its titles, its formats
+│   ├── lib/         SYSCONF, Mii database, saves, title metadata, U8, ASH (planned)
+│   └── titles/      miichannel-nx, wiimenu-nx
+└── example-wii-nx/  the toolkit: disc and title extraction, symbol matching, project setup
+```
+
+Game code and data are never here. Every game is built from your own disc, and
+the system titles are downloaded from Nintendo by each user.
+
 ## Components
 
 | Repo | Role |

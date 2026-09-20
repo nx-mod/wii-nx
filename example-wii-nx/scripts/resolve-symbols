@@ -3,6 +3,7 @@
 
     scripts/resolve-symbols build  <known.dol> <map.txt> <runtime/src> <signatures.json>
     scripts/resolve-symbols match  <signatures.json> <target.dol> [--out addresses.json]
+    scripts/resolve-symbols chain  <known.dol> <resolved.json> <signatures.json>
 
 The engine replaces ~580 guest functions with native code, each registered at one
 game's address. Nearly all of them are Nintendo's own SDK libraries, which are
@@ -217,6 +218,48 @@ def follow_calls(database, dol, resolved):
             return gained
 
 
+def chain(known_dol, resolved_path, output):
+    """Build signatures from a game we have already resolved.
+
+    `resolved.json` is a previous match's output: names at addresses in that
+    game. Treating it as a second reference bridges games whose code drifted too
+    far from the original to match directly - a title from an SDK version in
+    between may match both.
+
+    There is no function map here, so a function is taken to run until the next
+    resolved address (capped), which is enough for signatures and usually for
+    following calls.
+    """
+    global WINDOW
+    dol = Dol(open(known_dol, "rb").read())
+    resolved = {name: int(address, 16) for name, address in json.load(open(resolved_path)).items()}
+    ordered = sorted(resolved.items(), key=lambda item: item[1])
+    starts = sorted({address for _, address in ordered})
+    print(f"{len(resolved)} names from {os.path.basename(resolved_path)}")
+
+    database, bodies = {}, {}
+    for window in WINDOWS:
+        WINDOW = window
+        signatures = {}
+        for name, address in ordered:
+            signature = signature_of(dol.read(address, window * 4))
+            if signature:
+                signatures.setdefault(signature, []).append({"name": name, "address": address})
+        database[str(window)] = {key: value[0] for key, value in signatures.items() if len(value) == 1}
+    for name, address in ordered:
+        following = next((start for start in starts if start > address), address + 0x400)
+        length = min(following - address, 0x1000)
+        code = dol.read(address, length)
+        if 8 <= len(code) == length:
+            bodies[f"0x{address:08X}"] = {"name": name, "code": code.hex()}
+
+    with open(output, "w") as handle:
+        json.dump({"windows": database, "bodies": bodies,
+                   "names": {f"0x{address:08X}": name for name, address in ordered}}, handle, indent=1)
+    print(f"  wrote {output}")
+    return 0
+
+
 def match(signatures_path, target_dol, out_path):
     global WINDOW
     database = json.load(open(signatures_path))["windows"]
@@ -282,6 +325,8 @@ def main(argv):
         rest = [value for value in rest if value != "--all-functions"]
         if len(rest) == 4:
             return build(*rest, every_function=every)
+    if command == "chain" and len(rest) == 3:
+        return chain(*rest)
     if command == "match" and len(rest) >= 1:
         out = None
         if "--out" in rest:

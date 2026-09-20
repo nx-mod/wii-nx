@@ -10,7 +10,7 @@ set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
 game_dir=$(cd "$here/.." && pwd)
-tools="$game_dir/../example-wii-nx/scripts"
+tools="$game_dir/../../example-wii-nx/scripts"
 
 [ $# -ge 1 ] || { sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 2; }
 image=$1
