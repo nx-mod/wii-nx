@@ -1,4 +1,4 @@
-# nand-nx
+# wiinand-nx
 
 The Wii's own system side on Switch: one shared NAND, the titles that live in it,
 and the library that understands its formats.
@@ -10,7 +10,7 @@ by every game, so a Mii made once shows up everywhere and saves live where a Wii
 would put them.
 
 ```
-nand-nx/
+wiinand-nx/
 ├── lib/            the formats, as one library (see below)
 └── titles/
     ├── miichannel-nx/   Mii Channel - first, its executable is a plain content
