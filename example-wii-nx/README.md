@@ -17,11 +17,11 @@ Game code and data are never in this repository. You build from your own disc.
 ## The pipeline
 
 ```
-your disc dump            open-source homebrew
-      |                            |
-  extract-disc                 build-dol        (devkitPPC)
-      |                            |
-      +------------ main.dol ------+
+your disc dump      a Wii system title     open-source homebrew
+      |                     |                       |
+  extract-disc          fetch-title            build-dol       (devkitPPC)
+      |                     |                       |
+      +---------------- main.dol -------------------+
                         |
                    inspect-dol      entry point, sections, SDA bases
                         |
@@ -43,6 +43,7 @@ your disc dump            open-source homebrew
 | Script | What it does | State |
 |---|---|---|
 | `inspect-dol` | Entry point, sections, BSS, and the `_SDA_BASE_` / `_SDA2_BASE_` registers a project must declare. `--yaml` prints them ready to paste | **works** (verified against Mario Kart Wii) |
+| `fetch-title` | Download a Wii system title (a channel, not a disc) from Nintendo's update servers, decrypt it and unpack its executable - the boot content is often a loader stub, so it scores the contents and picks the real one | **works** (verified on the Mii Channel) |
 | `extract-dol` | Pull `main.dol` straight out of a disc image without extracting it: reads the partition table, unwraps the title key and decrypts only the clusters the executable occupies (about 2 minutes, a few MB) | **works** (verified on two discs) |
 | `extract-disc` | Disc image (ISO/WBFS/RVZ/GCZ/CISO) → `disc/`, via Dolphin's `dolphin-tool`, with a free-space check | **works** |
 | `new-game` | Both of the above plus the project: `game.toml`, `recomp.yml`, `README.md`, `.gitignore`, all read from the disc | **works** |
