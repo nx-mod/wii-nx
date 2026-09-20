@@ -90,6 +90,14 @@ Next levers, in order:
   embed the Wii common key; the user's own keys.bin is an optional alternative. Nothing
   Nintendo-owned in any repo or release.
 - **Mii Channel** as a recompiled title: the first title loaded from the NAND instead of a disc.
+- **A Wii on the Switch**, in three stages (see wiimenu-nx/README.md):
+  1. **Shell**: the Wii Menu drawing its home screen, with our games presented as installed titles.
+  2. **Settings**: "Wii Options" is part of the same title; its edits write to the shared NAND that
+     every game already reads.
+  3. **Launching**: picking a game hands over to that game's NRO, and each game's banner is its own
+     small program the menu runs.
+  Blocked first on ASH decompression and on finding the System Menu's executable inside its contents
+  (six U8 archives plus a loader with a 3.8 MB blob).
 - **example-wii-nx**: open-source Wii homebrew (libogc) through the whole pipeline in public CI:
   DOL (devkitPPC container) -> translate -> NRO against the lib releases -> package -> NSP ->
   release. Tests the translator, core runtime and packaging, not the Nintendo SDK layer; start
