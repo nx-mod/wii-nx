@@ -14,7 +14,7 @@ Planned contents, in the order they are needed:
 |---|---|
 | SYSCONF read/write | **done** - `wiinand/sysconf.h`, checked byte for byte against the runtime's own writer |
 | `setting.txt` | Region and console identity, already generated per game |
-| Mii database (RFL_DB) | Import and export Miis; convert from the Switch's own |
+| Mii database (RFL_DB) | **done** - `wiinand/miidb.h`: read, add, remove, checksum |
 | Save data | Back up, restore, import from Dolphin or a real Wii |
 | Title metadata (TMD, ticket) | Installing a downloaded title into the NAND |
 | U8 archives | Channels pack their files this way |

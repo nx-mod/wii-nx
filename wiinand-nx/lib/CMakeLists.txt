@@ -7,7 +7,8 @@ cmake_minimum_required(VERSION 3.16)
 project(wiinand LANGUAGES CXX)
 
 add_library(wiinand STATIC
-    source/sysconf.cpp)
+    source/sysconf.cpp
+    source/miidb.cpp)
 target_include_directories(wiinand PUBLIC include)
 target_compile_features(wiinand PUBLIC cxx_std_17)
 
@@ -20,4 +21,9 @@ if (PROJECT_IS_TOP_LEVEL AND NOT CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
     target_link_libraries(wiinand_sysconf_test PRIVATE wiinand)
     add_test(NAME sysconf
              COMMAND wiinand_sysconf_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/SYSCONF)
+
+    add_executable(wiinand_miidb_test tests/miidb_test.cpp)
+    target_link_libraries(wiinand_miidb_test PRIVATE wiinand)
+    add_test(NAME miidb
+             COMMAND wiinand_miidb_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/RFL_DB.dat)
 endif ()
