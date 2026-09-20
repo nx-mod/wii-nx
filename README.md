@@ -37,7 +37,22 @@ the system titles are downloaded from Nintendo by each user.
 
 ```sh
 git clone --recursive https://github.com/nx-mod/wii-nx
+cd wii-nx
+
+# your own disc, extracted and translated
+wiigames-nx/mkwii-nx/scripts/extract "/path/to/your/disc.iso"
+example-wii-nx/scripts/translate mkwii-nx
+
+# one build
+cmake -S . -B build -G Ninja \
+      -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/cmake/Switch.cmake \
+      -DWIINX_GAME=mkwii-nx
+cmake --build build
 ```
+
+The result is `mkwii-nx.nro`, which goes in `sdmc:/wii-nx/games/mkwii-nx/`.
+`-DWIINX_GAME=` builds the libraries alone, which is what CI does, since no game
+code can live on a public runner.
 
 Every game follows the same path: dump your disc, extract it, translate it, build, copy to your Switch.
 Mario Kart Wii's steps are in the [wiicompiled-nx README](https://github.com/nx-mod/wiicompiled-nx#install);
