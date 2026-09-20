@@ -29,7 +29,17 @@ class Dol:
         self.sizes = struct.unpack(">18I", data[0x90:0xD8])
         self.bss_address, self.bss_size, self.entry = struct.unpack(">3I", data[0xD8:0xE4])
         if not any(self.sizes):
-            raise ValueError("no sections: not a DOL?")
+            raise ValueError("no sections")
+        # Every section must live in Wii memory and inside the file, or this is
+        # something else that happens to be big enough.
+        for index in range(SECTION_COUNT):
+            if not self.sizes[index]:
+                continue
+            if not 0x80000000 <= self.addresses[index] < 0x81800000:
+                raise ValueError(f"section {index} loads at 0x{self.addresses[index]:08X}, "
+                                 "outside Wii memory")
+            if self.offsets[index] + self.sizes[index] > len(data):
+                raise ValueError(f"section {index} runs past the end of the file")
 
     def sections(self):
         for index in range(SECTION_COUNT):
@@ -38,10 +48,12 @@ class Dol:
                        self.sizes[index], self.offsets[index])
 
     def read32(self, address):
+        """The instruction at `address`, or None when it is not in this file."""
         for _, _, start, size, offset in self.sections():
             if start <= address < start + size:
                 position = offset + (address - start)
-                return struct.unpack(">I", self.data[position:position + 4])[0]
+                word = self.data[position:position + 4]
+                return struct.unpack(">I", word)[0] if len(word) == 4 else None
         return None
 
     # The lowest mapped address and the highest, including BSS: what the guest
@@ -86,7 +98,11 @@ def main(argv):
         return 2
     path = argv[0]
     as_yaml = "--yaml" in argv[1:]
-    dol = Dol(open(path, "rb").read())
+    try:
+        dol = Dol(open(path, "rb").read())
+    except (ValueError, struct.error) as error:
+        print(f"{path}: not a DOL ({error})")
+        return 1
     bases = dol.sda_bases()
     lowest, highest = dol.span()
 

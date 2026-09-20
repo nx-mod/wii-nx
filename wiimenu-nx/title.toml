@@ -1,0 +1,6 @@
+# Read from the title by example-wii-nx/scripts/fetch-title; do not edit by hand.
+name = "wiimenu-nx"
+title = "Wii Menu (System Menu)"
+title_id = "0000000100000002"     # NAND title, not a disc
+contents = 7
+# The executable is not a plain content here; see README.md.
