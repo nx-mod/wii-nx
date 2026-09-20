@@ -11,9 +11,11 @@ differ. So a function can be recognised by its instructions instead:
 
   build   takes a game we already run, its function map (addresses, used as
           function boundaries) and the runtime sources (which name the functions
-          we replace), and writes a signature per function.
-  match   scans another game's DOL for those signatures and reports where each
-          function landed, so the same native replacements can be bound there.
+          we replace), and writes a signature and a body per function.
+  match   scans another game's DOL for those signatures, then follows the calls:
+          a matched function's body names its callees by position, so every call
+          inside it resolves another function - including short ones that cannot
+          have a distinctive signature. That repeats until nothing new is found.
 
 Operands that legitimately differ between games are masked out: branch targets,
 the immediate of lis/addis, and displacements relative to the small-data
@@ -102,11 +104,20 @@ def replaced_functions(runtime_root):
     return found
 
 
-def build(known_dol, map_path, runtime_root, output):
+def build(known_dol, map_path, runtime_root, output, every_function=False):
     global WINDOW
     dol = Dol(open(known_dol, "rb").read())
     boundaries = sorted({int(line.split()[0], 16) for line in open(map_path) if line.strip()})
     replacements = replaced_functions(runtime_root)
+    wanted = dict(replacements)
+    if every_function:
+        # Every function in the map, not just the ones we replace: an unnamed
+        # function that matches still names its callees through its call sites,
+        # which is how the short and the obscure ones get resolved.
+        for address in boundaries:
+            wanted.setdefault(address, f"sub_{address:08X}")
+        print(f"including all {len(wanted)} mapped functions")
+    replacements = wanted
     lengths = {address: (boundaries[index + 1] - address)
                for index, address in enumerate(boundaries[:-1]) if address in replacements}
     print(f"{len(replacements)} replaced functions, {len(boundaries)} known boundaries")
@@ -129,10 +140,81 @@ def build(known_dol, map_path, runtime_root, output):
 
     covered = {entry["name"] for table in database.values() for entry in table.values()}
     print(f"  {len(covered)}/{len(replacements)} functions have a signature")
+
+    # Bodies, so matching one function can resolve the ones it calls.
+    bodies = {}
+    for address, name in sorted(replacements.items()):
+        length = lengths.get(address)
+        if not length or length > 0x4000 or length < 8:
+            continue
+        code = dol.read(address, length)
+        if len(code) == length:
+            bodies[f"0x{address:08X}"] = {"name": name, "code": code.hex()}
+    print(f"  {len(bodies)} bodies kept for call following")
     with open(output, "w") as handle:
-        json.dump({"windows": database}, handle, indent=1)
+        json.dump({"windows": database, "bodies": bodies,
+                   "names": {f"0x{a:08X}": n for a, n in sorted(replacements.items())}}, handle, indent=1)
     print(f"  wrote {output}")
     return 0
+
+
+def call_target(instruction, address):
+    """Where a bl at `address` goes, or None if this is not a call."""
+    if instruction >> 26 != 18 or not instruction & 1:      # bl, not b
+        return None
+    offset = instruction & 0x03FFFFFC
+    if offset & 0x02000000:
+        offset -= 0x04000000
+    if instruction & 2:                                     # absolute
+        return offset & 0xFFFFFFFF
+    return (address + offset) & 0xFFFFFFFF
+
+
+def follow_calls(database, dol, resolved):
+    """Resolve more functions from the calls inside ones already resolved.
+
+    The same function in two games has the same instructions, so its calls sit at
+    the same offsets. Walking a resolved function's body in both games maps each
+    callee across, which reaches functions too short or too common to match on
+    their own. Repeat until a pass finds nothing new.
+    """
+    bodies = database.get("bodies")
+    names = database.get("names")
+    if not bodies or not names:
+        return 0
+
+    by_name = {entry["name"]: (int(address, 16), bytes.fromhex(entry["code"]))
+               for address, entry in bodies.items()}
+    name_of = {int(address, 16): name for address, name in names.items()}
+    gained = 0
+    while True:
+        found_this_pass = 0
+        for name, target_address in list(resolved.items()):
+            source = by_name.get(name)
+            if source is None:
+                continue
+            source_address, source_code = source
+            target_code = dol.read(target_address, len(source_code))
+            if len(target_code) != len(source_code):
+                continue
+            for position in range(0, len(source_code) - 3, 4):
+                source_word = struct.unpack(">I", source_code[position:position + 4])[0]
+                target_word = struct.unpack(">I", target_code[position:position + 4])[0]
+                if mask(source_word) != mask(target_word):
+                    break                                   # bodies diverged: stop here
+                source_callee = call_target(source_word, source_address + position)
+                if source_callee is None:
+                    continue
+                callee_name = name_of.get(source_callee)
+                if callee_name is None or callee_name in resolved:
+                    continue
+                target_callee = call_target(target_word, target_address + position)
+                if target_callee is not None:
+                    resolved[callee_name] = target_callee
+                    found_this_pass += 1
+        gained += found_this_pass
+        if not found_this_pass:
+            return gained
 
 
 def match(signatures_path, target_dol, out_path):
@@ -166,12 +248,21 @@ def match(signatures_path, target_dol, out_path):
             resolved[entry["name"]] = hits[0]
             ambiguous.discard(entry["name"])
 
-    total = len(known)
-    print(f"{os.path.basename(target_dol)}: {len(resolved)}/{total} resolved "
-          f"({100.0 * len(resolved) / total:.1f}%), {len(ambiguous)} ambiguous")
+    by_signature = len(resolved)
+    database_all = json.load(open(signatures_path))
+    followed = follow_calls(database_all, dol, resolved)
+
+    named = {name for name in database_all.get("names", {}).values() if not name.startswith("sub_")}
+    if not named:
+        named = known
+    hit = {name for name in resolved if name in named}
+    print(f"{os.path.basename(target_dol)}: {len(hit)}/{len(named)} replacements resolved "
+          f"({100.0 * len(hit) / len(named):.1f}%); {by_signature} functions by signature, "
+          f"{followed} more by following calls")
     if out_path:
         with open(out_path, "w") as handle:
-            json.dump({name: f"0x{address:08X}" for name, address in sorted(resolved.items())}, handle, indent=1)
+            json.dump({name: f"0x{address:08X}" for name, address in sorted(resolved.items())
+                   if not name.startswith("sub_")}, handle, indent=1)
         print(f"  wrote {out_path}")
     return 0
 
@@ -186,8 +277,11 @@ def main(argv):
         print(__doc__)
         return 2
     command, rest = argv[0], argv[1:]
-    if command == "build" and len(rest) == 4:
-        return build(*rest)
+    if command == "build":
+        every = "--all-functions" in rest
+        rest = [value for value in rest if value != "--all-functions"]
+        if len(rest) == 4:
+            return build(*rest, every_function=every)
     if command == "match" and len(rest) >= 1:
         out = None
         if "--out" in rest:
