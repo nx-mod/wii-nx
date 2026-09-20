@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""What a game still needs by hand, and a starting point for adding it.
+
+    scripts/manual-adds <game folder> [--template <Symbol>] [--all]
+
+Most of a game is automatic: its code is translated, and the engine's
+replacements are bound to that game's addresses by matching their code. What is
+left over is this:
+
+  1. Replacements that were not found in this game. Each one falls back to the
+     game's own translated code, which is correct but slower, so these are an
+     opportunity rather than a fault.
+  2. Things only this game does, which no shared engine can cover. These live in
+     <game>/native/ and are written by hand.
+
+This prints both, and --template writes a skeleton for (2).
+
+Mario Kart Wii is the worked example: see wiigames-nx/mkwii-nx/native/, which
+holds its strap screen and its mod loader hooks - two functions, out of the ~580
+the engine replaces.
+"""
+
+import json
+import os
+import re
+import sys
+
+PATTERNS = [
+    re.compile(r"REGISTER_NATIVE_FUNCTION(?:_AS)?\s*\(\s*0x([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+    re.compile(r"REGISTER_TRANSLATED_FUNCTION\s*\(\s*0x([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+    re.compile(r"PPC_NATIVE_OVERRIDE(?:_VOID)?\s*\(\s*([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+]
+
+SDK = re.compile(
+    r"^(GX|gx_|OS|PPC|AI|DSP|AX|DVD|NAND|ISFS|IOS|ES|ESP|VI|PAD|WPAD|KPAD|WUD|SC|CARD|EXI|SI|IPC"
+    r"|NWC24|SO|NCD|NHTTP|NSSL|SSL|MTX|PSMTX|PSVEC|C_MTX|MEM|RFL|HBM|TPL|CX|ENC|WENC|VF|SYS"
+    r"|DC|LC|GKI|BTM|content|Cache_|SelectThread|SetInterruptMask|SetExiInterruptMask|ConsoleWrite"
+    r"|Stub_|Exit_|HLE_|__)")
+MIDDLEWARE = re.compile(r"^(nw4r|NW4R|EGG|egg|DWC|dwc|RVL|TaskThread|SoundPlayer)")
+
+TEMPLATE = '''// {symbol} for {game}.
+//
+// Written by hand because this game does something no other does, or because the
+// engine's version could not be matched to an address here. Files in this folder
+// are compiled into this game's build alone.
+//
+// Replace the address below with this game's, and the body with what the
+// function should do. Until then, leave the file out of the build: the game's
+// own translated code runs, which is correct, just slower.
+#include "abi_bridge.h"
+
+extern "C" void {symbol}(CpuContext* ctx) {{
+    // ctx holds the guest registers: arguments in ctx->gpr[3..], the result in
+    // ctx->gpr[3]. Memory::Read32 / Memory::Write32 reach guest memory.
+    (void)ctx;
+}}
+
+REGISTER_NATIVE_FUNCTION_AS(0x{address}, {symbol}, "{symbol}");
+'''
+
+
+def engine_replacements(runtime_root):
+    found = {}
+    for directory, _, files in os.walk(runtime_root):
+        for name in files:
+            if not name.endswith((".cpp", ".h", ".hpp", ".inc")):
+                continue
+            with open(os.path.join(directory, name), errors="replace") as handle:
+                text = handle.read()
+            for pattern in PATTERNS:
+                for match in pattern.finditer(text):
+                    found.setdefault(match.group(2), int(match.group(1), 16))
+    return found
+
+
+def classify(symbol):
+    if MIDDLEWARE.match(symbol):
+        return "middleware"
+    if SDK.match(symbol):
+        return "SDK"
+    return "game-specific"
+
+
+def main(argv):
+    paths = [value for value in argv if not value.startswith("-")]
+    if not paths:
+        print(__doc__)
+        return 2
+    game_dir = os.path.abspath(paths[0])
+    name = os.path.basename(game_dir)
+    root = os.path.dirname(os.path.dirname(game_dir))         # the wii-nx checkout
+    runtime_root = os.path.join(root, "wiicompiled-nx", "runtime", "src")
+    if not os.path.isdir(runtime_root):
+        runtime_root = os.path.join(os.path.dirname(root), "wiicompiled", "runtime", "src")
+
+    if "--template" in argv:
+        symbol = argv[argv.index("--template") + 1]
+        native_dir = os.path.join(game_dir, "native")
+        os.makedirs(native_dir, exist_ok=True)
+        path = os.path.join(native_dir, f"{symbol}.cpp")
+        if os.path.exists(path):
+            print(f"{path} already exists")
+            return 1
+        with open(path, "w") as handle:
+            handle.write(TEMPLATE.format(symbol=symbol, game=name, address="00000000"))
+        print(f"wrote {path}")
+        print("Fill in the address and the body; it builds into this game only.")
+        return 0
+
+    replacements = engine_replacements(runtime_root)
+    bindings_path = os.path.join(game_dir, "bindings.json")
+    bound = {}
+    if os.path.exists(bindings_path):
+        bound = {symbol: int(address, 16) for symbol, address in json.load(open(bindings_path)).items()}
+
+    print(f"{name}\n  engine replacements : {len(replacements)}")
+    if not bound:
+        print("  bindings            : none\n")
+        print("  This game is the one the engine's addresses belong to, so nothing")
+        print("  needs binding. Everything below is what it does that others do not.")
+    else:
+        missing = sorted(set(replacements) - set(bound))
+        groups = {"SDK": [], "middleware": [], "game-specific": []}
+        for symbol in missing:
+            groups[classify(symbol)].append(symbol)
+        print(f"  bound automatically : {len(bound)} ({100.0 * len(bound) / max(len(replacements), 1):.1f}%)")
+        print(f"  not found           : {len(missing)}\n")
+        for kind, symbols in groups.items():
+            if not symbols:
+                continue
+            print(f"  {kind} ({len(symbols)}): the game's own code runs for these")
+            for symbol in symbols[:12]:
+                print(f"    {symbol}  (0x{replacements[symbol]:08X} in the engine's game)")
+            if len(symbols) > 12:
+                print(f"    ... and {len(symbols) - 12} more" + ("" if "--all" in argv else "  (--all to list)"))
+            print()
+
+    native_dir = os.path.join(game_dir, "native")
+    written = sorted(f for f in os.listdir(native_dir) if f.endswith(".cpp")) if os.path.isdir(native_dir) else []
+    print(f"  written by hand     : {len(written)}")
+    for file_name in written:
+        print(f"    native/{file_name}")
+    if not written:
+        print("    (none yet; scripts/manual-adds <game> --template <Symbol> starts one)")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
