@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""Read and edit a Wii SYSCONF - the console's settings.
+
+    scripts/sysconf show <SYSCONF>
+    scripts/sysconf get  <SYSCONF> <name>
+    scripts/sysconf set  <SYSCONF> <name> <value> [--out <file>]
+
+SYSCONF holds what the Wii's own settings screens edit: language, aspect ratio,
+sound, screen saver, sensor bar position, PAL60 and the rest. Every game reads
+it, and wii-nx keeps one shared copy in sdmc:/wii-nx/system/nand/shared2/sys/.
+
+Values are written back in the same format the runtime generates (header "SCv0",
+an offset table, then each item as a type/name-length byte, the name, and the
+value; "SCed" closes the file at 0x3FFC). Editing in place keeps every offset,
+so only the value changes.
+
+Common settings:
+
+    IPL.LNG   0 Japanese, 1 English, 2 German, 3 French, 4 Spanish,
+              5 Italian, 6 Dutch, 7 Simplified Chinese, 8 Traditional Chinese,
+              9 Korean
+    IPL.AR    0 4:3, 1 16:9
+    IPL.E60   PAL60 (50 Hz consoles only)
+    IPL.PGS   progressive scan
+    IPL.SND   0 mono, 1 stereo, 2 surround
+    IPL.SSV   screen saver
+    BT.BAR    0 sensor bar below the screen, 1 above
+    BT.SENS   pointer sensitivity
+    BT.SPKV   Wii Remote speaker volume
+    BT.MOT    rumble
+"""
+
+import struct
+import sys
+
+SIZE = 0x4000
+TYPES = {1: "big array", 2: "small array", 3: "byte", 4: "short", 5: "long",
+         6: "long long", 7: "bool"}
+
+
+def items(data):
+    """(name, type, value offset, value length) for each setting."""
+    if data[:4] != b"SCv0":
+        raise SystemExit('not a SYSCONF (it does not start with "SCv0")')
+    count = struct.unpack(">H", data[4:6])[0]
+    found = []
+    for index in range(count):
+        offset = struct.unpack(">H", data[6 + index * 2:8 + index * 2])[0]
+        if not offset:
+            continue
+        header = data[offset]
+        kind, name_length = header >> 5, (header & 0x1F) + 1
+        name = data[offset + 1:offset + 1 + name_length].decode("ascii", "replace")
+        position = offset + 1 + name_length
+        if kind == 1:                                   # big array
+            length = struct.unpack(">H", data[position:position + 2])[0] + 1
+            position += 2
+        elif kind == 2:                                 # small array
+            length = data[position] + 1
+            position += 1
+        else:
+            length = {3: 1, 4: 2, 5: 4, 6: 8, 7: 1}.get(kind, 1)
+        found.append((name, kind, position, length))
+    return found
+
+
+def as_text(data, kind, offset, length):
+    blob = data[offset:offset + length]
+    if kind == 7:
+        return "on" if blob[0] else "off"
+    if kind in (3, 4, 5, 6):
+        return str(int.from_bytes(blob, "big"))
+    return f"{length} bytes: {blob[:16].hex()}" + ("..." if length > 16 else "")
+
+
+def main(argv):
+    if len(argv) < 2:
+        print(__doc__)
+        return 2
+    command, path = argv[0], argv[1]
+    data = bytearray(open(path, "rb").read())
+    if len(data) != SIZE:
+        print(f"warning: {len(data)} bytes, expected {SIZE}", file=sys.stderr)
+    entries = items(data)
+
+    if command == "show":
+        print(f"{path}: {len(entries)} settings")
+        for name, kind, offset, length in entries:
+            print(f"  {name:<12} {TYPES.get(kind, kind):<12} {as_text(data, kind, offset, length)}")
+        return 0
+
+    if command == "get" and len(argv) >= 3:
+        for name, kind, offset, length in entries:
+            if name == argv[2]:
+                print(as_text(data, kind, offset, length))
+                return 0
+        print(f"no setting called {argv[2]}", file=sys.stderr)
+        return 1
+
+    if command == "set" and len(argv) >= 4:
+        name, raw = argv[2], argv[3]
+        output = argv[argv.index("--out") + 1] if "--out" in argv else path
+        for entry_name, kind, offset, length in entries:
+            if entry_name != name:
+                continue
+            if kind == 7:
+                value = (1 if raw.lower() in ("1", "on", "true", "yes") else 0).to_bytes(1, "big")
+            elif kind in (3, 4, 5, 6):
+                value = int(raw, 0).to_bytes(length, "big")
+            else:
+                value = bytes.fromhex(raw)
+                if len(value) != length:
+                    print(f"{name} holds {length} bytes, got {len(value)}", file=sys.stderr)
+                    return 1
+            data[offset:offset + length] = value
+            with open(output, "wb") as handle:
+                handle.write(data)
+            print(f"{name} = {as_text(data, kind, offset, length)}  ->  {output}")
+            return 0
+        print(f"no setting called {name}", file=sys.stderr)
+        return 1
+
+    print(__doc__)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
