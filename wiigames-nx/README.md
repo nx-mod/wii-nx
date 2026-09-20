@@ -5,6 +5,7 @@ never the game itself, which you build from your own dump.
 
 | Game | ID | Engine located | Notes |
 |---|---|---|---|
+| [mkwii-nx](mkwii-nx) | `RMCP01` | - | **Playable.** The game the engine was written against, so its addresses are the reference every other game is matched to |
 | [nsmbwii-nx](nsmbwii-nx) | `SMNE01` | 342/574 (59.6%) | Second game; shares Mario Kart's middleware |
 | [spmwii-nx](spmwii-nx) | `R8PE01` | 403/574 (70.2%) | Its own engine on a plain SDK |
 | [punchout-nx](punchout-nx) | `R7PE01` | 386/574 (67.2%) | Small, exclusive, never ported |
@@ -12,8 +13,9 @@ never the game itself, which you build from your own dump.
 | [metroidprime3-nx](metroidprime3-nx) | `RM3E01` | 394/574 (68.6%) | The engine Aurora was written for |
 | [pikmin2-nx](pikmin2-nx) | `R92E01` | 396/574 (69.0%) | Full public decompilation exists |
 
-Mario Kart Wii (`RMCP01`) is the game running today, and still lives in
-wiicompiled-nx; it moves here when the wii-nx build lands.
+Mario Kart Wii is the game running today. Its folder here holds its project, its
+disc and its translated code - copied, not moved: the working build still comes
+from wiicompiled-nx until a build from here produces the same NRO.
 
 ## Adding a game
 
