@@ -1,0 +1,7 @@
+# Filled in from your disc by scripts/extract --dol; do not edit by hand.
+name = "punchout-nx"
+title = "Punch-Out!!"
+game_id = "TODO"            # RPBE01 NTSC-U, RPBP01 PAL, RPBJ01 Japan
+revision = 0
+region = "TODO"
+dol_sha256 = "TODO"
