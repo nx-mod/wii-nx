@@ -1,0 +1,4 @@
+# Nintendo's title data is never committed: download your own copy.
+/title/
+/generated/
+/build/
