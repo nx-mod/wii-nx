@@ -1,37 +1,55 @@
 # wii-nx
 
-Wii games running natively on Nintendo Switch — statically recompiled from your own discs, not emulated.
+Wii games running natively on Nintendo Switch — statically recompiled from your
+own discs, not emulated. Each game's PowerPC code is translated to C++ ahead of
+time and compiled for the Switch, with the Wii's system software answered
+natively rather than simulated.
+
+Game code and data are never in this repository. You build from your own disc,
+and the Wii's system titles are downloaded from Nintendo by each user.
 
 ## Games
 
-| Game | Status |
-|---|---|
-| Mario Kart Wii (PAL, `RMCP01`) | Boots, menus and races playable; not full speed yet |
-| New Super Mario Bros. Wii (NTSC-U, `SMNE01`, Rev 2) | Bring-up |
+| Game | Disc | State |
+|---|---|---|
+| Mario Kart Wii | `RMCP01` PAL | **Playable**: boots, menus, races, saves. Not full speed, and no audio yet |
+| New Super Mario Bros. Wii | `SMNE01` NTSC-U | Translating |
+| Super Paper Mario | `R8PE01` NTSC-U | Staged |
+| Punch-Out!! | `R7PE01` NTSC-U | Staged |
+| Metroid Prime 3: Corruption | `RM3E01` NTSC-U | Staged |
+| Pikmin 2 | `R92E01` NTSC-U | Staged |
+| Wii Sports + Wii Sports Resort | `SP2E01` NTSC-U | Staged |
+
+"Staged" means the project exists with everything read from the disc, and the
+engine has been matched against it, but it has not been translated yet. See
+[wiigames-nx](wiigames-nx) for how much of the engine each one already fits.
+
+The Wii's own titles are in [wiinand-nx](wiinand-nx): the Mii Channel first,
+then the Wii Menu.
 
 ## Layout
 
 ```
 wii-nx/
-├── wiigames-nx/     one folder per game: nsmbwii-nx, spmwii-nx, punchout-nx, wiisports-nx
-├── wiinand-nx/      the Wii's system side: its shared NAND, its titles, its formats
-│   ├── lib/         SYSCONF, Mii database, saves, title metadata, U8, ASH (planned)
+├── wiigames-nx/     one folder per game
+├── wiinand-nx/      the Wii's system side
+│   ├── lib/         its formats: settings, Miis, saves, archives
 │   └── titles/      miichannel-nx, wiimenu-nx
-└── example-wii-nx/  the toolkit: disc and title extraction, symbol matching, project setup
+├── example-wii-nx/  the toolkit: discs, titles, symbol matching, project setup
+└── CMakeLists.txt   one build: libraries, engine, game, NRO
 ```
 
-Game code and data are never here. Every game is built from your own disc, and
-the system titles are downloaded from Nintendo by each user.
+Each library below builds on its own and can be used by any Switch project; this
+repository only puts them together.
 
-## Components
-
-| Repo | Role |
+| Library | Role |
 |---|---|
-| [wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) | Engine: PowerPC → C++ translator, Wii runtime, Switch platform, game projects |
-| [aurora-nx](https://github.com/nx-mod/aurora-nx) | GameCube/Wii SDK layer: GX graphics on WebGPU, Switch backend |
-| [dawn-nx](https://github.com/nx-mod/dawn-nx) | WebGPU on Switch (Horizon) |
-| [nxvk](https://github.com/nx-mod/nxvk) | Vulkan driver for the Switch GPU |
-| [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | SQLite with a native Switch VFS (shader caches) |
+| [wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) | The engine: PowerPC → C++ translator, and the Wii's system software answered natively |
+| [aurora-nx](https://github.com/nx-mod/aurora-nx) | The Wii's graphics (GX) on WebGPU |
+| [dawn-nx](https://github.com/nx-mod/dawn-nx) | WebGPU on Switch |
+| [nxvk](https://github.com/nx-mod/nxvk) | The Vulkan driver underneath |
+| [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | SQLite with a Switch filesystem layer (the shader caches) |
+| `wiinand-nx/lib` | The Wii's NAND formats, shared by the engine, the tools and the launcher |
 
 ## Getting started
 
@@ -39,27 +57,57 @@ the system titles are downloaded from Nintendo by each user.
 git clone --recursive https://github.com/nx-mod/wii-nx
 cd wii-nx
 
-# your own disc, extracted and translated
+# your own disc
 wiigames-nx/mkwii-nx/scripts/extract "/path/to/your/disc.iso"
 example-wii-nx/scripts/translate mkwii-nx
 
-# one build
 cmake -S . -B build -G Ninja \
       -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/cmake/Switch.cmake \
       -DWIINX_GAME=mkwii-nx
 cmake --build build
 ```
 
-The result is `mkwii-nx.nro`, which goes in `sdmc:/wii-nx/games/mkwii-nx/`.
-`-DWIINX_GAME=` builds the libraries alone, which is what CI does, since no game
-code can live on a public runner.
+The result is `mkwii-nx.nro`. Copy it, and the extracted disc, to your SD card:
 
-Every game follows the same path: dump your disc, extract it, translate it, build, copy to your Switch.
-Mario Kart Wii's steps are in the [wiicompiled-nx README](https://github.com/nx-mod/wiicompiled-nx#install);
-each game's guide moves to `wiicompiled-nx/projects/<game>/` as the multi-game engine lands.
+```
+sdmc:/wii-nx/
+├── config/                  settings shared by every game
+├── system/                  the emulated Wii: one NAND for all of them
+└── games/mkwii-nx/
+    ├── mkwii-nx.nro
+    ├── config.toml
+    ├── disc/                your extracted disc
+    ├── cache/               compiled shaders, kept between launches
+    └── logs/
+```
 
-No game code or data is included — you need your own disc.
+An older install under `sdmc:/WiiCompiled/` is moved here on first launch, saves
+included.
+
+`-DWIINX_GAME=` builds the libraries alone, which is what CI does: no game code
+can live on a public runner.
+
+## Adding a game
+
+```sh
+example-wii-nx/scripts/new-game "/path/to/Your Game.iso" yourgame-nx
+```
+
+That reads the disc and writes the whole project. Screening a candidate first
+costs about a minute and predicts how much work it needs — see
+[example-wii-nx](example-wii-nx).
+
+## Where the work is
+
+- **Speed.** Mario Kart runs at roughly a quarter of real time. The frame is
+  spent in the game's own code, so the levers are compiler-wide optimisation and
+  native versions of the hottest Wii middleware routines. `PLAN.md` has the
+  measurements.
+- **A second game running.** Everything up to translation works for any game;
+  translating one end to end is the current edge.
+- **Audio**, which is stubbed, and **Wii Remote motion**, which Wii Sports needs.
 
 ## License
 
-GPL-3.0. Mario Kart Wii and New Super Mario Bros. Wii are © Nintendo.
+GPL-3.0. The games and the Wii's system titles are © Nintendo; none of them are
+included here.

@@ -35,5 +35,12 @@ needs work.
 
 ## Status
 
-Project only: not translated yet. Waiting on the engine change that binds
-replacements by name instead of Mario Kart Wii's addresses.
+Being translated: the first game after Mario Kart Wii to go through the whole
+path. The engine binds 349 of its replacements to this game's addresses, and
+translation runs but stops partway, on a call target that is not a real function
+address - the kind of thing only a second game surfaces.
+
+The engine binds its replacements to this game's own addresses now, so what
+remains is the translation itself, and then whatever this game does that the
+engine has not met before. `../../example-wii-nx/scripts/manual-adds .` lists
+what is not automatic.
