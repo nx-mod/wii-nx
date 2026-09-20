@@ -1,0 +1,38 @@
+schema_version: 1
+workspace_root: ..
+
+# Wii Sports + Wii Sports Resort (the two-game disc). Every value below was read
+# from a real dump by example-wii-nx's extract-dol + inspect-dol.
+project:
+  id: wiisports-sp2e01
+  display_name: Wii Sports + Wii Sports Resort
+  game_id: SP2E01             # NTSC-U, revision 0
+  region: E
+
+memory:
+  base: 0x80000000
+  size: 0x01800000
+  sda_base: 0x801FBAC0        # _SDA_BASE_  (r13), set in the startup code
+  sda2_base: 0x801FCEC0       # _SDA2_BASE_ (r2),  set in the startup code
+
+inputs:
+  dol:
+    path: disc/sys/main.dol
+    sha256: de02d525d55c9ea57968f720fe5acc39c4ba5df0b0625d93a3ec5749c4a6301b
+
+translation:
+  entry_points:
+    - 0x80004050              # the DOL header's entry point
+  allow_unsupported_instructions: false
+
+runtime:
+  native_registration_root: ../wiicompiled-nx/runtime/src
+  native_abi_directories:
+    - ../wiicompiled-nx/runtime/src/hle/gx
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: build/base/wiisports_base_manifest.json
