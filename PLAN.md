@@ -52,10 +52,17 @@ Next levers, in order:
 
 ## Found 2026-09-19
 
-- **Everything was compiled -fPIC.** devkitPro's NintendoSwitch CMake platform file turns
-  CMAKE_POSITION_INDEPENDENT_CODE on for every project. In one translated shard 8249 of 8349
-  global accesses went through the GOT, and GCC could not inline or use interprocedural register
-  allocation across functions. Off on Switch now (Dawn, Aurora, runtime); rebuild pending test.
+- **The guest-memory globals were reached through the GOT.** devkitPro's NintendoSwitch CMake
+  platform file turns CMAKE_POSITION_INDEPENDENT_CODE on for every project, so each access the
+  translated code makes to gFlatGuestBase / the page-bias tables / the write guard first loaded the
+  address from the GOT, and GCC could not inline or allocate registers across calls. Measured on one
+  shard: 8175 GOT loads, 1297 direct.
+  - Dropping -fPIC gives 0 GOT loads but does not link: absolute addresses in read-only data cannot
+    be relocated when an NRO is loaded ("read-only segment has dynamic relocations").
+  - -fPIE alone changes nothing (8175 GOT loads): extern data still goes through the GOT.
+  - **Marking those declarations hidden** (runtime/include/mkw_visibility.h) plus -fvisibility=hidden
+    on the project's own code: 111 GOT loads, 10260 direct. Keeps PIC, so it links. Awaiting a
+    hardware run for the speed figure.
 - **-mcpu=native** in the translated code meant generic ARMv8 tuning (the cross compiler cannot
   detect a CPU). Now -mcpu=cortex-a57+crc+crypto.
 - **Region is hard-coded to Europe** (setting.txt AREA/MODEL/VIDEO/GAME, SYSCONF). With one NAND
