@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Download the Wii Menu from Nintendo and get it ready to translate.
+# Download the Mii Channel from Nintendo and get it ready to translate.
 #
 #   scripts/fetch
 #
@@ -13,7 +13,7 @@ set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
 game_dir=$(cd "$here/.." && pwd)
-tools="$game_dir/../example-wii-nx/scripts"
+tools="$game_dir/../../../example-wii-nx/scripts"
 title_id=$(sed -n 's/^title_id *= *"\(.*\)"/\1/p' "$game_dir/title.toml")
 
 "$tools/fetch-title" "$title_id" "$game_dir/title" "$@"
