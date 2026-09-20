@@ -7,3 +7,11 @@ __pycache__/
 # Local working notes, not for publication.
 /notes/
 build-switch/
+
+# Game code and data: extracted from your own disc, never committed.
+*.dol
+*.rel
+*.iso
+*.wbfs
+disc/
+generated/
