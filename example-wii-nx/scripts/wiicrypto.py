@@ -1,9 +1,13 @@
 """Wii crypto and constants shared by the scripts here.
 
 A small, dependency-free AES-128 (verified against the FIPS-197 vector), since a
-stock Python has no AES. Used to decrypt disc partitions and NAND title
-contents, both of which are wrapped with the Wii common key.
+stock Python has no AES. It is slow - about a minute per MB - so openssl does the
+work when it is installed, which is most of the time; the result is identical.
 """
+
+import os
+import shutil
+import subprocess
 
 # The Wii common key, which every disc's title key is wrapped with. Public
 # knowledge and carried by Dolphin; no game data of any kind.
@@ -79,7 +83,7 @@ def _decrypt_block(words, block):
     return bytes(state[row][column] for column in range(4) for row in range(4))
 
 
-def aes_cbc_decrypt(key, iv, data):
+def aes_cbc_decrypt_python(key, iv, data):
     words = _expand_key(key)
     out = bytearray(len(data))
     previous = iv
@@ -89,3 +93,25 @@ def aes_cbc_decrypt(key, iv, data):
         out[offset:offset + 16] = bytes(p ^ q for p, q in zip(plain, previous))
         previous = block
     return bytes(out)
+
+
+_OPENSSL = shutil.which("openssl")
+
+
+def _openssl_cbc_decrypt(key, iv, data):
+    result = subprocess.run(
+        [_OPENSSL, "enc", "-aes-128-cbc", "-d", "-nopad",
+         "-K", key.hex(), "-iv", iv.hex()],
+        input=data, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+    return result.stdout if result.returncode == 0 and len(result.stdout) == len(data) else None
+
+
+def aes_cbc_decrypt(key, iv, data):
+    """AES-128-CBC, via openssl when available (the fallback is ~1 min/MB)."""
+    if len(data) == 0:
+        return b""
+    if _OPENSSL is not None and len(data) >= 4096 and not os.environ.get("WIICRYPTO_PURE_PYTHON"):
+        decrypted = _openssl_cbc_decrypt(key, iv, data)
+        if decrypted is not None:
+            return decrypted
+    return aes_cbc_decrypt_python(key, iv, data)
