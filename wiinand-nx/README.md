@@ -19,7 +19,7 @@ wiinand-nx/
 
 ## Why a library
 
-The same formats are needed in three places, and are currently written twice:
+The same formats are needed in three places, and used to be written twice:
 
 - **the runtime** (`wiicompiled-nx/runtime/include/nand_*.h`), which answers a
   game's requests and creates a NAND on first run;
@@ -27,14 +27,15 @@ The same formats are needed in three places, and are currently written twice:
   saves;
 - **the scripts** (`example-wii-nx/scripts/`), in Python, for work on a PC.
 
-`lib/` is where that moves: one C++ implementation, buildable for Switch and for
-the host, with the scripts calling it rather than reimplementing it.
+`lib/` is where that lives now: one C++ implementation, buildable for Switch and
+for the host. SYSCONF and the Mii database are done and checked against files the
+runtime itself writes; the rest follows.
 
 | Format | What it is | Where it exists today |
 |---|---|---|
-| SYSCONF | console settings: language, aspect, sound, sensor bar, PAL60 | runtime writes it; `scripts/sysconf` reads and edits it |
+| SYSCONF | console settings: language, aspect, sound, sensor bar, PAL60 | **`lib/`**, and `scripts/sysconf` on the command line |
 | `setting.txt` | region, model, serial - obfuscated, not encrypted | runtime writes it |
-| RFL_DB | the Mii database | runtime creates an empty one |
+| RFL_DB | the Mii database | **`lib/`**: read, add, remove, checksum |
 | Save data | per title, plus the `data.bin` export format | runtime serves saves |
 | TMD / ticket | title metadata and keys | `scripts/wiinand.py` |
 | U8 | the archive channels pack their files in | `scripts/unpack-u8` |

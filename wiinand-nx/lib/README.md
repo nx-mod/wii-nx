@@ -1,4 +1,4 @@
-# wiinand-nx/lib (planned)
+# wiinand-nx/lib
 
 One implementation of the Wii's NAND formats, for the runtime, the launcher and
 the tools - replacing the copies in `wiicompiled-nx/runtime/include/nand_*.h` and

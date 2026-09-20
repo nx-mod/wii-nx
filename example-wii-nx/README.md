@@ -42,19 +42,26 @@ your disc dump      a Wii system title     open-source homebrew
 
 | Script | What it does | State |
 |---|---|---|
-| `inspect-dol` | Entry point, sections, BSS, and the `_SDA_BASE_` / `_SDA2_BASE_` registers a project must declare. `--yaml` prints them ready to paste | **works** (verified against Mario Kart Wii) |
-| `fetch-title` | Download a Wii system title (a channel, not a disc) from Nintendo's update servers, decrypt it and unpack its executable - the boot content is often a loader stub, so it scores the contents and picks the real one | **works** (verified on the Mii Channel) |
-| `extract-dol` | Pull `main.dol` straight out of a disc image without extracting it: reads the partition table, unwraps the title key and decrypts only the clusters the executable occupies (about 2 minutes, a few MB) | **works** (verified on two discs) |
-| `extract-disc` | Disc image (ISO/WBFS/RVZ/GCZ/CISO) → `disc/`, via Dolphin's `dolphin-tool`, with a free-space check | **works** |
-| `new-game` | Both of the above plus the project: `game.toml`, `recomp.yml`, `README.md`, `.gitignore`, all read from the disc | **works** |
-| `resolve-symbols` | Find a new game's SDK functions by matching code, not addresses. Signatures come from a game we already run, with operands that legitimately differ masked out; then it follows the calls inside every matched function to reach ones too short or too common to match alone | **works**: 76.7% Mii Channel, 70.2% Super Paper Mario, 67.2% Punch-Out!!, 59.6% New Super Mario Bros. Wii, with no wrong matches on a self-check |
-| `make-bindings` | Turn resolved addresses into the C++ table a game's build links, so the runtime registers its replacements where *that* game keeps them | **works** |
-| `translate` | Run the translator over the project | planned |
-| `build-nro` | Build against the prebuilt nxvk / dawn-nx / sqlite-nx releases | planned |
-| `package` | Lay out `games/<game>/` for the SD card, with NACP and icon | planned |
-| `make-forwarder` | NSP forwarder for the home menu | planned |
+| **Getting the code** | | |
+| `extract-dol` | Pull `main.dol` out of a disc image without extracting the disc: reads the partition table, unwraps the title key and decrypts only the clusters the executable occupies. Seconds, a few MB | **works** |
+| `extract-disc` | The whole disc (ISO/WBFS/RVZ/GCZ/CISO) via Dolphin's `dolphin-tool`, with a free-space check | **works** |
+| `fetch-title` | Download a Wii system title from Nintendo's update servers and unpack its executable. The content a title marks as "boot" is often a loader stub, so contents are scored and the real one chosen | **works** |
+| `fetch-nand` | A reference set of system titles, from a menu or by flag. Resumes | **works** |
+| `unpack-u8` | List or extract a U8 archive, which is how channels pack their files, flagging ASH and LZ77 compression inside | **works** |
+| **Understanding it** | | |
+| `inspect-dol` | Entry point, sections, BSS, and the `_SDA_BASE_` / `_SDA2_BASE_` registers a project must declare. `--yaml` prints them ready to paste | **works** |
+| `resolve-symbols` | Find a game's copies of the functions the engine replaces by matching their code, with operands that legitimately differ masked out, then following the calls inside every match | **works**: 59-77% per game, no wrong matches on a self-check |
+| `audit` | How universal the engine is: its replacements sorted into SDK, middleware and game-specific | **works** (98.1% / 1.5% / 0.3%) |
+| `manual-adds` | What a game still needs by hand, and `--template` to start one | **works** |
+| **Building it** | | |
+| `new-game` | A complete project read from a disc: `game.toml`, `recomp.yml`, `README.md`, `.gitignore` | **works** |
+| `make-bindings` | Resolved addresses as the C++ table a game's build links | **works** |
+| `sysconf` | Read and edit a Wii SYSCONF (the console's settings) | **works** |
+| `translate` | Run the translator over a project | planned |
+| `build-nro` | Build against the prebuilt library releases | planned |
+| `package` | Lay out `games/<game>/` for the SD card, with icon and metadata | planned |
+| `make-forwarder` | An NSP forwarder for the home menu | planned |
 | `deploy` | Copy to a Switch over FTP | planned |
-| `audit` | Sort the engine's native replacements into SDK / middleware / game-specific, the measure of how universal the engine is | **works** (today: 98.1% SDK, 1.5% middleware, 0.3% game) |
 | `build-dol` | Build the open-source example's DOL with devkitPPC | planned |
 
 ## Adding a game
@@ -73,10 +80,31 @@ The disc ID's fourth character is the region: `P` Europe, `E` USA, `J` Japan,
 Wii to the game (PAL/NTSC video, console region and language) from the one
 shared NAND.
 
+## Screening a candidate
+
+About a minute, and it predicts how much work a game needs:
+
+```sh
+scripts/extract-dol "/path/to/game.iso" /tmp/game.dol     # seconds
+scripts/inspect-dol /tmp/game.dol                          # ID, entry, bases
+scripts/resolve-symbols match <signatures.json> /tmp/game.dol
+```
+
+The last number is how much of the engine was located in that game by matching
+code. For scale: 97.7% against the game the signatures came from, 85.5% Mii
+Channel, 80.9% Super Paper Mario, 69.0% Pikmin 2, 68.6% Metroid Prime 3, 67.2%
+Punch-Out!!, 65.1% New Super Mario Bros. Wii.
+
 ## What a new game still needs by hand
 
-The scripts cover everything mechanical. What they cannot do is the engine work a
-game needs when it uses something no earlier game did: a different SDK version, an
-unimplemented graphics or audio path, a quirk of its own. That work goes into
-wiicompiled-nx, where every later game gets it for free. The `audit` script
-measures how much of it is left.
+The scripts cover everything mechanical. Two things they cannot do:
+
+- **What the matcher missed.** Those functions fall back to the game's own
+  translated code, which is correct but slower. `manual-adds` lists them.
+- **What only that game does.** It goes in `<game>/native/`, compiled into that
+  game's build alone. Mario Kart Wii is the worked example, with two functions:
+  its strap screen and its mod loader hooks.
+
+Engine work a game needs because it uses something no earlier game did - a
+different SDK version, an unimplemented graphics or audio path - goes into
+wiicompiled-nx, where every later game gets it for free.

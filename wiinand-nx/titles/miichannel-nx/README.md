@@ -39,14 +39,15 @@ what `fetch-title` picks:
 
 ## Status
 
-Project only: not translated yet. Two pieces are needed first, both shared with
-the other games:
+Project only: not translated yet.
 
-- **Bind by symbol.** The engine's ~580 native replacements are still tied to
-  Mario Kart Wii's addresses (`example-wii-nx/scripts/audit`).
-- **Boot a NAND title.** Everything today starts from a disc: the runtime needs
-  to load a title's executable and serve its contents the way IOS does, instead
-  of serving a disc.
+Binding is no longer in the way: the engine looks its replacements up by name in
+a table built from the title's own code, and 402 of 470 were located here - the
+best of anything tried, since a channel is mostly the Wii's own libraries.
+
+What remains is booting a NAND title at all. Everything today starts from a disc,
+so the runtime needs to serve a title's contents the way the console's system
+software does.
 
 ## Related
 

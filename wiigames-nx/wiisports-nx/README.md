@@ -48,4 +48,10 @@ simpler if you have them.
 
 ## Status
 
-Project ready; disc not extracted and nothing translated yet.
+Staged: the project holds everything its disc told us, and the engine has been
+matched against it. Not translated yet.
+
+The engine binds its replacements to this game's own addresses now, so what
+remains is the translation itself, and then whatever this game does that the
+engine has not met before. `../../example-wii-nx/scripts/manual-adds .` lists
+what is not automatic.
