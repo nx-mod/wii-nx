@@ -48,6 +48,7 @@ your disc dump      a Wii system title     open-source homebrew
 | `extract-disc` | Disc image (ISO/WBFS/RVZ/GCZ/CISO) → `disc/`, via Dolphin's `dolphin-tool`, with a free-space check | **works** |
 | `new-game` | Both of the above plus the project: `game.toml`, `recomp.yml`, `README.md`, `.gitignore`, all read from the disc | **works** |
 | `resolve-symbols` | Find a new game's SDK functions by matching code, not addresses. Signatures come from a game we already run, with operands that legitimately differ masked out; then it follows the calls inside every matched function to reach ones too short or too common to match alone | **works**: 76.7% Mii Channel, 70.2% Super Paper Mario, 67.2% Punch-Out!!, 59.6% New Super Mario Bros. Wii, with no wrong matches on a self-check |
+| `make-bindings` | Turn resolved addresses into the C++ table a game's build links, so the runtime registers its replacements where *that* game keeps them | **works** |
 | `translate` | Run the translator over the project | planned |
 | `build-nro` | Build against the prebuilt nxvk / dawn-nx / sqlite-nx releases | planned |
 | `package` | Lay out `games/<game>/` for the SD card, with NACP and icon | planned |
