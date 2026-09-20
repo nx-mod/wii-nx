@@ -1,0 +1,7 @@
+# Read from the disc by example-wii-nx/scripts/new-game; do not edit by hand.
+name = "spmwii-nx"
+title = "Super Paper Mario"
+game_id = "R8PE01"
+revision = 2
+region = "NTSC-U"          # E: the disc ID's fourth character
+dol_sha256 = "316fe3a88654cf55f164a493fdc7d872fb7362298613e335a2240b4921bfe7a0"
