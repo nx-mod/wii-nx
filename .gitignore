@@ -3,3 +3,6 @@
 
 # Python bytecode from the scripts.
 __pycache__/
+
+# Local working notes, not for publication.
+/notes/
