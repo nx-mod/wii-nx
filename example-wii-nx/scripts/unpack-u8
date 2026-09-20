@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+"""List or unpack a Wii U8 archive.
+
+    scripts/unpack-u8 <file> [output-folder]
+
+Channels and the Wii Menu keep their executable and assets inside U8 archives
+(magic 55AA382D) rather than as a plain content, so a title's "executable"
+content can be an archive to open first. With no output folder this only lists
+what is inside.
+
+Files inside may still be compressed. The common ones are flagged: ASH0
+(Nintendo's own, used by the Wii Menu) and LZ77.
+"""
+
+import os
+import struct
+import sys
+
+MAGIC = 0x55AA382D
+
+
+def parse(data):
+    """[(path, offset, size, is_directory)] for every entry in the archive."""
+    magic, root_offset, _header_size, _data_offset = struct.unpack(">IIII", data[:16])
+    if magic != MAGIC:
+        raise SystemExit("not a U8 archive (magic is not 55AA382D)")
+
+    node_count = struct.unpack(">I", data[root_offset + 8:root_offset + 12])[0]
+    strings = root_offset + node_count * 12
+    entries, stack = [], [(node_count, "")]
+
+    for index in range(node_count):
+        position = root_offset + index * 12
+        kind_and_name, offset, size = struct.unpack(">III", data[position:position + 12])
+        kind, name_offset = kind_and_name >> 24, kind_and_name & 0xFFFFFF
+        end = data.index(b"\0", strings + name_offset)
+        name = data[strings + name_offset:end].decode("ascii", "replace")
+
+        while len(stack) > 1 and index >= stack[-1][0]:
+            stack.pop()
+        parent = stack[-1][1]
+        path = f"{parent}/{name}" if parent else name
+
+        if kind == 1:                       # directory: `size` is its end index
+            if index:
+                stack.append((size, path))
+                entries.append((path, 0, 0, True))
+        else:
+            entries.append((path, offset, size, False))
+    return entries
+
+
+def compression(blob):
+    if blob[:4] == b"ASH0":
+        return "ASH0"
+    if blob[:1] == b"\x11" or blob[:1] == b"\x10":
+        return "LZ77"
+    if len(blob) >= 0x100:
+        sizes = struct.unpack(">18I", blob[0x90:0xD8])
+        offsets = struct.unpack(">18I", blob[0x00:0x48])
+        if any(sizes) and all(offsets[i] + sizes[i] <= len(blob) for i in range(18) if sizes[i]):
+            return "DOL"
+    return ""
+
+
+def main(argv):
+    if not argv:
+        print(__doc__)
+        return 2
+    path = argv[0]
+    output = argv[1] if len(argv) > 1 else None
+    data = open(path, "rb").read()
+    entries = parse(data)
+
+    files = 0
+    for name, offset, size, is_directory in entries:
+        if is_directory:
+            print(f"  {name}/")
+            continue
+        files += 1
+        note = compression(data[offset:offset + min(size, 0x200)])
+        print(f"  {name:<48} {size:>9}  {note}")
+        if output:
+            destination = os.path.join(output, name)
+            os.makedirs(os.path.dirname(destination), exist_ok=True)
+            with open(destination, "wb") as handle:
+                handle.write(data[offset:offset + size])
+    print(f"{files} files")
+    if output:
+        print(f"unpacked into {output}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

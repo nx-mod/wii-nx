@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Download the Wii Menu from Nintendo and get it ready to translate.
+#
+#   scripts/fetch
+#
+# Downloads the title you are entitled to as a Wii owner, straight from
+# Nintendo's update servers (the same ones Dolphin's "Perform Online System
+# Update" uses), unpacks its executable and prints the values recorded in
+# recomp.yml so you can confirm they match.
+#
+# Nothing Nintendo owns is stored in this repository; title/ is ignored by git.
+set -euo pipefail
+
+here=$(cd "$(dirname "$0")" && pwd)
+game_dir=$(cd "$here/.." && pwd)
+tools="$game_dir/../example-wii-nx/scripts"
+title_id=$(sed -n 's/^title_id *= *"\(.*\)"/\1/p' "$game_dir/title.toml")
+
+"$tools/fetch-title" "$title_id" "$game_dir/title" "$@"
+echo
+"$tools/inspect-dol" "$game_dir/title/main.dol"
+echo
+echo ">> compare the entry point and bases above with recomp.yml"
