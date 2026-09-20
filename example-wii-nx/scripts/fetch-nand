@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+"""Download a reference set of Wii system titles into a local folder.
+
+    scripts/fetch-nand [folder]                       pick from a menu
+    scripts/fetch-nand [folder] --all                 everything, no questions
+    scripts/fetch-nand [folder] --ios --channels --menu
+    scripts/fetch-nand [folder] --titles 0001000248414341,0000000100000002
+    scripts/fetch-nand --list
+
+Run with no selection and it lists every title and asks which to download: single
+numbers, ranges (3-9), group names (ios, channels, menu), all, or q. Default
+folder: wii-nx/nand/, which is not tracked by git.
+
+Why keep one: the system titles are the largest body of Nintendo SDK code
+available, which is what resolve-symbols builds its signatures from, and they are
+the reference for what the runtime has to emulate. The Mii Channel is here too.
+
+Each title lands in <folder>/<title-id>/ with its metadata, its contents, and
+main.dol when one of them is the executable; index.json lists everything.
+
+Titles already downloaded are skipped, so the script can be re-run and resumed.
+
+Nothing here is redistributable: it is Nintendo's, downloaded by you from the
+same servers a Wii uses, and it stays out of the repository.
+"""
+
+import json
+import os
+import sys
+import time
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from wiinand import BASE_URL, download  # noqa: E402
+
+SYSTEM_MENU = [
+    ("0000000100000002", "System Menu"),
+    ("0000000100000100", "BC"),
+    ("0000000100000101", "MIOS"),
+]
+
+# The IOS versions Wii games and channels actually run on.
+IOS_NUMBERS = [9, 12, 13, 14, 15, 17, 21, 22, 28, 30, 31, 33, 34, 35, 36, 37, 38,
+               41, 43, 45, 46, 48, 53, 55, 56, 57, 58, 59, 61, 62, 70, 80]
+IOS = [(f"00000001{number:08x}", f"IOS{number}") for number in IOS_NUMBERS]
+
+# Channels are 00010002 + four ASCII letters. The last letter is the region:
+# A world, E USA, P Europe, J Japan, K Korea.
+CHANNELS = [
+    ("0001000248414341", "Mii Channel"),
+    ("0001000248414141", "Photo Channel"),
+    ("0001000248415941", "Photo Channel 1.1"),
+    ("0001000248414241", "Shopping Channel"),
+    ("0001000248414645", "Forecast Channel (USA)"),
+    ("0001000248414650", "Forecast Channel (Europe)"),
+    ("0001000248414745", "News Channel (USA)"),
+    ("0001000248414750", "News Channel (Europe)"),
+    ("0001000148414445", "Internet Channel (USA)"),
+]
+
+
+def catalog():
+    return ([(title_id, name, "menu") for title_id, name in SYSTEM_MENU] +
+            [(title_id, name, "ios") for title_id, name in IOS] +
+            [(title_id, name, "channels") for title_id, name in CHANNELS])
+
+
+def show(entries, index):
+    """Print the catalog, marking what is already downloaded."""
+    group = None
+    for number, (title_id, name, kind) in enumerate(entries, 1):
+        if kind != group:
+            group = kind
+            print(f"\n  {kind}:")
+        have = " [have]" if title_id in index else ""
+        print(f"   {number:>3}. {name:<28} {title_id}{have}")
+    print()
+
+
+def parse_choice(text, entries):
+    """Numbers, ranges, group names or 'all' -> the titles they name."""
+    chosen, unknown = [], []
+    for piece in text.replace(",", " ").split():
+        piece = piece.strip().lower()
+        if piece in ("all", "*"):
+            chosen += entries
+        elif piece in ("menu", "ios", "channels"):
+            chosen += [entry for entry in entries if entry[2] == piece]
+        elif "-" in piece and all(part.isdigit() for part in piece.split("-", 1)):
+            first, last = (int(part) for part in piece.split("-", 1))
+            chosen += [entries[number - 1] for number in range(first, last + 1)
+                       if 1 <= number <= len(entries)]
+        elif piece.isdigit() and 1 <= int(piece) <= len(entries):
+            chosen.append(entries[int(piece) - 1])
+        elif len(piece) == 16:
+            chosen.append((piece, piece, "titles"))
+        else:
+            unknown.append(piece)
+    if unknown:
+        print(f"   ignored: {' '.join(unknown)}")
+    seen, unique = set(), []
+    for entry in chosen:
+        if entry[0] not in seen:
+            seen.add(entry[0])
+            unique.append(entry)
+    return unique
+
+
+def choose_interactively(entries, index):
+    show(entries, index)
+    print("  Pick titles: numbers (1 4 7), ranges (3-9), groups (menu ios channels),")
+    print("  'all', or 'q' to quit.")
+    try:
+        answer = input("  > ").strip()
+    except EOFError:
+        return []
+    if answer.lower() in ("q", "quit", "exit", ""):
+        return []
+    return parse_choice(answer, entries)
+
+
+def selection(argv):
+    chosen = []
+    if "--titles" in argv:
+        raw = argv[argv.index("--titles") + 1]
+        return [(title.strip().lower(), title.strip(), "titles") for title in raw.split(",") if title.strip()]
+    entries = catalog()
+    for flag, kind in (("--menu", "menu"), ("--ios", "ios"), ("--channels", "channels")):
+        if flag in argv or "--all" in argv:
+            chosen += [entry for entry in entries if entry[2] == kind]
+    seen, unique = set(), []
+    for title in chosen:
+        if title[0] not in seen:
+            seen.add(title[0])
+            unique.append(title)
+    return unique
+
+
+def main(argv):
+    # The value after --titles is not the folder.
+    positional = [value for position, value in enumerate(argv)
+                  if not value.startswith("-") and (position == 0 or argv[position - 1] != "--titles")]
+    folder = positional[0] if positional else None
+    if folder is None:
+        folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "nand")
+    folder = os.path.abspath(folder)
+    index_path = os.path.join(folder, "index.json")
+    index = json.load(open(index_path)) if os.path.exists(index_path) else {}
+    entries = catalog()
+
+    if "--list" in argv:
+        show(entries, index)
+        return 0
+
+    titles = selection(argv)
+    if not titles:
+        titles = choose_interactively(entries, index)
+    if not titles:
+        print("nothing selected")
+        return 0
+
+    print(f">> {len(titles)} titles from {BASE_URL}")
+    print(f">> into {folder}")
+    os.makedirs(folder, exist_ok=True)
+    failed = []
+    start = time.time()
+    for number, (title_id, name, _kind) in enumerate(titles, 1):
+        destination = os.path.join(folder, title_id)
+        if title_id in index and os.path.exists(os.path.join(destination, "tmd")):
+            print(f"[{number}/{len(titles)}] {name}: already here")
+            continue
+        print(f"[{number}/{len(titles)}] {name} ({title_id})")
+        try:
+            result = download(title_id, destination, keep=True, quiet=False)
+        except Exception as error:                      # noqa: BLE001 - report and continue
+            print(f"   FAILED: {error}")
+            failed.append((title_id, name, str(error)))
+            continue
+        result["name"] = name
+        index[title_id] = result
+        with open(index_path, "w") as handle:
+            json.dump(index, handle, indent=1, sort_keys=True)
+
+    total = sum(entry.get("bytes", 0) for entry in index.values())
+    # IOS titles are ARM code for the Wii's security processor, not PowerPC, so
+    # they have no DOL; they are here as reference, not to translate.
+    executables = sum(1 for entry in index.values() if entry.get("executable"))
+    print(f">> {len(index)} titles, {executables} with a PowerPC executable, "
+          f"{total / 1048576:.0f} MiB, {time.time() - start:.0f}s")
+    if failed:
+        print(f">> {len(failed)} failed:")
+        for title_id, name, error in failed:
+            print(f"   {title_id} {name}: {error}")
+    print(f">> index: {index_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
