@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+"""Find a game's SDK functions by matching code, not addresses.
+
+    scripts/resolve-symbols build  <known.dol> <map.txt> <runtime/src> <signatures.json>
+    scripts/resolve-symbols match  <signatures.json> <target.dol> [--out addresses.json]
+
+The engine replaces ~580 guest functions with native code, each registered at one
+game's address. Nearly all of them are Nintendo's own SDK libraries, which are
+the same compiled code in every game - only the addresses they were linked at
+differ. So a function can be recognised by its instructions instead:
+
+  build   takes a game we already run, its function map (addresses, used as
+          function boundaries) and the runtime sources (which name the functions
+          we replace), and writes a signature per function.
+  match   scans another game's DOL for those signatures and reports where each
+          function landed, so the same native replacements can be bound there.
+
+Operands that legitimately differ between games are masked out: branch targets,
+the immediate of lis/addis, and displacements relative to the small-data
+registers (r2/r13). Everything else - opcodes, registers, stack offsets - has to
+match exactly.
+"""
+
+import collections
+import json
+import os
+import re
+import struct
+import sys
+
+# Signatures are taken at several lengths and tried longest first: a long window
+# is more distinctive, a short one covers small functions and tolerates a game
+# being built from a different SDK version.
+WINDOWS = (16, 12, 8, 6, 4)
+WINDOW = 16          # the length currently being computed
+
+PATTERNS = [
+    re.compile(r"REGISTER_NATIVE_FUNCTION(?:_AS)?\s*\(\s*0x([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+    re.compile(r"REGISTER_TRANSLATED_FUNCTION\s*\(\s*0x([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+    re.compile(r"PPC_NATIVE_OVERRIDE(?:_VOID)?\s*\(\s*([0-9A-Fa-f]{8})\s*,\s*([A-Za-z_]\w*)"),
+]
+
+
+class Dol:
+    def __init__(self, data):
+        self.data = data
+        self.offsets = struct.unpack(">18I", data[0x00:0x48])
+        self.addresses = struct.unpack(">18I", data[0x48:0x90])
+        self.sizes = struct.unpack(">18I", data[0x90:0xD8])
+
+    def text_sections(self):
+        for index in range(7):
+            if self.sizes[index]:
+                yield self.addresses[index], self.data[self.offsets[index]:self.offsets[index] + self.sizes[index]]
+
+    def read(self, address, length):
+        for start, blob in self.text_sections():
+            if start <= address < start + len(blob):
+                position = address - start
+                return blob[position:position + length]
+        return b""
+
+
+def mask(instruction):
+    """Zero the operand bits that differ between two games' copies of a function."""
+    opcode = instruction >> 26
+    if opcode == 18:                      # b / bl: target
+        return instruction & 0xFC000003
+    if opcode == 16:                      # bc: target
+        return instruction & 0xFFFF0003
+    if opcode in (15, 3):                 # lis/addis, twi: immediate
+        return instruction & 0xFFFF0000
+    if 32 <= opcode <= 55 or opcode in (14, 24, 25, 28, 29):
+        # d-form loads/stores and addi/ori against the small-data registers
+        base = (instruction >> 16) & 31
+        if base in (2, 13):
+            return instruction & 0xFFFF0000
+    return instruction
+
+
+def signature_of(code):
+    if len(code) < WINDOW * 4:
+        return None
+    words = struct.unpack(f">{WINDOW}I", code[:WINDOW * 4])
+    if all(word == 0 for word in words):
+        return None
+    return struct.pack(f">{WINDOW}I", *(mask(word) for word in words)).hex()
+
+
+def replaced_functions(runtime_root):
+    """{address: name} for every guest function the runtime replaces."""
+    found = {}
+    for directory, _, files in os.walk(runtime_root):
+        for name in files:
+            if not name.endswith((".cpp", ".h", ".hpp", ".inc")):
+                continue
+            with open(os.path.join(directory, name), errors="replace") as handle:
+                text = handle.read()
+            for pattern in PATTERNS:
+                for match in pattern.finditer(text):
+                    found.setdefault(int(match.group(1), 16), match.group(2))
+    return found
+
+
+def build(known_dol, map_path, runtime_root, output):
+    global WINDOW
+    dol = Dol(open(known_dol, "rb").read())
+    boundaries = sorted({int(line.split()[0], 16) for line in open(map_path) if line.strip()})
+    replacements = replaced_functions(runtime_root)
+    lengths = {address: (boundaries[index + 1] - address)
+               for index, address in enumerate(boundaries[:-1]) if address in replacements}
+    print(f"{len(replacements)} replaced functions, {len(boundaries)} known boundaries")
+
+    database = {}
+    for window in WINDOWS:
+        WINDOW = window
+        signatures = {}
+        for address, name in sorted(replacements.items()):
+            length = lengths.get(address)
+            if length is None or length < window * 4:
+                continue
+            signature = signature_of(dol.read(address, window * 4))
+            if signature:
+                signatures.setdefault(signature, []).append({"name": name, "address": address})
+        unique = {key: value[0] for key, value in signatures.items() if len(value) == 1}
+        database[str(window)] = unique
+        print(f"  {window:>2} instructions: {len(unique):>3} unique "
+              f"({len(signatures) - len(unique)} ambiguous)")
+
+    covered = {entry["name"] for table in database.values() for entry in table.values()}
+    print(f"  {len(covered)}/{len(replacements)} functions have a signature")
+    with open(output, "w") as handle:
+        json.dump({"windows": database}, handle, indent=1)
+    print(f"  wrote {output}")
+    return 0
+
+
+def match(signatures_path, target_dol, out_path):
+    global WINDOW
+    database = json.load(open(signatures_path))["windows"]
+    dol = Dol(open(target_dol, "rb").read())
+    known = {entry["name"] for table in database.values() for entry in table.values()}
+
+    resolved, ambiguous = {}, set()
+    # Longest windows first: a name resolved by a long signature is not revisited.
+    for window in sorted((int(key) for key in database), reverse=True):
+        signatures = database[str(window)]
+        if not signatures:
+            continue
+        WINDOW = window
+        positions = collections.defaultdict(list)
+        for start, blob in dol.text_sections():
+            for position in range(0, len(blob) - window * 4, 4):
+                signature = signature_of(blob[position:position + window * 4])
+                if signature:
+                    positions[signature].append(start + position)
+        for signature, entry in signatures.items():
+            if entry["name"] in resolved:
+                continue
+            hits = positions.get(signature)
+            if not hits:
+                continue
+            if len(hits) > 1:
+                ambiguous.add(entry["name"])
+                continue
+            resolved[entry["name"]] = hits[0]
+            ambiguous.discard(entry["name"])
+
+    total = len(known)
+    print(f"{os.path.basename(target_dol)}: {len(resolved)}/{total} resolved "
+          f"({100.0 * len(resolved) / total:.1f}%), {len(ambiguous)} ambiguous")
+    if out_path:
+        with open(out_path, "w") as handle:
+            json.dump({name: f"0x{address:08X}" for name, address in sorted(resolved.items())}, handle, indent=1)
+        print(f"  wrote {out_path}")
+    return 0
+
+
+def main(argv):
+    global WINDOW
+    if "--window" in argv:
+        position = argv.index("--window")
+        WINDOW = int(argv[position + 1])
+        argv = argv[:position] + argv[position + 2:]
+    if not argv:
+        print(__doc__)
+        return 2
+    command, rest = argv[0], argv[1:]
+    if command == "build" and len(rest) == 4:
+        return build(*rest)
+    if command == "match" and len(rest) >= 1:
+        out = None
+        if "--out" in rest:
+            out = rest[rest.index("--out") + 1]
+            rest = rest[:rest.index("--out")]
+        return match(rest[0], rest[1], out)
+    print(__doc__)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
