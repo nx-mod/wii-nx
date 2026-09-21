@@ -15,3 +15,6 @@ build-switch/
 *.wbfs
 disc/
 generated/
+
+# Fetched per disc by wiigames-nx/wiisports-nx/scripts/fetch-symbols.
+wiigames-nx/wiisports-nx/MAP.txt

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Get this game ready to translate, from your own disc dump.
+#
+#   scripts/extract <image>          the whole disc (needs ~4.5 GB)
+#   scripts/extract <image> --dol    just the executable, to inspect first
+#
+# <image> is your dump: .iso, .wbfs, .rvz, .gcz or .ciso. Nothing it produces is
+# ever committed.
+set -euo pipefail
+
+here=$(cd "$(dirname "$0")" && pwd)
+game_dir=$(cd "$here/.." && pwd)
+tools="$game_dir/../../example-wii-nx/scripts"
+
+[ $# -ge 1 ] || { sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 2; }
+image=$1
+
+if [ "${2:-}" = "--dol" ]; then
+    "$tools/extract-dol" "$image" "$game_dir/main.dol"
+    "$tools/inspect-dol" "$game_dir/main.dol"
+    echo
+    echo ">> compare the entry point and bases above with recomp.yml"
+else
+    "$tools/extract-disc" "$image" "$game_dir"
+    "$tools/inspect-dol" "$game_dir/disc/sys/main.dol"
+fi

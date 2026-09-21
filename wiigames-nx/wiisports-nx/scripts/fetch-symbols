@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+"""Write MAP.txt for this game from the ogws decompilation's symbol map.
+
+    scripts/fetch-symbols [--revision 0|1]
+
+ogws (github.com/doldecomp/ogws, CC0; fetched from the nx-mod/ogws-nx fork) is a decompilation of Wii Sports that
+carries a complete symbol map for each retail revision: every function's
+address, most of them named. The translator uses MAP.txt as its discovery
+oracle - function boundaries it would otherwise have to find by walking the
+call graph - and the names make a profile readable.
+
+The revision defaults to the one in game.toml, which scripts/extract --dol fills
+in from your disc. The map is fetched rather than kept here so it always matches
+the revision you actually have.
+"""
+
+import os
+import re
+import sys
+import urllib.request
+
+URL = "https://raw.githubusercontent.com/nx-mod/ogws-nx/switch/config/RSPE01_{rev:02d}/symbols.txt"
+
+# name = .text:0x80006124; // type:function size:0x16C scope:weak
+LINE = re.compile(r"^(\S+)\s*=\s*\.[\w.]+:0x([0-9A-Fa-f]{8});\s*//.*\btype:function\b")
+
+
+def revision_from_game_toml(game_dir):
+    try:
+        with open(os.path.join(game_dir, "game.toml")) as handle:
+            for line in handle:
+                match = re.match(r"\s*revision\s*=\s*(\d+)", line)
+                if match:
+                    return int(match.group(1))
+    except OSError:
+        pass
+    return 1
+
+
+def main(argv):
+    game_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    revision = revision_from_game_toml(game_dir)
+    if "--revision" in argv:
+        revision = int(argv[argv.index("--revision") + 1])
+    if revision not in (0, 1):
+        print(f"ogws has maps for revisions 0 and 1, not {revision}")
+        return 2
+
+    url = URL.format(rev=revision)
+    print(f"fetching {url}")
+    with urllib.request.urlopen(url, timeout=60) as response:
+        text = response.read().decode("utf-8", errors="replace")
+
+    functions = {}
+    for line in text.splitlines():
+        match = LINE.match(line.strip())
+        if match:
+            functions.setdefault(int(match.group(2), 16), match.group(1))
+
+    if not functions:
+        print("no function symbols found - has ogws changed its config format?")
+        return 1
+
+    out = os.path.join(game_dir, "MAP.txt")
+    with open(out, "w") as handle:
+        for address in sorted(functions):
+            handle.write(f"{address:08x} {functions[address]}\n")
+
+    named = sum(1 for name in functions.values() if not re.match(r"^(fn|func)_[0-9A-Fa-f]{8}$", name))
+    print(f"wrote {out}: {len(functions)} functions, {named} named (RSPE01 revision {revision})")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
