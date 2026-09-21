@@ -1,0 +1,66 @@
+# The libraries, built the way the README says CI builds them: no game.
+#
+# -DWIINX_GAME= composes everything a game would link against - the NAND
+# library, Dawn, and the engine's own targets - and stops short of the game
+# itself, which is the only part that cannot exist on a public runner.
+name: libraries
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A second push supersedes the first: the Switch job is long, and the older run
+# is never the one being tested.
+concurrency:
+  group: libraries-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The NAND formats build and test on any host - they depend on nothing but the
+  # standard library - so this answers in a minute whether SYSCONF and RFL_DB
+  # still round-trip, without waiting on a cross build.
+  wiinand:
+    name: wiinand-nx/lib (host tests)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure and build
+        run: cmake -S wiinand-nx/lib -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j2
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  switch:
+    name: libraries for Switch
+    runs-on: ubuntu-24.04
+    container: devkitpro/devkita64:latest
+    timeout-minutes: 180
+    steps:
+      - name: Free disk space
+        run: rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc || true
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # The Vulkan driver is a portlib, not a submodule: nxvk publishes it built.
+      - name: nxvk portlib
+        run: |
+          set -eu
+          url=$(curl -fsSL https://api.github.com/repos/nx-mod/nxvk/releases/latest \
+                | grep -o 'https://[^"]*nxvk-switch-portlib[^"]*\.tar\.xz' | head -1)
+          echo "portlib: $url"
+          curl -fsSL "$url" -o /tmp/nxvk.tar.xz
+          tar -xJf /tmp/nxvk.tar.xz -C "$DEVKITPRO/portlibs/switch" --strip-components=1
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+                -DCMAKE_TOOLCHAIN_FILE="$DEVKITPRO/cmake/Switch.cmake" \
+                -DWIINX_GAME=
+
+      - name: Build
+        run: cmake --build build -j2
