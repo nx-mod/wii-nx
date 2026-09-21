@@ -9,7 +9,8 @@ never the game itself, which you build from your own dump.
 | [nsmbwii-nx](nsmbwii-nx) | `SMNE01` | 342/574 (59.6%) | Second game; shares Mario Kart's middleware |
 | [spmwii-nx](spmwii-nx) | `R8PE01` | 403/574 (70.2%) | Its own engine on a plain SDK |
 | [punchout-nx](punchout-nx) | `R7PE01` | 386/574 (67.2%) | Small, exclusive, never ported |
-| [wiisports-nx](wiisports-nx) | `SP2E01` | 321/574 (55.9%) | Two games on one disc; needs Wii Remote motion |
+| [wiisports-nx](wiisports-nx) | `RSPE01` | - | Symbols and nw4r source from the ogws decompilation |
+| [wiisportspack-nx](wiisportspack-nx) | `SP2E01` | 321/574 (55.9%) | Wii Sports + Resort on one disc; needs Wii Remote motion |
 | [metroidprime3-nx](metroidprime3-nx) | `RM3E01` | 394/574 (68.6%) | The engine Aurora was written for |
 | [pikmin2-nx](pikmin2-nx) | `R92E01` | 396/574 (69.0%) | Full public decompilation exists |
 

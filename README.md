@@ -18,6 +18,7 @@ and the Wii's system titles are downloaded from Nintendo by each user.
 | Punch-Out!! | `R7PE01` NTSC-U | Staged |
 | Metroid Prime 3: Corruption | `RM3E01` NTSC-U | Staged |
 | Pikmin 2 | `R92E01` NTSC-U | Staged |
+| Wii Sports | `RSPE01` NTSC-U | Staged, symbols from the ogws decompilation |
 | Wii Sports + Wii Sports Resort | `SP2E01` NTSC-U | Staged |
 
 "Staged" means the project exists with everything read from the disc, and the
