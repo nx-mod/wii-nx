@@ -12,7 +12,7 @@ and the Wii's system titles are downloaded from Nintendo by each user.
 
 | Game | Disc | State |
 |---|---|---|
-| Mario Kart Wii | `RMCP01` PAL | **Playable**: boots, menus, races, saves. Not full speed, and no audio yet |
+| Mario Kart Wii | `RMCP01` PAL | **Playable**: boots, menus, races, saves, with sound. About a quarter of full speed |
 | New Super Mario Bros. Wii | `SMNE01` NTSC-U | Translating |
 | Super Paper Mario | `R8PE01` NTSC-U | Staged |
 | Punch-Out!! | `R7PE01` NTSC-U | Staged |
@@ -50,6 +50,7 @@ repository only puts them together.
 | [dawn-nx](https://github.com/nx-mod/dawn-nx) | WebGPU on Switch |
 | [nxvk](https://github.com/nx-mod/nxvk) | The Vulkan driver underneath |
 | [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | SQLite with a Switch filesystem layer (the shader caches) |
+| [libwii-nx](https://github.com/nx-mod/libwii-nx) | The Wii as a library: the console's platform layer and versioned native versions of the middleware games link. Staged; the engine still provides both today |
 | `wiinand-nx/lib` | The Wii's NAND formats, shared by the engine, the tools and the launcher |
 
 ## Getting started
@@ -100,13 +101,14 @@ costs about a minute and predicts how much work it needs — see
 
 ## Where the work is
 
-- **Speed.** Mario Kart runs at roughly a quarter of real time. The frame is
-  spent in the game's own code, so the levers are compiler-wide optimisation and
-  native versions of the hottest Wii middleware routines. `PLAN.md` has the
-  measurements.
+- **Speed.** Mario Kart runs at roughly a quarter of real time, on the CPU: the
+  GPU waits for work. The levers are native versions of the hottest middleware
+  routines (collected in libwii-nx), graphics-command decoding on its own core
+  (`[video] threaded_gx`, experimental), and compiler-wide optimisation.
+  `PLAN.md` has the measurements.
 - **A second game running.** Everything up to translation works for any game;
   translating one end to end is the current edge.
-- **Audio**, which is stubbed, and **Wii Remote motion**, which Wii Sports needs.
+- **Wii Remote motion**, which Wii Sports needs.
 
 ## License
 

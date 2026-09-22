@@ -1,5 +1,5 @@
 schema_version: 1
-workspace_root: ..
+workspace_root: .
 
 project:
   id: mkwii-rmcp01
@@ -35,9 +35,9 @@ translation:
   allow_unsupported_instructions: false 
 
 runtime:
-  native_registration_root: ../wiicompiled-nx/runtime/src
+  native_registration_root: ../../wiicompiled-nx/runtime/src
   native_abi_directories:
-    - ../wiicompiled-nx/runtime/src/hle/gx
+    - ../../wiicompiled-nx/runtime/src/hle/gx
   # No native_bindings: this is the game the runtime's own addresses belong to,
   # and the reference every other game's table is matched against.
 

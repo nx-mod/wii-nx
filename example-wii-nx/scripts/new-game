@@ -79,9 +79,9 @@ EOF
     echo "  # (translation.entry_points above comes from the DOL header.)"
     echo
     echo "runtime:"
-    echo "  native_registration_root: ../wiicompiled-nx/runtime/src"
+    echo "  native_registration_root: ../../wiicompiled-nx/runtime/src"
     echo "  native_abi_directories:"
-    echo "    - ../wiicompiled-nx/runtime/src/hle/gx"
+    echo "    - ../../wiicompiled-nx/runtime/src/hle/gx"
     echo
     echo "output:"
     echo "  root: generated"
