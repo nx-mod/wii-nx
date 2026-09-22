@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Pull main.dol out of a Wii disc image, without extracting the disc.
+"""Pull main.dol - or any file - out of a Wii disc image, without extracting the disc.
 
     scripts/extract-dol <image.iso> <output.dol>
+    scripts/extract-dol <image.iso> <output> --file <path on the disc>
+
+--file takes a path in the game partition's filesystem, e.g.
+US/sys/sports/SportsPackUP.dol: a two-in-one disc keeps each game's
+executable there, with main.dol only a launcher.
 
 The executable lives in the game partition's system area, which file-level tools
 cannot address, and the partition is encrypted. This reads the partition table,
@@ -70,6 +75,39 @@ def game_partition(image):
     raise SystemExit("no DATA partition found (is this a Wii .iso?)")
 
 
+def find_file(partition, boot, path):
+    """(offset, size) of `path` in the partition's filesystem table (FST)."""
+    fst_offset = struct.unpack(">I", boot[0x424:0x428])[0] * 4
+    fst_size = struct.unpack(">I", boot[0x428:0x42C])[0] * 4
+    fst = partition.read(fst_offset, fst_size)
+    count = struct.unpack(">I", fst[8:12])[0]
+    names = fst[count * 12:]
+
+    def entry(index):
+        word, offset, size = struct.unpack(">III", fst[index * 12:index * 12 + 12])
+        name = names[word & 0xFFFFFF:].split(b"\0")[0].decode("ascii", "replace")
+        return word >> 24, name, offset, size
+
+    wanted = [part for part in path.strip("/").split("/") if part]
+    index, end = 1, count
+    for depth, part in enumerate(wanted):
+        while index < end:
+            is_dir, name, offset, size = entry(index)
+            if name.lower() == part.lower():
+                if depth == len(wanted) - 1:
+                    if is_dir:
+                        raise SystemExit(f"{path} is a directory")
+                    return offset * 4, size
+                if not is_dir:
+                    raise SystemExit(f"{name} in {path} is not a directory")
+                index, end = index + 1, size   # a directory's size is its last entry + 1
+                break
+            index = size if is_dir else index + 1   # skip a whole subdirectory
+        else:
+            raise SystemExit(f"{path} is not on this disc")
+    raise SystemExit(f"{path} is not on this disc")
+
+
 def dol_size(header):
     offsets = struct.unpack(">18I", header[0x00:0x48])
     sizes = struct.unpack(">18I", header[0x90:0xD8])
@@ -77,7 +115,12 @@ def dol_size(header):
 
 
 def main(argv):
-    if len(argv) != 2:
+    wanted = None
+    if "--file" in argv:
+        at = argv.index("--file")
+        wanted = argv[at + 1] if at + 1 < len(argv) else None
+        argv = argv[:at] + argv[at + 2:]
+    if len(argv) != 2 or ("--file" in sys.argv and not wanted):
         print(__doc__)
         return 2
     image_path, output_path = argv
@@ -92,7 +135,22 @@ def main(argv):
         title = boot[0x20:0x60].split(b"\0")[0].decode("ascii", "replace")
         dol_offset = struct.unpack(">I", boot[0x420:0x424])[0] * 4
         print(f"{game_id}  {title}")
-        print(f"  main.dol at partition offset 0x{dol_offset:X}")
+        if wanted:
+            offset, size = find_file(partition, boot, wanted)
+            print(f"  {wanted}: {size} bytes at partition offset 0x{offset:X}; decrypting")
+            data = partition.read(offset, size)
+            dol_offset = None
+        else:
+            print(f"  main.dol at partition offset 0x{dol_offset:X}")
+    if wanted:
+        if len(data) != size:
+            raise SystemExit(f"short read: {len(data)} of {size} bytes")
+        with open(output_path, "wb") as out:
+            out.write(data)
+        print(f"  wrote {output_path}")
+        return 0
+    with open(image_path, "rb") as image:
+        partition = game_partition(image)
         header = partition.read(dol_offset, 0x100)
         size = dol_size(header)
         print(f"  {size} bytes; decrypting")
