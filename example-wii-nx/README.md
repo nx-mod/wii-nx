@@ -57,7 +57,7 @@ your disc dump      a Wii system title     open-source homebrew
 | `new-game` | A complete project read from a disc: `game.toml`, `recomp.yml`, `README.md`, `.gitignore` | **works** |
 | `make-bindings` | Resolved addresses as the C++ table a game's build links | **works** |
 | `sysconf` | Read and edit a Wii SYSCONF (the console's settings) | **works** |
-| `translate` | Run the translator over a project | planned |
+| `translate` | Run the translator over a project: its four steps from the game's `recomp.yml`, with a memory guard. Mario Kart Wii in about 2 minutes | **works** |
 | `build-nro` | Build against the prebuilt library releases | planned |
 | `package` | Lay out `games/<game>/` for the SD card, with icon and metadata | planned |
 | `make-forwarder` | An NSP forwarder for the home menu | planned |

@@ -1,5 +1,5 @@
 schema_version: 1
-workspace_root: ..
+workspace_root: .
 
 # Super Paper Mario. Every value below was read from a real dump by
 # example-wii-nx's extract-dol + inspect-dol; README.md shows how.
@@ -26,12 +26,12 @@ translation:
   allow_unsupported_instructions: false
 
 runtime:
-  native_registration_root: ../wiicompiled-nx/runtime/src
+  native_registration_root: ../../wiicompiled-nx/runtime/src
   # Where this game keeps the functions the engine replaces, found by
   # matching their code (example-wii-nx/scripts/resolve-symbols).
   native_bindings: wiigames-nx/spmwii-nx/bindings.json
   native_abi_directories:
-    - ../wiicompiled-nx/runtime/src/hle/gx
+    - ../../wiicompiled-nx/runtime/src/hle/gx
 
 output:
   root: generated

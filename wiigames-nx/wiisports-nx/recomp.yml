@@ -1,5 +1,5 @@
 schema_version: 1
-workspace_root: ..
+workspace_root: .
 
 # Wii Sports (RSPE01). The entry point comes from the ogws decompilation's
 # symbol map; the small-data bases and the checksum come from your disc, via
@@ -30,9 +30,9 @@ translation:
   allow_unsupported_instructions: false
 
 runtime:
-  native_registration_root: ../wiicompiled-nx/runtime/src
+  native_registration_root: ../../wiicompiled-nx/runtime/src
   native_abi_directories:
-    - ../wiicompiled-nx/runtime/src/hle/gx
+    - ../../wiicompiled-nx/runtime/src/hle/gx
 
 output:
   root: generated

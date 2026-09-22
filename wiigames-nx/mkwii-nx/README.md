@@ -23,12 +23,13 @@ hooks - which compile into this game's build alone.
 
 ## Why it needs no address table
 
-The engine's ~580 native replacements name the addresses they have *in this
+The engine's ~560 native replacements name the addresses they have *in this
 game*, so there is nothing to look up. Every other game supplies a table
 (`resolve-symbols` + `make-bindings`) built by matching its code against this
 one.
 
 ## Status
 
-Playable: boots, menus, races, saves. Not full speed - roughly a quarter of real
-time - which the performance work in PLAN.md is about. No audio yet.
+Playable: boots, menus, races, saves, with music and sound. Not full speed -
+roughly a quarter of real time - which the performance work in PLAN.md is about.
+Movie buttons in the menus (THP) decode natively.
