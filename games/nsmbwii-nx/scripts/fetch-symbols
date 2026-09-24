@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""Write MAP.txt for this game from the published NSMBW symbol maps.
+
+    scripts/fetch-symbols [--version E2]
+
+The maps are RootCubed's (github.com/RootCubed/NSMBW-Maps), one per retail
+version, recovered by the New Super Mario Bros. Wii modding community. They
+carry no license, so they are fetched to your machine rather than kept in this
+repository - the same reason a disc is not kept here.
+
+E2 is this project's version: NTSC-U, revision 2.
+"""
+import os
+import re
+import sys
+import urllib.request
+
+RELEASE = "https://github.com/RootCubed/NSMBW-Maps/releases/download/v1.0/symbols_{version}_dolphin.map"
+LINE = re.compile(r"^([0-9a-fA-F]{8})\s+[0-9a-fA-F]{8}\s+([0-9a-fA-F]{8})\s+\d+\s+(\S.*?)\s*$")
+
+
+def main(argv):
+    version = argv[argv.index("--version") + 1] if "--version" in argv else "E2"
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    url = RELEASE.format(version=version)
+    print(f">> {url}")
+    text = urllib.request.urlopen(url, timeout=120).read().decode("utf-8", "replace")
+
+    section, rows = None, []
+    for raw in text.splitlines():
+        line = raw.rstrip()
+        if line.endswith("section layout"):
+            section = line.split()[0]
+            continue
+        match = LINE.match(line)
+        # Only the code sections hold functions; the map lists data the same way.
+        if match and section in (".init", ".text"):
+            rows.append((int(match.group(2), 16), match.group(3).split("\t")[0].strip()))
+
+    rows = sorted(set(rows))
+    out = os.path.join(here, "MAP.txt")
+    with open(out, "w") as handle:
+        for address, name in rows:
+            handle.write(f"{address:08x} {name}\n")
+    print(f">> wrote {out}: {len(rows)} functions")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
