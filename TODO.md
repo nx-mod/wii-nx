@@ -1,7 +1,8 @@
 # TODO - wii-nx
 
-- [ ] The launcher: games and installed channels as tiles, each with its own
-      banner
+- [ ] The launcher: it lists games, WiiWare and system titles and starts them
+      (libdol-nx `src/launcher`). Still to do: tiles with each title's own
+      banner, rather than a list of names
 - [ ] The Mii Channel, which needs a title to be launchable from the NAND
 - [ ] The Wii Menu, which needs that and ASH decompression
 - [ ] Homebrew, built and included - the only thing here that can be handed out
