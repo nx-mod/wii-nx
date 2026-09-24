@@ -54,3 +54,14 @@ software does.
 - The launcher (planned) will offer this alongside games, plus Mii import and
   export, so Miis can also come from a Dolphin NAND, a real Wii, or the Switch's
   own Mii database.
+
+## What is known about it
+
+| | |
+|---|---|
+| entry point | `0x80006124` |
+| functions found | 10,054, of which 2,322 are named by the symbol set |
+| natives bound | 303, by signature - more than any game here, because a system channel is almost all SDK and middleware |
+| libraries | RVL SDK 2007-08, nw4r, HBM (the Home Button menu), RFL (Miis) |
+
+`title/` holds what you downloaded from Nintendo and is not committed.
