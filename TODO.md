@@ -9,5 +9,7 @@
 - [ ] A second game playable end to end
 - [ ] Wii Remote motion, which Wii Sports needs
 - [ ] A downloads page per release
-- [ ] Move the toolkit in `example-wii-nx` down to wiicompiled-nx, so this
-      repository is the front door and nothing else
+- [x] One copy of the toolkit: `example-wii-nx` is gone, and libdol-nx's tools
+      are what everything here calls
+- [x] One copy of each game: `games/`, rather than a folder here and a
+      repository of its own that drifts from it

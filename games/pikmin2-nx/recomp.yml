@@ -1,0 +1,41 @@
+schema_version: 1
+workspace_root: .
+
+# Pikmin 2 (Wii). Every value below was read from a real dump by
+# example-wii-nx's extract-dol + inspect-dol.
+project:
+  id: pikmin2-r92e01
+  display_name: Pikmin 2 (Wii)
+  game_id: R92E01             # NTSC-U, revision 0
+  region: E
+
+memory:
+  base: 0x80000000
+  size: 0x01800000
+  sda_base: 0x80672800        # _SDA_BASE_  (r13), set in the startup code
+  sda2_base: 0x806754E0       # _SDA2_BASE_ (r2),  set in the startup code
+
+inputs:
+  dol:
+    path: disc/sys/main.dol
+    sha256: fbd36daa7a07186a68e027caca7f9171d869493f690deaed6477af64d53c80e3
+
+translation:
+  entry_points:
+    - 0x80006124              # the DOL header's entry point
+  allow_unsupported_instructions: false
+
+runtime:
+  native_registration_root: ../../wiicompiled-nx/runtime/src
+  # Where this game keeps the functions the engine replaces, found by
+  # matching their code (example-wii-nx/scripts/resolve-symbols).
+  native_bindings: bindings.json
+  native_abi_directories:
+    - ../../wiicompiled-nx/runtime/src/hle/gx
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: build/base/pikmin2_base_manifest.json

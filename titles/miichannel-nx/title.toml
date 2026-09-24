@@ -1,0 +1,6 @@
+# Read from the title by libdol-nx/tools/wiinx-fetch-title; do not edit by hand.
+name = "miichannel-nx"
+title = "Mii Channel"
+title_id = "0001000248414341"     # NAND title, not a disc
+contents = 7
+boot_content = 6                  # a loader stub; the executable is content index 1

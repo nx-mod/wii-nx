@@ -1,0 +1,7 @@
+# Read from the disc by tools/wiinx-new-game; do not edit by hand.
+name = "mkwii-nx"
+title = "MarioKartWii"
+game_id = "RMCP01"
+revision = 0
+region = "PAL"          # P: the disc ID's fourth character
+dol_sha256 = "80d18895b39c63bd80f457398bfcbb91b7d16ac116a41a88967e954080155b05"
