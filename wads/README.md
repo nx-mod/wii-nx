@@ -28,9 +28,10 @@ more, because of how Nintendo shipped them:
 
 ## What is here
 
-| | Disc | State |
+| | Title | State |
 |---|---|---|
-| [megaman9-nx](megaman9-nx) | `WR9E`, WiiWare | translated: 10,321 functions, 266 natives bound |
+| [megaman9-nx](megaman9-nx) | `WR9E`, WiiWare | translated: 10,321 functions, 266 natives bound. Its game is LZ11 inside a content |
+| [crystaldefenders-nx](crystaldefenders-nx) | `WCIE`, WiiWare | set up: 6,596 functions, 2,500 named, 237 natives bound. Its game is a plain content |
 
 ## What to expect of a kind
 
