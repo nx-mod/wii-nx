@@ -4,8 +4,10 @@ Mario Kart Wii (RMCP01, PAL) running natively on Nintendo Switch, built from
 your own disc with [libdol-nx](https://github.com/nx-mod/libdol-nx).
 
 No game code or data is in this repository. What is here is the project that
-describes the game, the few functions this game needs of its own, and the
-symbol map the decompilation community made. The disc is yours.
+describes the game and the few functions this game needs of its own. The disc
+is yours, and so is the symbol map: it came from the Mario Kart Wii
+decompilation community, under no licence anyone recorded, so it is not
+published here either.
 
 ```sh
 git clone --recursive https://github.com/nx-mod/mkwii-nx
@@ -22,7 +24,7 @@ Supply the disc first: `../../libdol-nx/tools/wiinx-new-game <your dump> .`
 |---|---|
 | `recomp.yml` | the translation project: entry point, small-data bases, the REL, where libdol-nx is |
 | `game.toml` | what the disc says it is: ID, revision, region, title |
-| `MAP.txt` | Mario Kart Wii's symbol map, from the decompilation community |
+| `MAP.txt` | the symbol map, which you supply: 21,033 named functions. Not in this repository |
 | `native/` | this game's own code, compiled into its build only |
 
 
