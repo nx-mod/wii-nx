@@ -13,3 +13,5 @@
       are what everything here calls
 - [x] One copy of each game: `games/`, rather than a folder here and a
       repository of its own that drifts from it
+- [x] No build of its own: libdol-nx builds a game, and the libraries are
+      checked out beside it rather than pinned here
