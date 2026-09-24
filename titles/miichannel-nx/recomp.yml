@@ -1,14 +1,17 @@
 schema_version: 1
-workspace_root: ..
+workspace_root: .
 
-# Mii Channel. Not a disc: a Wii system title, downloaded from Nintendo by
-# scripts/fetch. Every value below was read from it by libdol-nx's
-# wiinx-fetch-title and wiinx-inspect-dol.
+# Mii Channel. Not a disc: a Wii system title, downloaded from Nintendo the way
+# a console downloads it. Every value below was read out of the title itself by
+# libdol-nx's wiinx-fetch-title, wiinx-inspect-dol and wiinx-scan.
 project:
   id: miichannel-haca
-  display_name: Mii Channel
+  display_name: MiiChannel
+  game_id: HACA
   title_id: 0001000248414341
   region: A                   # the title serves every region
+  base_manifest_format: mkwii-recomp-base-manifest
+  base_manifest_stem: miichannel_base
 
 memory:
   base: 0x80000000
@@ -18,10 +21,15 @@ memory:
 
 translation:
   entry_points:
-    - 0x80006124
+    - 0x80006124              # the DOL header's own entry point
   function_map:
     path: functions.map
   allow_unsupported_instructions: false
+
+inputs:
+  dol:
+    path: title/main.dol
+    sha256: b6a8f1e47c3b52de69e25e30b22227b4b227e697bc5a059fff738e9a40df31d8
 
 # Where libdol-nx is, relative to this folder.
 runtime:
@@ -29,21 +37,6 @@ runtime:
   native_abi_directories:
     - ../../../libdol-nx/src/platform/gx
   native_bindings: bindings.json
-
-inputs:
-  dol:
-    path: title/main.dol
-    sha256: b6a8f1e47c3b52de69e25e30b22227b4b227e697bc5a059fff738e9a40df31d8
-
-translation:
-  entry_points:
-    - 0x80006124              # the DOL header's entry point
-  allow_unsupported_instructions: false
-
-runtime:
-  native_registration_root: ../wiicompiled-nx/runtime/src
-  native_abi_directories:
-    - ../wiicompiled-nx/runtime/src/hle/gx
 
 output:
   root: generated

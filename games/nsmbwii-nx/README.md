@@ -1,6 +1,6 @@
 # nsmbwii-nx
 
-New Super Mario Bros. Wii (SMNE01, NTSC-U, revision 2) on Nintendo Switch,
+New Super Mario Bros. Wii (SMNP01, PAL, revision 2) on Nintendo Switch,
 built from your own disc with [libdol-nx](https://github.com/nx-mod/libdol-nx).
 
 No game code or data is in this repository. The disc is yours; everything here
@@ -60,9 +60,9 @@ What it needs, in the order it will need it:
 
 | | |
 |---|---|
-| Game ID | `SMNE01` |
+| Game ID | `SMNP01` |
 | Revision | 2 |
-| Region | NTSC-U (E) |
+| Region | PAL (E) |
 | main.dol SHA-256 | `0373b4dbffd7c9da9d27eb7257a7677877a3e33ceb81818bab1daa93560b9907` |
 
 `functions.map`, where its functions start, is found in the game's own code by

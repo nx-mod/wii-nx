@@ -2,3 +2,8 @@
 /disc/
 /generated/
 /build/
+
+# The symbol map is RootCubed's (github.com/RootCubed/NSMBW-Maps) and carries no
+# licence, so it is fetched to your machine rather than kept here - the same
+# reason a disc is not. scripts/fetch-symbols gets the one for your version.
+/MAP.txt
