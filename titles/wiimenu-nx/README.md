@@ -31,16 +31,17 @@ gives is seven contents:
 | `0000009d` | 6.2 MB | U8 archive: fonts, icons, several ASH0-compressed |
 | `0000009e` | 3.8 MB | a small loader plus a 3.8 MB blob; ASH0 data inside |
 
-So getting to the code needs two things we do not have yet:
+Of the two things that stood in the way, one is done:
 
-1. **ASH decompression.** Nintendo's own format, used through the Wii Menu.
-   Open implementations exist.
-2. **Working out which blob is the program**, then treating it as the executable.
-   `libdol-nx/tools/wiinx-unpack-u8` opens the archives; the loader in
-   `0000009e` is the thread to pull.
+1. **ASH decompression** - now in libdol-nx's `format/archive`, and checked
+   against this title's own files: `corrupt_icon.ash`, `font/font_kr.ash`,
+   `layout/chn/homeBtn1.ash` and the rest expand, each into a U8 archive.
+2. **Working out which blob is the program**, then treating it as the
+   executable. Content `0000009e` is a loader with 3.8 MB behind it, and that
+   is the thread to pull.
 
-Until then this project cannot start, which is why the Mii Channel is first: its
-executable is a plain content.
+So the remaining question is the second one. The Mii Channel is still first,
+because its executable is a plain content and needs none of this.
 
 ## What it would need from the runtime
 
