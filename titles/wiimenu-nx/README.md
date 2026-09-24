@@ -19,24 +19,29 @@ Wii uses. Nothing Nintendo owns is committed; `title/` is ignored by git.
 ## Where its executable lives
 
 Unlike a game, the Wii Menu does not ship a plain `main.dol`. The download gives
-seven contents, and the one it boots - `0000009e` - is a DOL whose only code
+nine contents, and the one it boots - `0000009b` - is a DOL whose only code
 section is a kilobyte of BAT setup that maps memory and returns. The program is
-the 3.7 MB "data" section behind it:
+the 3.5 MB "data" section behind it:
 
 | | |
 |---|---|
+| version | 514, which is 4.3E: its archives carry `layout/ned` and `layout/spa` |
 | loaded at | `0x81330000`, high in MEM1 |
 | entry | `0x81330000`, its first instruction |
-| image ends | `0x8166CC48`, which is the blob's own first word |
-| bss | `0x8166CC48` + 64 KB |
-| built | `systemmenu.rvl.1005130953`, by `irduser@IPLBUIL` (content `0000009c`) |
+| image ends | `0x8169A4C8`, which is the blob's own first word |
+| bss | `0x8169A4C8` + 64 KB |
 
 Nothing is compressed and nothing is hidden: the blob is plain PowerPC behind an
 eight word header whose first word says where the image stops.
 `tools/wiinx-title-program` reads that and writes an ordinary DOL, which
 `recomp.yml` translates. The small-data bases fall out of the code the same way
-they do for a game (`r13` `0x81672660`, `r2` `0x81670A60`), which is the check
+they do for a game (`r13` `0x8169FEE0`, `r2` `0x8169E2A0`), which is the check
 that the image really is what it looks like.
+
+The region is not incidental. The System Menu is one title whose versions are
+numbered by region - 512 Japan, 513 USA, 514 Europe, 518 Korea - so asking the
+servers for it without naming one gets Korea's, which numbers highest.
+`wiinx-fetch-nand --region` names it.
 
 The other contents are U8 archives of fonts, icons and layouts, several
 ASH0-compressed; libdol-nx's `format/archive` expands those.
@@ -81,9 +86,9 @@ executable per game and the most interesting test the engine would get.
 
 ## Status
 
-The executable is located and the project translates it. `wiinx-scan` binds 272
-natives in it - more than either Mega Man - and the symbol set names 2,306 of
-its functions, with 8,325 more found by their prologues.
+The executable is located and the project translates it. `wiinx-scan` binds 271
+natives in it - more than either Mega Man - and the symbol set names 2,299 of
+its functions, with the rest found by their prologues.
 
 Not yet built or run. What stands between here and a home screen is the runtime
 work below: booting a NAND title, and a title list to show.

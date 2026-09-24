@@ -2,6 +2,7 @@
 name = "wiimenu-nx"
 title = "Wii Menu (System Menu)"
 title_id = "0000000100000002"     # NAND title, not a disc
-contents = 7
-boot_content = 158                # 0x9e: a BAT-setup stub, with the program behind it
+contents = 9
+boot_content = 155                # 0x9b: a BAT-setup stub, with the program behind it
+version = 514                     # 4.3E: the European System Menu
 # tools/wiinx-title-program writes title/program.dol from that content.
