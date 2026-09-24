@@ -2,8 +2,8 @@ schema_version: 1
 workspace_root: ..
 
 # Mii Channel. Not a disc: a Wii system title, downloaded from Nintendo by
-# scripts/fetch. Every value below was read from it by example-wii-nx's
-# fetch-title + inspect-dol.
+# scripts/fetch. Every value below was read from it by libdol-nx's
+# wiinx-fetch-title and wiinx-inspect-dol.
 project:
   id: miichannel-haca
   display_name: Mii Channel
@@ -15,6 +15,20 @@ memory:
   size: 0x01800000
   sda_base: 0x803C4520        # _SDA_BASE_  (r13), set in the startup code
   sda2_base: 0x803C6040       # _SDA2_BASE_ (r2),  set in the startup code
+
+translation:
+  entry_points:
+    - 0x80006124
+  function_map:
+    path: functions.map
+  allow_unsupported_instructions: false
+
+# Where libdol-nx is, relative to this folder.
+runtime:
+  native_registration_root: ../../../libdol-nx/src
+  native_abi_directories:
+    - ../../../libdol-nx/src/platform/gx
+  native_bindings: bindings.json
 
 inputs:
   dol:
