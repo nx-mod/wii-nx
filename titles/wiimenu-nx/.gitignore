@@ -2,3 +2,8 @@
 /title/
 /generated/
 /build/
+/functions.map
+/cache/
+# Written from bindings.json by every translation.
+/native/native_bindings.cpp
+/translate.log
