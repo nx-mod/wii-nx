@@ -49,7 +49,7 @@ runtime:
   # This is the game libdol-nx's natives were written from, so the addresses
   # they are registered at are this game's own. Every other game names its own
   # table here instead (docs/signatures.md).
-  native_bindings: registered
+  native_bindings: bindings.json
 
 output:
   root: generated
