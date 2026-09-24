@@ -18,3 +18,13 @@ generated/
 
 # Fetched per disc by wiigames-nx/wiisports-nx/scripts/fetch-symbols.
 wiigames-nx/wiisports-nx/MAP.txt
+
+# The NAND: system titles downloaded from Nintendo, and the settings and saves
+# that go with them. Yours, from your own console or from Nintendo's servers,
+# and never committed - the same rule as a disc.
+/system/
+
+# A game's function list, when it was built from a symbol map that carries no
+# licence (games/*/scripts/fetch-symbols). Crediting is not permission, and it
+# is seconds to rebuild.
+games/*/functions.map
