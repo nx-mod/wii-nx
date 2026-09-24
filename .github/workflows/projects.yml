@@ -1,0 +1,87 @@
+# The game projects, checked without a game.
+#
+# This repository holds projects, not code: a folder per game, WAD and system
+# title, each naming its entry points, its memory layout and where its natives
+# sit. None of it can be built here - a build needs the disc, and the disc
+# stays with whoever owns it - but a project that no longer parses is worth
+# catching in a minute rather than hours into a translation.
+#
+# The libraries build in their own repositories: libdol-nx's switch workflow
+# cross-compiles the sections a game links against.
+name: projects
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: projects-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  projects:
+    name: projects parse
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # Every project carries the memory layout, entry points and binding
+      # tables a translation reads first. A typo in one is silent until the
+      # run that needs it.
+      - name: Every project parses
+        run: |
+          python3 - <<'PY'
+          import glob, sys
+          bad = 0
+          projects = sorted(glob.glob("*/*/recomp.yml"))
+          assert projects, "no projects found: has the layout moved?"
+          for path in projects:
+              text = open(path).read()
+              for key in ("schema_version", "project:", "inputs:"):
+                  if key not in text:
+                      print(f"{path}: missing {key}"); bad += 1
+              print(f"ok {path}")
+          sys.exit(1 if bad else 0)
+          PY
+
+      # A binding table that does not parse, or points outside guest RAM, binds
+      # a native replacement to nothing.
+      - name: Every binding table parses
+        run: |
+          python3 - <<'PY'
+          import glob, json, sys
+          bad = 0
+          for path in sorted(glob.glob("*/*/bindings.json")):
+              try:
+                  table = json.load(open(path))
+              except Exception as error:
+                  print(f"{path}: {error}"); bad += 1; continue
+              if not table:
+                  print(f"{path}: empty"); bad += 1; continue
+              for name, address in table.items():
+                  value = int(address, 16)
+                  # MEM1 and MEM2, which is all a Wii title's code can be in.
+                  if not 0x80000000 <= value <= 0x93FFFFFF:
+                      print(f"{path}: {name} {address} outside guest RAM"); bad += 1
+              print(f"ok {path}: {len(table)} natives")
+          sys.exit(1 if bad else 0)
+          PY
+
+      # The rule the whole project rests on: build from your own disc, and
+      # nothing from a disc is ever committed. This catches the mistake in the
+      # pull request rather than in the history.
+      - name: No game code or data committed
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          formats = (".dol", ".rel", ".elf", ".iso", ".gcm", ".wbfs", ".rvz",
+                     ".wia", ".gcz", ".ciso", ".nkit", ".wad", ".tmd", ".tik",
+                     ".arc", ".brres", ".szs", ".thp", ".nand", ".bin")
+          files = subprocess.run(["git", "ls-files"], check=True,
+                                 capture_output=True, text=True).stdout.split()
+          found = [f for f in files if f.lower().endswith(formats)]
+          for f in found:
+              print(f"game data committed: {f}")
+          sys.exit(1 if found else 0)
+          PY
