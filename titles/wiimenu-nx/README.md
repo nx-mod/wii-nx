@@ -16,32 +16,30 @@ scripts/fetch
 Downloads the System Menu from Nintendo's update servers, the same ones a real
 Wii uses. Nothing Nintendo owns is committed; `title/` is ignored by git.
 
-## Where its executable lives (open question)
+## Where its executable lives
 
-Unlike a game, the Wii Menu does not ship a plain `main.dol`. What the download
-gives is seven contents:
+Unlike a game, the Wii Menu does not ship a plain `main.dol`. The download gives
+seven contents, and the one it boots - `0000009e` - is a DOL whose only code
+section is a kilobyte of BAT setup that maps memory and returns. The program is
+the 3.7 MB "data" section behind it:
 
-| Content | Size | What it is |
-|---|---|---|
-| `00000009` | 4.5 MB | U8 archive: one LZ77-compressed library |
-| `0000000b` | 686 KB | U8 archive: `RFL_Res.dat`, the Mii resource data |
-| `00000049` | 1.1 MB | U8 archive |
-| `0000004a` | 3.6 MB | U8 archive |
-| `0000009c` | 64 B | small |
-| `0000009d` | 6.2 MB | U8 archive: fonts, icons, several ASH0-compressed |
-| `0000009e` | 3.8 MB | a small loader plus a 3.8 MB blob; ASH0 data inside |
+| | |
+|---|---|
+| loaded at | `0x81330000`, high in MEM1 |
+| entry | `0x81330000`, its first instruction |
+| image ends | `0x8166CC48`, which is the blob's own first word |
+| bss | `0x8166CC48` + 64 KB |
+| built | `systemmenu.rvl.1005130953`, by `irduser@IPLBUIL` (content `0000009c`) |
 
-Of the two things that stood in the way, one is done:
+Nothing is compressed and nothing is hidden: the blob is plain PowerPC behind an
+eight word header whose first word says where the image stops.
+`tools/wiinx-title-program` reads that and writes an ordinary DOL, which
+`recomp.yml` translates. The small-data bases fall out of the code the same way
+they do for a game (`r13` `0x81672660`, `r2` `0x81670A60`), which is the check
+that the image really is what it looks like.
 
-1. **ASH decompression** - now in libdol-nx's `format/archive`, and checked
-   against this title's own files: `corrupt_icon.ash`, `font/font_kr.ash`,
-   `layout/chn/homeBtn1.ash` and the rest expand, each into a U8 archive.
-2. **Working out which blob is the program**, then treating it as the
-   executable. Content `0000009e` is a loader with 3.8 MB behind it, and that
-   is the thread to pull.
-
-So the remaining question is the second one. The Mii Channel is still first,
-because its executable is a plain content and needs none of this.
+The other contents are U8 archives of fonts, icons and layouts, several
+ASH0-compressed; libdol-nx's `format/archive` expands those.
 
 ## What it would need from the runtime
 
@@ -83,5 +81,9 @@ executable per game and the most interesting test the engine would get.
 
 ## Status
 
-Not started. Blocked on ASH decompression and on finding the executable, so the
-Mii Channel goes first.
+The executable is located and the project translates it. `wiinx-scan` binds 272
+natives in it - more than either Mega Man - and the symbol set names 2,306 of
+its functions, with 8,325 more found by their prologues.
+
+Not yet built or run. What stands between here and a home screen is the runtime
+work below: booting a NAND title, and a title list to show.
