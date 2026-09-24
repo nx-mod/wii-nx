@@ -1,0 +1,9 @@
+# Game code and data are never committed: build from your own disc.
+# No trailing slash on disc: it is often a link to where the disc already is.
+/disc
+/generated/
+/build/
+/functions.map
+# Pipelines this game built by being played: the build ships them if they are
+# here, and they are never committed.
+/cache/
