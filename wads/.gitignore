@@ -1,0 +1,11 @@
+# Nothing that came out of a WAD, ever.
+*.wad
+*.app
+*.dol
+*.tik
+*.tmd
+unpacked/
+game/
+build/
+generated/
+cache/
