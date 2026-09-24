@@ -36,6 +36,12 @@ game: see [docs/install.md](docs/install.md).
 Each game is a folder in [games](games), holding what that game needs and never
 the game itself.
 
+## WiiWare and Virtual Console
+
+Titles you own as WADs are in [wads](wads), one folder each. They take two steps
+a disc game does not - decrypting the WAD, and expanding the content its loader
+would have - and then translate the same way. Mega Man 9 is the first.
+
 ## The Wii's own screens
 
 The console's own titles run here too, from a NAND shared by every game — so a
