@@ -1,0 +1,44 @@
+schema_version: 1
+workspace_root: .
+
+# unknown, a title installed from a WAD rather than played off a disc.
+# Everything below was read out of its own executable.
+project:
+  id: crystaldefenders2-unknown
+  display_name: crystaldefenders2
+  game_id: unknown
+  region: E
+  base_manifest_format: mkwii-recomp-base-manifest
+  base_manifest_stem: crystaldefenders2_base
+
+memory:
+  base: 0x80000000
+  size: 0x01800000
+  sda_base: 0x8028FE00
+  sda2_base: 0x80291D00
+
+translation:
+  entry_points:
+    - 0x8000403C
+  function_map:
+    path: functions.map
+  allow_unsupported_instructions: false
+
+inputs:
+  dol:
+    path: game/payload.dol
+    sha256: 8ba60dfa9787c75da174f8c6d5414829e3f8b61d438c29209bc629f60dbdaa52
+
+# Where libdol-nx is, relative to this folder.
+runtime:
+  native_registration_root: ../../../libdol-nx/src
+  native_abi_directories:
+    - ../../../libdol-nx/src/platform/gx
+  native_bindings: bindings.json
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: build/base/crystaldefenders2_base_manifest.json

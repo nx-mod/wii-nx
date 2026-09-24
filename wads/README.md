@@ -18,7 +18,15 @@ more, because of how Nintendo shipped them:
    often one shared with other titles - and the game itself is another content,
    compressed. Mega Man 9's is 1.4 MB of LZ11 that expands to 2.87 MB.
 
-`wiinx-wad` does both:
+A project is made in one command, which does both and reads everything else out
+of the executable - where its code starts, what functions it has, what they are
+called, and which of them this library already replaces:
+
+```sh
+../libdol-nx/tools/wiinx-new-title "Mega Man 9.wad" wads/megaman9-nx
+```
+
+`wiinx-wad` is the unpacking on its own:
 
 ```sh
 ../libdol-nx/tools/wiinx-wad "Mega Man 9.wad" unpacked/
@@ -32,6 +40,8 @@ more, because of how Nintendo shipped them:
 |---|---|---|
 | [megaman9-nx](megaman9-nx) | `WR9E`, WiiWare | translated: 10,321 functions, 266 natives bound. Its game is LZ11 inside a content |
 | [crystaldefenders-nx](crystaldefenders-nx) | `WCIE`, WiiWare | set up: 6,596 functions, 2,500 named, 237 natives bound. Its game is a plain content |
+| [crystaldefenders2-nx](crystaldefenders2-nx) | `WC2E`, WiiWare | set up: 6,601 functions, 2,499 named, 237 natives bound. A separate game on the same engine as R1 |
+| [bombermanblast-nx](bombermanblast-nx) | `WM8E`, WiiWare | set up: 12,014 functions, 3,070 named, 296 natives bound. The fullest of them: nw4r's 3D and sound, Miis, the Home Button menu, and online |
 
 ## What to expect of a kind
 
