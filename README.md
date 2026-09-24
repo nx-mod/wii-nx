@@ -33,14 +33,14 @@ game: see [docs/install.md](docs/install.md).
 | Wii Sports | `RSPE01` NTSC-U | set up, not yet translated |
 | Wii Sports + Resort | `SP2E01` NTSC-U | set up, not yet translated |
 
-Each game is its own small project in [wiigames-nx](wiigames-nx), holding what
-that game needs and never the game itself.
+Each game is a folder in [games](games), holding what that game needs and never
+the game itself.
 
 ## The Wii's own screens
 
 The console's own titles run here too, from a NAND shared by every game — so a
-Mii made once shows up everywhere. They are in [wiinand-nx](wiinand-nx): the Mii
-Channel first, then the Wii Menu.
+Mii made once shows up everywhere. They are in [titles](titles): the Mii Channel
+first, then the Wii Menu.
 
 ## Homebrew
 
@@ -67,16 +67,16 @@ distributed. You build from a disc you own.
 
 ## For developers
 
-The machinery lives elsewhere:
-[wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) turns a disc into a
-program, [libwii-nx](https://github.com/nx-mod/libwii-nx) is the Wii's own
-hardware and system software, and
-[libdol-nx](https://github.com/nx-mod/libdol-nx) is everything the Wii and the
-GameCube share — the CPU, GX, the DSP, the SDK and the translator. Underneath
-sit [aurora-nx](https://github.com/nx-mod/aurora-nx),
-[dawn-nx](https://github.com/nx-mod/dawn-nx),
-[nxvk](https://github.com/nx-mod/nxvk) and
-[sqlite-nx](https://github.com/nx-mod/sqlite-nx).
+The libraries live elsewhere, and each builds on its own:
+
+| | |
+|---|---|
+| [libdol-nx](https://github.com/nx-mod/libdol-nx) | everything the Wii and the GameCube share: the CPU, GX, the DSP, the SDK, the formats, the translator and the tools |
+| [libwii-nx](https://github.com/nx-mod/libwii-nx) | the Wii's own: IOS, the NAND, the Wii Remote, its settings |
+| [wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) | the engine this grew from |
+| [aurora-nx](https://github.com/nx-mod/aurora-nx), [dawn-nx](https://github.com/nx-mod/dawn-nx), [nxvk](https://github.com/nx-mod/nxvk), [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | graphics, and the storage under the shader cache |
+
+This repository puts them together and holds the games.
 
 The GameCube side of the same work is [gc-nx](https://github.com/nx-mod/gc-nx).
 

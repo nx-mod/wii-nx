@@ -28,8 +28,8 @@ happens on a PC, once per game:
 git clone --recursive https://github.com/nx-mod/wii-nx
 cd wii-nx
 
-wiigames-nx/mkwii-nx/scripts/extract "/path/to/your/disc.iso"
-example-wii-nx/scripts/translate mkwii-nx
+games/mkwii-nx/scripts/extract "/path/to/your/disc.iso"
+../libdol-nx/tools/wiinx-translate games/mkwii-nx
 
 cmake -S . -B build -G Ninja \
       -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/cmake/Switch.cmake \
@@ -43,12 +43,11 @@ above.
 ## Adding a game that is not listed
 
 ```sh
-example-wii-nx/scripts/new-game "/path/to/Your Game.iso" yourgame-nx
+../libdol-nx/tools/wiinx-new-game "/path/to/Your Game.iso" games/yourgame-nx
 ```
 
-That reads the disc and writes the whole project. Screening a candidate first
-takes about a minute and says how much work it needs — see
-[example-wii-nx](../example-wii-nx).
+That reads the disc and writes the whole project: what the game is, where its
+code starts, and how to prepare it.
 
 ## Saves
 

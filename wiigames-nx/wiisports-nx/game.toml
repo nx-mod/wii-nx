@@ -1,8 +1,0 @@
-# Filled in from the disc by scripts/extract --dol; the revision picks the
-# symbol map scripts/fetch-symbols downloads.
-name = "wiisports-nx"
-title = "Wii Sports"
-game_id = "RSPE01"
-revision = 1               # TODO: confirm from your disc (ogws matches rev 0 and rev 1)
-region = "NTSC-U"
-dol_sha256 = ""            # TODO: from scripts/extract --dol

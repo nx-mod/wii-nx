@@ -1,0 +1,41 @@
+schema_version: 1
+workspace_root: .
+
+# Metroid Prime 3: Corruption. Every value below was read from a real dump by
+# example-wii-nx's extract-dol + inspect-dol.
+project:
+  id: metroidprime3-rm3e01
+  display_name: Metroid Prime 3: Corruption
+  game_id: RM3E01             # NTSC-U, revision 0
+  region: E
+
+memory:
+  base: 0x80000000
+  size: 0x01800000
+  sda_base: 0x806801C0        # _SDA_BASE_  (r13), set in the startup code
+  sda2_base: 0x806869C0       # _SDA2_BASE_ (r2),  set in the startup code
+
+inputs:
+  dol:
+    path: disc/sys/main.dol
+    sha256: 6b550f221602074747a2e61b0aa064203fd493f6865dfb3b1a912682065e6104
+
+translation:
+  entry_points:
+    - 0x80006320              # the DOL header's entry point
+  allow_unsupported_instructions: false
+
+runtime:
+  native_registration_root: ../../wiicompiled-nx/runtime/src
+  # Where this game keeps the functions the engine replaces, found by
+  # matching their code (example-wii-nx/scripts/resolve-symbols).
+  native_bindings: bindings.json
+  native_abi_directories:
+    - ../../wiicompiled-nx/runtime/src/hle/gx
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: build/base/metroidprime3_base_manifest.json

@@ -28,10 +28,10 @@ if (NOT CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
 endif ()
 
 set(WIINX_GAME "mkwii-nx" CACHE STRING
-    "Which game to build: a folder in wiigames-nx, or empty for the libraries alone")
+    "Which game to build: a folder in games/, or empty for the libraries alone")
 
 # Each piece, wherever it lives.
-foreach (component wiicompiled-nx aurora-nx dawn-nx nxvk sqlite-nx)
+foreach (component wiicompiled-nx libdol-nx libwii-nx aurora-nx dawn-nx nxvk sqlite-nx)
     string(TOUPPER "${component}" upper)
     string(REPLACE "-" "_" upper "${upper}")
     set(WIINX_${upper}_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${component}" CACHE PATH
@@ -50,8 +50,8 @@ endif ()
 
 # The Wii's NAND formats: settings, Miis, saves. Used by the runtime and by the
 # launcher, and buildable on its own.
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/wiinand-nx/lib/CMakeLists.txt")
-    add_subdirectory(wiinand-nx/lib)
+if (EXISTS "${WIINX_LIBDOL_NX_DIR}/CMakeLists.txt")
+    add_subdirectory("${WIINX_LIBDOL_NX_DIR}" libdol-nx)
 endif ()
 
 # WebGPU. Dawn builds the game itself when it is the top-level project; here it
@@ -74,18 +74,18 @@ add_subdirectory("${WIINX_DAWN_NX_DIR}" dawn-build)
 # ---------------------------------------------------------------------------
 
 if (WIINX_GAME)
-    set(WIINX_GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/wiigames-nx/${WIINX_GAME}")
+    set(WIINX_GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/games/${WIINX_GAME}")
     if (NOT EXISTS "${WIINX_GAME_DIR}/recomp.yml")
         message(FATAL_ERROR
             "No game at ${WIINX_GAME_DIR}.\n"
-            "Available: see wiigames-nx/, or -DWIINX_GAME= to build the libraries alone.")
+            "Available: see games/, or -DWIINX_GAME= to build the libraries alone.")
     endif ()
     if (NOT EXISTS "${WIINX_GAME_DIR}/generated/build_shards/shards.cmake")
         message(FATAL_ERROR
             "${WIINX_GAME} has no translated code yet.\n"
             "Extract your disc and translate it first:\n"
-            "  wiigames-nx/${WIINX_GAME}/scripts/extract <your disc image>\n"
-            "  example-wii-nx/scripts/translate ${WIINX_GAME}")
+            "  games/${WIINX_GAME}/scripts/extract <your disc image>\n"
+            "  ../libdol-nx/tools/wiinx-translate games/${WIINX_GAME}")
     endif ()
 
     # Aurora (GX on WebGPU) reuses the Dawn added above rather than fetching its
@@ -121,5 +121,5 @@ if (WIINX_GAME)
         message(STATUS "wii-nx: ${WIINX_GAME} -> ${WIINX_GAME}.nro")
     endif ()
 else ()
-    message(STATUS "wii-nx: libraries only (-DWIINX_GAME=<folder in wiigames-nx> to build a game)")
+    message(STATUS "wii-nx: libraries only (-DWIINX_GAME=<folder in games> to build a game)")
 endif ()
