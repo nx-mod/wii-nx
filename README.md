@@ -76,7 +76,9 @@ The libraries live elsewhere, and each builds on its own:
 | [wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) | the engine this grew from |
 | [aurora-nx](https://github.com/nx-mod/aurora-nx), [dawn-nx](https://github.com/nx-mod/dawn-nx), [nxvk](https://github.com/nx-mod/nxvk), [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | graphics, and the storage under the shader cache |
 
-This repository puts them together and holds the games.
+Nothing is built here: libdol-nx is the toolkit, and one command of its own
+turns your disc into a program. This repository holds the games, the console's
+own screens, and how to set them up.
 
 The GameCube side of the same work is [gc-nx](https://github.com/nx-mod/gc-nx).
 

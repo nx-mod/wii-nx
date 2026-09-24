@@ -24,21 +24,24 @@ Open the game from the homebrew menu.
 A game has to be turned into a Switch program before it can run, and that
 happens on a PC, once per game:
 
+Everything below happens beside a libdol-nx checkout, which is the toolkit and
+does the building:
+
 ```sh
-git clone --recursive https://github.com/nx-mod/wii-nx
+git clone https://github.com/nx-mod/wii-nx
+git clone https://github.com/nx-mod/libdol-nx
+git clone https://github.com/nx-mod/libwii-nx
 cd wii-nx
 
-games/mkwii-nx/scripts/extract "/path/to/your/disc.iso"
-../libdol-nx/tools/wiinx-translate games/mkwii-nx
-
-cmake -S . -B build -G Ninja \
-      -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/cmake/Switch.cmake \
-      -DWIINX_GAME=mkwii-nx
-cmake --build build
+../libdol-nx/tools/wiinx-build games/mkwii-nx "/path/to/your/disc.iso"
 ```
 
-The result is `mkwii-nx.nro`. Copy it and the extracted disc to the card as
+That reads your disc, translates the game, builds it, and leaves
+`games/mkwii-nx/build/mkwii-nx.nro`. Copy it and the disc's files to the card as
 above.
+
+It needs devkitPro's Switch toolchain, and aurora-nx, dawn-nx and nxvk checked
+out beside libdol-nx - `wiinx-build` says which are missing and where it looked.
 
 ## Adding a game that is not listed
 
