@@ -1,10 +1,10 @@
 schema_version: 1
 workspace_root: .
 
-# The Wii Menu. Its boot content is a DOL whose code section is a kilobyte of
-# BAT setup; the program is the 3.4 MB image behind it, loaded high in MEM1 and
-# entered at its first instruction. tools/wiinx-title-program writes that out as
-# an ordinary DOL, which is what this translates.
+# The Wii Menu, 4.3E. Its boot content is a DOL whose code section is a kilobyte
+# of BAT setup; the program is the 3.5 MB image behind it, loaded high in MEM1
+# and entered at its first instruction. tools/wiinx-title-program writes that
+# out as an ordinary DOL, which is what this translates.
 project:
   id: wiimenu-0000000100000002
   display_name: Wii Menu
@@ -16,8 +16,8 @@ project:
 memory:
   base: 0x80000000
   size: 0x01800000
-  sda_base: 0x81672660
-  sda2_base: 0x81670A60
+  sda_base: 0x8169FEE0
+  sda2_base: 0x8169E2A0
 
 translation:
   entry_points:
@@ -29,7 +29,7 @@ translation:
 inputs:
   dol:
     path: title/program.dol
-    sha256: d782af9e2951ce39aa780c4705816c242432574af1db2170e52942eda3575f17
+    sha256: e7ff1eaa449fcacae40314b27f4b66a06bab7ed39393e3e7112f29bab03af9c9
 
 # Where libdol-nx is, relative to this folder.
 runtime:
