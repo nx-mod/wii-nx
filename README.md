@@ -5,6 +5,11 @@
 Not emulated. Each game is translated into a Switch program ahead of time and
 runs natively, using your own disc for its files.
 
+**This is a proof of concept, not a finished port.** One game is playable and
+runs at about a quarter speed; everything else here is in progress, and some of
+it does not run at all yet. The table below says which is which, and it is kept
+honest.
+
 ## What you need
 
 - A Switch running homebrew
