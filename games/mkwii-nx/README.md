@@ -38,9 +38,11 @@ libdol-nx is the Wii; anything only Mario Kart Wii does lives here.
 | `mod_loader_hooks.cpp` | where mods attach |
 | `product/retro_rewind_product.cpp` | what a Retro Rewind build is: its name, that it overlays the disc, and the marker its code reads |
 
-This is also the game libdol-nx's natives were written from, so its
-`recomp.yml` says `native_bindings: registered`: their addresses are this
-game's. Any other game matches them by code signature instead.
+This is also the game most of the libraries' natives were read from, so its
+`bindings.json` says each one is at its own reference address - which is just
+what is true of it. It binds through that table like every other game; nothing
+in the build treats it differently. Any other game matches the same natives by
+code signature instead.
 
 ## Retro Rewind
 

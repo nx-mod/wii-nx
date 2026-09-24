@@ -2,3 +2,5 @@
 /disc/
 /generated/
 /build/
+# Written from bindings.json by every translation.
+/native/native_bindings.cpp
