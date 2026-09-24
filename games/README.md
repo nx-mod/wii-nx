@@ -6,7 +6,7 @@ never the game itself, which you build from your own dump.
 | Game | ID | Engine located | Notes |
 |---|---|---|---|
 | [mkwii-nx](mkwii-nx) | `RMCP01` | - | **Playable.** The game the engine was written against, so its addresses are the reference every other game is matched to |
-| [nsmbwii-nx](nsmbwii-nx) | `SMNE01` | 342/574 (59.6%) | Second game; shares Mario Kart's middleware |
+| [nsmbwii-nx](nsmbwii-nx) | `SMNP01` | 342/574 (59.6%) | Second game; shares Mario Kart's middleware. One executable, no modules, and its own symbol map published per version |
 | [spmwii-nx](spmwii-nx) | `R8PE01` | 403/574 (70.2%) | Its own engine on a plain SDK |
 | [powii-nx](powii-nx) | `R7PE01` | 386/574 (67.2%) | Small, exclusive, never ported |
 | [wiisports-nx](wiisports-nx) | `RSPE01` | - | Symbols and nw4r source from the ogws decompilation |
@@ -18,10 +18,14 @@ Mario Kart Wii is the game running today. Its folder here holds its project, its
 disc and its translated code - copied, not moved: the working build still comes
 from wiicompiled-nx until a build from here produces the same NRO.
 
+The percentages are of *our* native set rather than of the game: 574 was how
+many functions the engine replaced when that audit ran. The set is larger now,
+so each game's real coverage is higher than the number says.
+
 ## Adding a game
 
 ```sh
-../example-wii-nx/scripts/new-game "/path/to/Your Game.iso" yourgame-nx
+../../libdol-nx/tools/wiinx-new-game "/path/to/Your Game.iso" games/yourgame-nx
 ```
 
 It reads the disc and writes the whole project: `game.toml`, `recomp.yml`, a
