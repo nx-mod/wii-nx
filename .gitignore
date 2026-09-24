@@ -28,3 +28,7 @@ wiigames-nx/wiisports-nx/MAP.txt
 # licence (games/*/scripts/fetch-symbols). Crediting is not permission, and it
 # is seconds to rebuild.
 games/*/functions.map
+
+# The symbol map: supplied by you, like the disc. Its source is not recorded
+# here, so it is not published here.
+/games/mkwii-nx/MAP.txt
