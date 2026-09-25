@@ -7,6 +7,7 @@ workspace_root: .
 project:
   id: crystaldefenders-wcie
   display_name: CrystalDefendersR1
+  title: Crystal Defenders          # what the launcher and the home menu show
   game_id: WCIE
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
