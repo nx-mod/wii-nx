@@ -5,7 +5,7 @@ workspace_root: .
 project:
   id: mkwii-rmcp01
   display_name: MarioKartWii
-  title: Mario Kart Wii          # what the launcher and the home menu show
+  title: Mario Kart Wii          # the name its own banner carries
   game_id: RMCP01            # PAL, revision 0
   region: P
   base_manifest_format: mkwii-recomp-base-manifest
