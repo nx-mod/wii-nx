@@ -8,6 +8,7 @@ workspace_root: .
 project:
   id: wiimenu-0000000100000002
   display_name: Wii Menu
+  title: Wii Menu          # what the launcher and the home menu show
   game_id: RHAE                 # the System Menu has no disc id; this is its channel
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
@@ -29,7 +30,7 @@ translation:
 inputs:
   dol:
     path: title/program.dol
-    sha256: e7ff1eaa449fcacae40314b27f4b66a06bab7ed39393e3e7112f29bab03af9c9
+    sha256: 7529e4a4cc11196db12e671c11a708f56c290a38f8e75ae4a7f03b36f37638bd
 
 # Where libdol-nx is, relative to this folder.
 runtime:

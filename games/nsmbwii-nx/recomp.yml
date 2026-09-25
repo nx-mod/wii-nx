@@ -5,6 +5,7 @@ workspace_root: .
 project:
   id: nsmbwii-smnp01
   display_name: New SUPER MARIO BROS. Wii
+  title: New Super Mario Bros. Wii          # what the launcher and the home menu show
   game_id: SMNP01            # PAL, revision 2
   region: P
 

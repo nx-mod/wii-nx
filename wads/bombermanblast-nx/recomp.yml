@@ -6,6 +6,7 @@ workspace_root: .
 project:
   id: bombermanblast-unknown
   display_name: bombermanblast
+  title: Bomberman Blast          # what the launcher and the home menu show
   game_id: unknown
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
