@@ -7,6 +7,7 @@ project:
   id: excitebike-wwre
   display_name: excitebike
   game_id: WWRE
+  title_id: 0001000157575245
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: excitebike_base
