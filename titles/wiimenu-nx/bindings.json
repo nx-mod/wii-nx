@@ -54,7 +54,6 @@
  "GX__GetCPUFifo_8016cf10": "0x81543284",
  "GX__GetProjectionv_801730cc": "0x81547DDC",
  "GX__GetViewportv_801733e0": "0x81548054",
- "GX__GetVtxDesc_8016d9f0": "0x81543588",
  "GX__InitTexObjCI_80170a04": "0x81545F78",
  "GX__InitTexObjLOD_80170a4c": "0x81545FC0",
  "GX__InitTexObj_801707f8": "0x81545D6C",
