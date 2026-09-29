@@ -1,0 +1,314 @@
+-- The C compiler identification is GNU 15.2.0
+-- The CXX compiler identification is GNU 15.2.0
+-- The ASM compiler identification is GNU
+-- Found assembler: /opt/devkitpro/devkitA64/bin/aarch64-none-elf-gcc
+-- Detected multilib folder: pic
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/devkitpro/devkitA64/bin/aarch64-none-elf-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Build type...........: Release
+-- C++ compiler.........: /opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++
+-- CMake generator......: Ninja
+-- CMake version........: 3.28.3
+-- 
+-- Dawn building using Emscripten toolchain: 0
+-- Dawn build D3D11 backend: OFF
+-- Dawn build D3D12 backend: OFF
+-- Dawn build Metal backend: OFF
+-- Dawn build Vulkan backend: ON
+-- Dawn build OpenGL backend: OFF
+-- Dawn build OpenGL ES backend: OFF
+-- Dawn build Null backend: ON
+-- 
+-- Tint build SPIR-V reader: ON
+-- Tint build WGSL reader: ON
+-- Tint build GLSL writer: OFF
+-- Tint build GLSL validator: ON
+-- Tint build HLSL writer: OFF
+-- Tint build MSL writer: OFF
+-- Tint build SPIR-V writer: ON
+-- Tint build WGSL writer: ON
+-- Tint build NULL writer: ON
+-- 
+-- Dawn build with ASan: OFF
+-- Dawn build with TSan: OFF
+-- Dawn build with MSan: OFF
+-- Dawn build with UBSan: OFF
+-- Dawn build with RTTI: OFF
+-- DAWN Werror: OFF
+-- Dawn enable install: OFF
+-- Dawn allow system component fallback: OFF
+-- Dawn enable SPIR-V validation: ON
+-- Dawn build with asserts in all configurations: OFF
+-- Dawn build Wayland support: OFF
+-- Dawn build X11 support: OFF
+-- Dawn build GLFW support: OFF
+-- Dawn build Windows UI support: OFF
+-- Dawn build and use DXC: OFF
+-- Dawn enable DXC asserts in non-debug builds: ON
+-- Dawn target MacOS: OFF
+-- Dawn build samples: OFF
+-- Dawn build Node bindings: OFF
+-- Dawn build Swiftshader: OFF
+-- Dawn build benchmarks: OFF
+-- Dawn build protobuf: OFF
+-- Dawn build monolithic library: STATIC
+-- Dawn build PIC: ON
+-- Dawn emit coverage: OFF
+-- Dawn fetch dependencies: OFF
+-- LLVM Source dir: 
+-- 
+-- Tint build command line executable tools: OFF
+-- Tint install: OFF
+-- Tint build IR binary: OFF
+-- Tint build fuzzers: OFF
+-- Tint build fuzzing vulkan drivers: OFF
+-- Tint build benchmarks: OFF
+-- Tint build tests: OFF
+-- Tint enable IR dumping: ON
+-- Tint enable IR validation assertions: ON
+-- Tint enable break in debugger: OFF
+-- Tint build checking [chromium-style]: OFF
+-- Tint randomize hashes: OFF
+-- Tint build Mesa: OFF
+-- 
+-- Dawn third_party dir: /home/user/dawn-nx/third_party
+-- Dawn GLFW dir: /home/user/dawn-nx/third_party/glfw3/src
+-- Dawn Jinja2 dir: /home/user/dawn-nx/third_party/jinja2
+-- Dawn MarkupSafe dir: /home/user/dawn-nx/third_party/markupsafe
+-- Dawn Khronos dir: /home/user/dawn-nx/third_party/khronos
+-- Dawn Swiftshader dir: /home/user/dawn-nx/third_party/swiftshader
+-- Dawn Protobuf dir: /home/user/dawn-nx/third_party/protobuf
+-- Dawn LPM dir: /home/user/dawn-nx/third_party/libprotobuf-mutator/src
+-- Dawn Emdawnwebgpu dir: /home/user/dawn-nx/third_party/emdawnwebgpu
+-- Dawn Spir-Tools dir: /home/user/dawn-nx/third_party/spirv-tools/src
+-- Dawn Spirv-Headers dir: /home/user/dawn-nx/third_party/spirv-headers/src
+-- Dawn Glslang dir: /home/user/dawn-nx/third_party/glslang/src
+-- Dawn Vulkan Headers dir: /home/user/dawn-nx/third_party/vulkan-headers/src
+-- Dawn Vulkan Utility Libraries dir: /home/user/dawn-nx/third_party/vulkan-utility-libraries/src
+-- 
+-- Node Addon API dir: /home/user/dawn-nx/third_party/node-addon-api
+-- Node API Headers dir: /home/user/dawn-nx/third_party/node-api-headers
+-- Webgpu IDL path: /home/user/dawn-nx/third_party/gpuweb/webgpu.idl
+-- Go exe: go
+-- 
+-- Performing Test DAWN_SUPPORTS_CXX_MODULES
+-- Performing Test DAWN_SUPPORTS_CXX_MODULES - Success
+-- Performing Test dawn_have_compiler_flag-C--Wconditional-uninitialized
+-- Performing Test dawn_have_compiler_flag-C--Wconditional-uninitialized - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wconditional-uninitialized
+-- Performing Test dawn_have_compiler_flag-CXX--Wconditional-uninitialized - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wcstring-format-directive
+-- Performing Test dawn_have_compiler_flag-C--Wcstring-format-directive - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wcstring-format-directive
+-- Performing Test dawn_have_compiler_flag-CXX--Wcstring-format-directive - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wctad-maybe-unsupported
+-- Performing Test dawn_have_compiler_flag-C--Wctad-maybe-unsupported - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wctad-maybe-unsupported
+-- Performing Test dawn_have_compiler_flag-CXX--Wctad-maybe-unsupported - Success
+-- Performing Test dawn_have_compiler_flag-C--Wc++11-narrowing
+-- Performing Test dawn_have_compiler_flag-C--Wc++11-narrowing - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wc++11-narrowing
+-- Performing Test dawn_have_compiler_flag-CXX--Wc++11-narrowing - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wdeprecated-copy
+-- Performing Test dawn_have_compiler_flag-C--Wdeprecated-copy - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wdeprecated-copy
+-- Performing Test dawn_have_compiler_flag-CXX--Wdeprecated-copy - Success
+-- Performing Test dawn_have_compiler_flag-C--Wdeprecated-copy-dtor
+-- Performing Test dawn_have_compiler_flag-C--Wdeprecated-copy-dtor - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wdeprecated-copy-dtor
+-- Performing Test dawn_have_compiler_flag-CXX--Wdeprecated-copy-dtor - Success
+-- Performing Test dawn_have_compiler_flag-C--Wduplicate-enum
+-- Performing Test dawn_have_compiler_flag-C--Wduplicate-enum - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wduplicate-enum
+-- Performing Test dawn_have_compiler_flag-CXX--Wduplicate-enum - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wextra-semi
+-- Performing Test dawn_have_compiler_flag-C--Wextra-semi - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wextra-semi
+-- Performing Test dawn_have_compiler_flag-CXX--Wextra-semi - Success
+-- Performing Test dawn_have_compiler_flag-C--Wextra-semi-stmt
+-- Performing Test dawn_have_compiler_flag-C--Wextra-semi-stmt - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wextra-semi-stmt
+-- Performing Test dawn_have_compiler_flag-CXX--Wextra-semi-stmt - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wimplicit-fallthrough
+-- Performing Test dawn_have_compiler_flag-C--Wimplicit-fallthrough - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wimplicit-fallthrough
+-- Performing Test dawn_have_compiler_flag-CXX--Wimplicit-fallthrough - Success
+-- Performing Test dawn_have_compiler_flag-C--Winconsistent-missing-destructor-override
+-- Performing Test dawn_have_compiler_flag-C--Winconsistent-missing-destructor-override - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Winconsistent-missing-destructor-override
+-- Performing Test dawn_have_compiler_flag-CXX--Winconsistent-missing-destructor-override - Failed
+-- Performing Test dawn_have_compiler_flag-C--Winvalid-offsetof
+-- Performing Test dawn_have_compiler_flag-C--Winvalid-offsetof - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Winvalid-offsetof
+-- Performing Test dawn_have_compiler_flag-CXX--Winvalid-offsetof - Success
+-- Performing Test dawn_have_compiler_flag-C--Wmissing-field-initializers
+-- Performing Test dawn_have_compiler_flag-C--Wmissing-field-initializers - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wmissing-field-initializers
+-- Performing Test dawn_have_compiler_flag-CXX--Wmissing-field-initializers - Success
+-- Performing Test dawn_have_compiler_flag-C--Wnon-c-typedef-for-linkage
+-- Performing Test dawn_have_compiler_flag-C--Wnon-c-typedef-for-linkage - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wnon-c-typedef-for-linkage
+-- Performing Test dawn_have_compiler_flag-CXX--Wnon-c-typedef-for-linkage - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wpessimizing-move
+-- Performing Test dawn_have_compiler_flag-C--Wpessimizing-move - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wpessimizing-move
+-- Performing Test dawn_have_compiler_flag-CXX--Wpessimizing-move - Success
+-- Performing Test dawn_have_compiler_flag-C--Wrange-loop-analysis
+-- Performing Test dawn_have_compiler_flag-C--Wrange-loop-analysis - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wrange-loop-analysis
+-- Performing Test dawn_have_compiler_flag-CXX--Wrange-loop-analysis - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wredundant-move
+-- Performing Test dawn_have_compiler_flag-C--Wredundant-move - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wredundant-move
+-- Performing Test dawn_have_compiler_flag-CXX--Wredundant-move - Success
+-- Performing Test dawn_have_compiler_flag-C--Wshadow-field
+-- Performing Test dawn_have_compiler_flag-C--Wshadow-field - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wshadow-field
+-- Performing Test dawn_have_compiler_flag-CXX--Wshadow-field - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wstrict-prototypes
+-- Performing Test dawn_have_compiler_flag-C--Wstrict-prototypes - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wstrict-prototypes
+-- Performing Test dawn_have_compiler_flag-CXX--Wstrict-prototypes - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wsuggest-destructor-override
+-- Performing Test dawn_have_compiler_flag-C--Wsuggest-destructor-override - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wsuggest-destructor-override
+-- Performing Test dawn_have_compiler_flag-CXX--Wsuggest-destructor-override - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wsuggest-override
+-- Performing Test dawn_have_compiler_flag-C--Wsuggest-override - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wsuggest-override
+-- Performing Test dawn_have_compiler_flag-CXX--Wsuggest-override - Success
+-- Performing Test dawn_have_compiler_flag-C--Wtautological-unsigned-zero-compare
+-- Performing Test dawn_have_compiler_flag-C--Wtautological-unsigned-zero-compare - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wtautological-unsigned-zero-compare
+-- Performing Test dawn_have_compiler_flag-CXX--Wtautological-unsigned-zero-compare - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wunreachable-code-aggressive
+-- Performing Test dawn_have_compiler_flag-C--Wunreachable-code-aggressive - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wunreachable-code-aggressive
+-- Performing Test dawn_have_compiler_flag-CXX--Wunreachable-code-aggressive - Failed
+-- Performing Test dawn_have_compiler_flag-C--Wunused-but-set-variable
+-- Performing Test dawn_have_compiler_flag-C--Wunused-but-set-variable - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wunused-but-set-variable
+-- Performing Test dawn_have_compiler_flag-CXX--Wunused-but-set-variable - Success
+-- Performing Test dawn_have_compiler_flag-C--Wunused-macros
+-- Performing Test dawn_have_compiler_flag-C--Wunused-macros - Failed
+-- Performing Test dawn_have_compiler_flag-CXX--Wunused-macros
+-- Performing Test dawn_have_compiler_flag-CXX--Wunused-macros - Success
+-- Found Python3: /usr/local/bin/python3 (found version "3.11.15") found components: Interpreter 
+-- Dawn: using python at /usr/local/bin/python3
+-- Dawn: using Abseil at /home/user/dawn-nx/third_party/abseil-cpp
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Dawn: using SPIRV-Headers at /home/user/dawn-nx/third_party/spirv-headers/src
+-- Dawn: using SPIRV-Tools at /home/user/dawn-nx/third_party/spirv-tools/src
+CMake Warning (dev) at /home/user/dawn-nx/third_party/spirv-tools/src/source/CMakeLists.txt:352 (add_library):
+  ADD_LIBRARY called with SHARED option but the target platform does not
+  support dynamic linking.  Building a STATIC library instead.  This may lead
+  to problems.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Dawn: using Vulkan::Headers at /home/user/dawn-nx/third_party/vulkan-headers/src
+-- Dawn: using VulkanUtilityLibraries at /home/user/dawn-nx/third_party/vulkan-utility-libraries/src
+-- Could NOT find VulkanHeaders (missing: VulkanHeaders_DIR)
+-- Dawn: using jinja2 at /home/user/dawn-nx/third_party/jinja2
+-- Dawn: using markupsafe at /home/user/dawn-nx/third_party/markupsafe
+-- Dawn: Configuring DawnGenerator for Dawn WebGPU Emscripten headers.
+-- Dawn: Configuring DawnGenerator for Dawn WebGPU Emscripten JS files.
+-- Dawn: Configuring DawnGenerator for Dawn version based utilities.
+-- Dawn: Configuring DawnGenerator for Dawn headers.
+-- Dawn: Configuring DawnGenerator for Dawn C++ headers.
+-- Dawn: Configuring DawnGenerator for Dawn C++ module interface.
+-- Dawn: Configuring DawnGenerator for Dawn GPU info utilities.
+-- Dawn: Configuring DawnGenerator for Dawn native utilities.
+-- Dawn: Configuring DawnGenerator for Dawn wire.
+-- Dawn: Configuring DawnGenerator for Dawn native utilities.
+-- Dawn: Configuring DawnGenerator for Dawn native WebGPU procs.
+-- Dawn: Configuring DawnGenerator for Dawn C++ wrapper.
+-- Dawn: Configuring DawnGenerator for WebGPU headers.
+-- wii-nx: no game checkout found; building Dawn without it (set -DMKWII_NX_DIR=<path> to build a game)
+-- aurora: Using existing Dawn
+-- aurora: Using system/existing abseil
+-- aurora: Fetching xxhash
+-- xxHash build type: Release
+-- Architecture: x86_64
+-- aurora: Fetching fmt
+-- {fmt} version: 11.1.4
+-- Build type: Release
+-- aurora: Using existing libpng
+-- aurora: Using existing Freetype
+-- aurora: Fetching sqlite3
+-- aurora: sqlite-nx VFS from /home/user/deps/sqlite-nx
+-- aurora: Fetching zstd
+-- ZSTD VERSION: 1.5.7
+-- Performing Test C_FLAG_WALL
+-- Performing Test C_FLAG_WALL - Success
+-- Performing Test CXX_FLAG_WALL
+-- Performing Test CXX_FLAG_WALL - Success
+-- Performing Test C_FLAG_WEXTRA
+-- Performing Test C_FLAG_WEXTRA - Success
+-- Performing Test CXX_FLAG_WEXTRA
+-- Performing Test CXX_FLAG_WEXTRA - Success
+-- Performing Test C_FLAG_WUNDEF
+-- Performing Test C_FLAG_WUNDEF - Success
+-- Performing Test CXX_FLAG_WUNDEF
+-- Performing Test CXX_FLAG_WUNDEF - Success
+-- Performing Test C_FLAG_WSHADOW
+-- Performing Test C_FLAG_WSHADOW - Success
+-- Performing Test CXX_FLAG_WSHADOW
+-- Performing Test CXX_FLAG_WSHADOW - Success
+-- Performing Test C_FLAG_WCAST_ALIGN
+-- Performing Test C_FLAG_WCAST_ALIGN - Success
+-- Performing Test CXX_FLAG_WCAST_ALIGN
+-- Performing Test CXX_FLAG_WCAST_ALIGN - Success
+-- Performing Test C_FLAG_WCAST_QUAL
+-- Performing Test C_FLAG_WCAST_QUAL - Success
+-- Performing Test CXX_FLAG_WCAST_QUAL
+-- Performing Test CXX_FLAG_WCAST_QUAL - Success
+-- Performing Test C_FLAG_WSTRICT_PROTOTYPES
+-- Performing Test C_FLAG_WSTRICT_PROTOTYPES - Success
+-- Performing Test LD_FLAG_WL_Z_NOEXECSTACK
+-- Performing Test LD_FLAG_WL_Z_NOEXECSTACK - Success
+-- Performing Test C_FLAG_QUNUSED_ARGUMENTS
+-- Performing Test C_FLAG_QUNUSED_ARGUMENTS - Failed
+-- Performing Test CXX_FLAG_QUNUSED_ARGUMENTS
+-- Performing Test CXX_FLAG_QUNUSED_ARGUMENTS - Failed
+-- Performing Test C_FLAG_WA_NOEXECSTACK
+-- Performing Test C_FLAG_WA_NOEXECSTACK - Success
+-- Performing Test CXX_FLAG_WA_NOEXECSTACK
+-- Performing Test CXX_FLAG_WA_NOEXECSTACK - Success
+-- CMAKE_INSTALL_PREFIX: /opt/devkitpro/portlibs/switch
+-- CMAKE_INSTALL_LIBDIR: lib
+-- ZSTD_LEGACY_SUPPORT defined!
+-- ZSTD_MULTITHREAD_SUPPORT is enabled
+-- aurora: Fetching Tracy
+-- libdol-nx: the guest starts at 0x81330000
+-- libdol-nx: wiimenu-nx keeps its data in titles/
+-- wiinx: runtime on (Aurora from the aurora_core target this build already defines)
+-- aurora: reusing existing aurora_core target
+-- libwii-nx: /home/user/libdol-nx/../libwii-nx
+-- libgc-nx: /home/user/libdol-nx/../libgc-nx
+-- Game-specific native sources: 4 from /home/user/wii-nx/titles/wiimenu-nx/native
+-- Translator graph: 15747/15747 base functions shared; 0 profile-sensitive callers; 0 Retro Rewind functions
+-- RetroRewind target disabled (run translate-mod and emit-build-shards)
+-- libdol-nx: shown as "Wii Menu (USA)"
+-- libdol-nx: wiimenu-nx -> wiimenu-nx.nro
+-- Configuring done (12.3s)
+-- Generating done (0.4s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    FETCHCONTENT_SOURCE_DIR_ABSEIL-CPP
+    FETCHCONTENT_SOURCE_DIR_FREETYPE
+    FETCHCONTENT_SOURCE_DIR_PNG
+    FETCHCONTENT_SOURCE_DIR_ZLIB
+
+
+-- Build files have been written to: /home/user/wii-nx/titles/wiimenu-nx/build

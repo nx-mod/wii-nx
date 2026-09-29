@@ -174,6 +174,7 @@ configure_build() { # project target
     local game=$1 target=$2
     [ -f "$DEVKITPRO/cmake/Switch.cmake" ] || die "no devkitPro at $DEVKITPRO (wiinx.sh setup)"
     say "configuring $(basename "$game")"
+    mkdir -p "$game/build"
     cmake -S "$lib/cmake/game" -B "$game/build" -G Ninja \
         -DCMAKE_TOOLCHAIN_FILE="$DEVKITPRO/cmake/Switch.cmake" \
         -DWIINX_GAME_DIR="$game" -DWIINX_DAWN_DIR="$WS/dawn-nx" \
@@ -188,28 +189,28 @@ configure_build() { # project target
         -DFETCHCONTENT_SOURCE_DIR_TRACY="$deps/tracy" \
         -DFETCHCONTENT_SOURCE_DIR_XXHASH="$deps/xxhash" \
         -DFETCHCONTENT_SOURCE_DIR_ZLIB="$deps/zlib" \
-        -DFETCHCONTENT_SOURCE_DIR_ZSTD="$deps/zstd" > "$game/build.configure.log" 2>&1 ||
-        { tail -30 "$game/build.configure.log"; die "configure failed ($game/build.configure.log)"; }
-    say "building $target (-j$JOBS; log $game/build.log)"
+        -DFETCHCONTENT_SOURCE_DIR_ZSTD="$deps/zstd" > "$game/build/configure.log" 2>&1 ||
+        { tail -30 "$game/build/configure.log"; die "configure failed ($game/build/configure.log)"; }
+    say "building $target (-j$JOBS; log $game/build/build.log)"
     set +e
-    nice -n 10 cmake --build "$game/build" -j "$JOBS" --target "$target" > "$game/build.log" 2>&1
+    nice -n 10 cmake --build "$game/build" -j "$JOBS" --target "$target" > "$game/build/build.log" 2>&1
     local rc=$?
     set -e
     local nro
-    nro=$(find "$game/build" -name '*.nro' -newer "$game/build.configure.log" 2>/dev/null | head -1)
+    nro=$(find "$game/build" -name '*.nro' -newer "$game/build/configure.log" 2>/dev/null | head -1)
     if [ $rc -eq 0 ] && [ -n "$nro" ]; then
         echo "NRO: $nro ($(stat -c %s "$nro") bytes)"
         return 0
     fi
     local undef
-    undef=$(grep -o "undefined reference to \`[^']*'" "$game/build.log" | sort -u)
-    if [ -n "$undef" ] && ! grep -q 'error:' <(grep -v 'ld returned' "$game/build.log"); then
+    undef=$(grep -o "undefined reference to \`[^']*'" "$game/build/build.log" | sort -u)
+    if [ -n "$undef" ] && ! grep -q 'error:' <(grep -v 'ld returned' "$game/build/build.log"); then
         echo "COMPILED; link stopped on:"; echo "$undef" | sed 's/^/  /'
         echo "(expected with the nxvk stand-in: every object built, only the Vulkan driver is missing)"
         return 3
     fi
-    grep -E 'error:|FAILED' "$game/build.log" | head -20
-    die "build failed ($game/build.log)"
+    grep -E 'error:|FAILED' "$game/build/build.log" | head -20
+    die "build failed ($game/build/build.log)"
 }
 
 cmd_synthetic() {
