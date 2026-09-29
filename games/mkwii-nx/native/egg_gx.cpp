@@ -109,28 +109,3 @@ extern "C" void EGG__LightTexture__SetupTevFinish_HLE_8022e2bc(CpuContext* ctx) 
     Memory::Write8(self + 0x74, 2);
 }
 PPC_NATIVE_OVERRIDE_VOID(8022e2bc, EGG__LightTexture__SetupTevFinish_HLE_8022e2bc, (CpuContext* ctx), (ctx));
-
-// ============================================================================
-// EGG::AsyncDisplay
-// ============================================================================
-
-extern "C" void EGG__AsyncDisplay__endRender_HLE_8020ff9c(CpuContext* ctx) {
-    constexpr uint32_t kCopyEfbToXfb = 0x80219FB4u;        // EGG::Display::copyEFBtoXFB
-    constexpr uint32_t kGxSetDrawDoneCallback = 0x8016ED50u;
-    constexpr uint32_t kEggDrawDoneCallback = 0x8020FCDCu; // -> XfbManager::SetNextFrameBuffer
-    uint32_t p = ctx->gpr[3]; ctx->gpr[3] = p; ctx->lr = 0x8020FF9C;
-    InvokeIndirectCpu(kCopyEfbToXfb, ctx);
-    // The guest registers EGG::DrawDoneCallback here (r3 = 0x8020FCDC); r3 at
-    // this point is copyEFBtoXFB's leftover, so pass the callback explicitly.
-    ctx->gpr[3] = kEggDrawDoneCallback;
-    InvokeIndirectCpu(kGxSetDrawDoneCallback, ctx);
-    // On hardware the PE finish interrupt runs that callback once the GPU has
-    // drained the copy; our GX work is complete by now and the HLE finish
-    // handler does not dispatch callbacks, so run it here. It hands the copied
-    // XFB to VISetNextFrameBuffer + VIFlush. Without it VIFlush never ran, so
-    // VISetBlack(FALSE) never committed (black frames interleaved with real
-    // ones) and the XFB ring never advanced.
-    ctx->lr = 0x8020FF9C;
-    InvokeIndirectCpu(kEggDrawDoneCallback, ctx);
-}
-PPC_NATIVE_OVERRIDE_VOID(8020FF9C, EGG__AsyncDisplay__endRender_HLE_8020ff9c, (CpuContext* ctx), (ctx));

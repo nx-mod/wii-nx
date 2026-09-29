@@ -10,7 +10,7 @@ alone.
 | `mkwii_game.cpp` | the game's hooks and OS layout |
 | `strap_scene.cpp` | the strap screen's input check |
 | `mod_loader_hooks.cpp` | the mod loader's entry hook |
-| `egg_gx.cpp` | EGG draw and display natives, with this game's EGG data |
+| `egg_gx.cpp` | EGG DrawGX and LightTexture natives, with this game's EGG data |
 | `egg_task_thread.cpp` | EGG::TaskThread::run, and the THP movie retry it needs |
 | `product/` | the Retro Rewind product |
 | `mkwii_dynamic_aspect_records.h` | the screens that draw to fixed-size targets, for widescreen |
