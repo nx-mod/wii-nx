@@ -9,6 +9,7 @@ the disc it reads:
 sdmc:/wii-nx/
 ├── config/                  settings shared by every game
 ├── system/                  the Wii itself: one NAND for all of them
+├── sd.img                   the Wii's SD card (optional)
 └── games/mkwii-nx/
     ├── mkwii-nx.nro
     ├── config.toml
@@ -18,6 +19,33 @@ sdmc:/wii-nx/
 ```
 
 Open the game from the homebrew menu.
+
+Power off in a game or the Wii Menu closes it. Reset starts it again.
+
+## The NAND
+
+`system/` is the Wii's internal memory, shared by every game and channel: saves,
+Miis, settings, installed channels. Copy your own console's NAND there (the
+`title/`, `ticket/`, `shared1/` and `shared2/` folders), or let a game make a
+fresh one.
+
+A WiiWare or Virtual Console title installs into it from its WAD, so the Wii
+Menu lists it:
+
+```sh
+../libdol-nx/tools/wiinx-install-title "<title>.wad" system/
+```
+
+## The SD card
+
+The Wii's SD slot reads `sd.img`, a FAT32 image, one card for every title. With
+no image there is no card. Make one on a PC:
+
+```sh
+mkfs.fat -F 32 -n WIINX -C sd.img 1048576
+```
+
+Put files on it by mounting it, and copy it to `sdmc:/wii-nx/sd.img`.
 
 ## Building a game, once
 
