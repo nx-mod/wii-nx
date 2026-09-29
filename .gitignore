@@ -48,3 +48,7 @@ titles/*/title/
 # Build logs from older run-wii-nx driver runs (now under build/).
 */*/build.log
 */*/build.configure.log
+
+# The Wii SD card image, beside the NAND: yours, never committed.
+/sd.img
+/sd/
