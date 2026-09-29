@@ -8,6 +8,7 @@ project:
   id: megaman9-wr9e
   display_name: MegaMan9
   game_id: WR9E
+  title_id: 0001000157523945
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: megaman9_base

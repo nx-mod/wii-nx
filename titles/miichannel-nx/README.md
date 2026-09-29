@@ -39,15 +39,15 @@ what `fetch-title` picks:
 
 ## Status
 
-Project only: not translated yet.
+Translated (72 shards, about a minute), not yet built or booted.
 
-Binding is no longer in the way: the engine looks its replacements up by name in
-a table built from the title's own code, and 402 of 470 were located here - the
-best of anything tried, since a channel is mostly the Wii's own libraries.
+- 311 natives bound, 57 SDK variables named in `globals.json`, the scheduler
+  layout in `native/miichannel_game.cpp`.
+- ES reports its own title id (`project.title_id`), so saves and `data/` land
+  in `/title/00010002/48414341/`.
+- Installed into the shared NAND (`/system/`) with `wiinx-install-title`.
 
-What remains is booting a NAND title at all. Everything today starts from a disc,
-so the runtime needs to serve a title's contents the way the console's system
-software does.
+What remains is booting from the NAND: the runtime starts from a disc today.
 
 ## Related
 
@@ -61,7 +61,7 @@ software does.
 |---|---|
 | entry point | `0x80006124` |
 | functions found | 10,054, of which 2,322 are named by the symbol set |
-| natives bound | 303, by signature - more than any game here, because a system channel is almost all SDK and middleware |
+| natives bound | 311, by signature - more than any game here, because a system channel is almost all SDK and middleware |
 | libraries | RVL SDK 2007-08, nw4r, HBM (the Home Button menu), RFL (Miis) |
 
 `title/` holds what you downloaded from Nintendo and is not committed.

@@ -10,6 +10,7 @@ project:
   display_name: Wii Menu
   title: Wii Menu          # what the launcher and the home menu show
   game_id: RHAE                 # the System Menu has no disc id; this is its channel
+  title_id: 0000000100000002
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: wiimenu_base

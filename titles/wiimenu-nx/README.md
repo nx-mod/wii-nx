@@ -86,9 +86,17 @@ executable per game and the most interesting test the engine would get.
 
 ## Status
 
-The executable is located and the project translates it. `wiinx-scan` binds 271
-natives in it - more than either Mega Man - and the symbol set names 2,299 of
-its functions, with the rest found by their prologues.
+Translated (about two and a half minutes), not yet built or run.
 
-Not yet built or run. What stands between here and a home screen is the runtime
-work below: booting a NAND title, and a title list to show.
+- 282 natives bound, 55 SDK variables named in `globals.json`, the scheduler
+  layout in `native/wiimenu_game.cpp`; 2,234 of its 16,089 functions named.
+- ES reports `0000000100000002` (`project.title_id`).
+- Installed into the shared NAND with the Mii Channel, beside your console's
+  SYSCONF and Mii database.
+- The translator reports four call targets with no body. Two, `0x8146B00C` and
+  `0x8146CFB8`, are inside the image and untranslated. The other two,
+  `0x817D0978` and `0x817D09A8`, lie past its bss, so the menu is probably
+  calling into code it loads itself.
+
+What stands between here and a home screen is the runtime work above: booting a
+NAND title, and a title list to show.

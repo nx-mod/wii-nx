@@ -7,6 +7,7 @@ project:
   id: megaman10-wrxe
   display_name: megaman10
   game_id: WRXE
+  title_id: 0001000157525845
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: megaman10_base
