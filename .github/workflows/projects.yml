@@ -68,6 +68,24 @@ jobs:
           sys.exit(1 if bad else 0)
           PY
 
+      # The SDK's variables by name (libdol-nx docs/game-hooks.md): a bad name
+      # or an address outside guest RAM is a write the runtime would misplace.
+      - name: Every globals table parses
+        run: |
+          python3 - <<'PY'
+          import glob, json, re, sys
+          bad = 0
+          for path in sorted(glob.glob("*/*/globals.json")):
+              table = json.load(open(path))
+              for name, address in table.items():
+                  if not re.fullmatch(r"[a-z0-9]+\.[A-Za-z_][A-Za-z0-9_]*", name):
+                      print(f"{path}: bad name {name}"); bad += 1
+                  if not 0x80000000 <= int(address, 16) <= 0x93FFFFFF:
+                      print(f"{path}: {name} {address} outside guest RAM"); bad += 1
+              print(f"ok {path}: {len(table)} names")
+          sys.exit(1 if bad else 0)
+          PY
+
       # The rule the whole project rests on: build from your own disc, and
       # nothing from a disc is ever committed. This catches the mistake in the
       # pull request rather than in the history.
@@ -77,7 +95,7 @@ jobs:
           import subprocess, sys
           formats = (".dol", ".rel", ".elf", ".iso", ".gcm", ".wbfs", ".rvz",
                      ".wia", ".gcz", ".ciso", ".nkit", ".wad", ".tmd", ".tik",
-                     ".arc", ".brres", ".szs", ".thp", ".nand", ".bin")
+                     ".arc", ".brres", ".szs", ".thp", ".nand", ".bin", ".app")
           files = subprocess.run(["git", "ls-files"], check=True,
                                  capture_output=True, text=True).stdout.split()
           found = [f for f in files if f.lower().endswith(formats)]
