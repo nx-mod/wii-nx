@@ -41,3 +41,6 @@ games/*/functions.map
 # A title's contents, unpacked from your own WAD by wiinx-wad.
 wads/*/game/
 *.app
+
+# A system title downloaded from Nintendo (wiinx-fetch-title): yours, never committed.
+titles/*/title/

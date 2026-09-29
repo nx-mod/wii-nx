@@ -233,6 +233,8 @@
  "VIInit_HLE_801b94a4": "0x8153CB9C",
  "VISetBlack_HLE_801bab2c": "0x8153E224",
  "VISetNextFrameBuffer_HLE_801baab8": "0x8153E1B0",
+ "VISetPostRetraceCallback_HLE_801b9138": "0x8153C830",
+ "VISetPreRetraceCallback_HLE_801b90f4": "0x8153C7EC",
  "VIWaitForRetrace_HLE_801b99ec": "0x8153D0E4",
  "WPADControlLed_HLE": "0x8157B188",
  "WPADControlMotor_HLE": "0x8157B054",
