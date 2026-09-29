@@ -32,3 +32,12 @@ games/*/functions.map
 # The symbol map: supplied by you, like the disc. Its source is not recorded
 # here, so it is not published here.
 /games/mkwii-nx/MAP.txt
+
+# Written by libdol-nx tools/wiinx-translate from bindings.json and globals.json.
+*/*/native/native_bindings.cpp
+*/*/native/guest_globals.cpp
+*/*/native/wiinx_bindings.cpp
+
+# A title's contents, unpacked from your own WAD by wiinx-wad.
+wads/*/game/
+*.app

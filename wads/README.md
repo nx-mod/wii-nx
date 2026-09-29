@@ -20,7 +20,8 @@ more, because of how Nintendo shipped them:
 
 A project is made in one command, which does both and reads everything else out
 of the executable - where its code starts, what functions it has, what they are
-called, and which of them this library already replaces:
+called, which of them this library already replaces, where the SDK keeps its
+variables (`globals.json`) and the scheduler's layout (`native/`):
 
 ```sh
 ../libdol-nx/tools/wiinx-new-title "Mega Man 9.wad" wads/megaman9-nx
@@ -38,7 +39,9 @@ called, and which of them this library already replaces:
 
 | | Title | State |
 |---|---|---|
-| [megaman9-nx](megaman9-nx) | `WR9E`, WiiWare | translated: 10,321 functions, 266 natives bound. Its game is LZ11 inside a content |
+| [megaman9-nx](megaman9-nx) | `WR9E`, WiiWare | translated; compiles for Switch (links once the NVK driver is present): 10,321 functions, 283 natives, 58 SDK globals. Its game is LZ11 inside a content |
+| [megaman10-nx](megaman10-nx) | `WRXE`, WiiWare | set up: 11,291 functions, 261 natives, 57 SDK globals. A 2009 SDK |
+| [excitebike-nx](excitebike-nx) | `WWRE`, WiiWare | set up: 16,830 functions, 274 natives, 57 SDK globals |
 | [crystaldefenders-nx](crystaldefenders-nx) | `WCIE`, WiiWare | set up: 6,596 functions, 2,500 named, 237 natives bound. Its game is a plain content |
 | [crystaldefenders2-nx](crystaldefenders2-nx) | `WC2E`, WiiWare | set up: 6,601 functions, 2,499 named, 237 natives bound. A separate game on the same engine as R1 |
 | [bombermanblast-nx](bombermanblast-nx) | `WM8E`, WiiWare | set up: 12,014 functions, 3,070 named, 296 natives bound. The fullest of them: nw4r's 3D and sound, Miis, the Home Button menu, and online |
