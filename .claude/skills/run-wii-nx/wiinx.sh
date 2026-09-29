@@ -2,7 +2,7 @@
 # Drive the wii-nx pipeline from a Linux box: fetch what it builds against,
 # translate a game, and cross-compile it into a Switch NRO.
 #
-#   wiinx.sh setup                 sibling repos, deps, devkitPro, nxvk stand-in
+#   wiinx.sh setup [NXVK.tar.xz]   sibling repos, deps, devkitPro, nxvk (stand-in without one)
 #   wiinx.sh status                what is present, what is missing
 #   wiinx.sh synthetic [DIR]       the no-disc test game: make, translate, build
 #   wiinx.sh new-wad FILE.wad DIR  a project from a WAD you own (wads/<name>-nx)
@@ -87,6 +87,7 @@ for m in json.load(sys.stdin)["manifests"]:
 }
 
 cmd_setup() {
+    local nxvk=${1:-}
     command -v dotnet >/dev/null || die "dotnet 8 is needed (apt-get install -y dotnet-sdk-8.0)"
     for t in cmake ninja git python3 tclsh curl; do
         command -v $t >/dev/null || die "$t is missing (apt-get install -y cmake ninja-build git python3 tcl curl)"
@@ -136,7 +137,12 @@ EOS
 
     [ -f "$DEVKITPRO/cmake/Switch.cmake" ] || fetch_devkitpro
     local portlib=$DEVKITPRO/portlibs/switch/lib
-    if [ ! -f "$portlib/libnvk.a" ]; then
+    if [ -n "$nxvk" ]; then
+        # nxvk-switch-portlib-<ver>.tar.xz, from github.com/nx-mod/vulkan-nx releases.
+        say "nxvk from $nxvk"
+        mkdir -p "$DEVKITPRO/portlibs/switch"
+        tar -xJf "$nxvk" -C "$DEVKITPRO/portlibs/switch"
+    elif [ ! -f "$portlib/libnvk.a" ]; then
         # Real nxvk comes from github.com/nx-mod/nxvk releases, which this
         # network cannot reach. Empty archives let everything compile; the
         # final link then stops on vk_icdGetInstanceProcAddr.
@@ -245,7 +251,7 @@ cmd_tests() {
 }
 
 case ${1:-} in
-    setup) cmd_setup ;;
+    setup) shift; cmd_setup "$@" ;;
     status) cmd_status ;;
     synthetic) shift; cmd_synthetic "$@" ;;
     new-wad) shift; cmd_new_wad "$@" ;;
