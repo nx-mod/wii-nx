@@ -62,7 +62,7 @@ Check the result any time:
 - `NRO: <path>`: a finished program.
 - `COMPILED; link stopped on: vk_icdGetInstanceProcAddr` (exit 3): every object
   built, but only the nxvk stand-in is installed.
-- `build failed`: the first errors, plus the path to `PROJECT/build.log`.
+- `build failed`: the first errors, plus the path to `PROJECT/build/build.log`.
 
 A WAD project, end to end:
 
