@@ -44,3 +44,7 @@ wads/*/game/
 
 # A system title downloaded from Nintendo (wiinx-fetch-title): yours, never committed.
 titles/*/title/
+
+# Build logs from older run-wii-nx driver runs (now under build/).
+*/*/build.log
+*/*/build.configure.log
