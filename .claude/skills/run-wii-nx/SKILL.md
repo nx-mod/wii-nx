@@ -19,8 +19,13 @@ sudo apt-get install -y cmake ninja-build git python3 tcl curl dotnet-sdk-8.0
 ## Setup (once, about a minute)
 
 ```bash
-.claude/skills/run-wii-nx/wiinx.sh setup
+.claude/skills/run-wii-nx/wiinx.sh setup /path/to/nxvk-switch-portlib-26.2.2.tar.xz
 ```
+
+The tarball is the Vulkan driver, from the `v26.2.2-nx-mod-v1` release of
+github.com/nx-mod/vulkan-nx. That URL is blocked here, so ask the user to upload
+it. Without it, setup installs an empty stand-in: everything compiles, but
+nothing links.
 
 Everything goes beside `wii-nx/`, in the folder holding it:
 
@@ -34,7 +39,7 @@ Everything goes beside `wii-nx/`, in the folder holding it:
 - **devkitPro**, if `$DEVKITPRO` (default `/opt/devkitpro`) has none: it's pulled
   from the `devkitpro/devkita64` Docker image's layers with curl, no Docker
   needed.
-- **An empty nxvk stand-in**, if real nxvk isn't installed.
+- **nxvk**, from the tarball; an empty stand-in if none is given and none is installed.
 
 Check the result any time:
 
@@ -56,8 +61,7 @@ Check the result any time:
 
 - `NRO: <path>`: a finished program.
 - `COMPILED; link stopped on: vk_icdGetInstanceProcAddr` (exit 3): every object
-  built, but only the nxvk stand-in is installed. This is the normal result in
-  this container.
+  built, but only the nxvk stand-in is installed.
 - `build failed`: the first errors, plus the path to `PROJECT/build.log`.
 
 A WAD project, end to end:
@@ -89,9 +93,14 @@ nxvk and hardware; neither is available here.
 - **Don't run plain `cmake --build` on a game.** It builds every third-party
   target, including Dawn's demo and Abseil's signal handler, which don't
   compile for Horizon. Build `<game>_nro` only, as the driver does.
-- **nxvk can't be fetched here**: its releases need api.github.com release
-  assets. With the empty stand-in the link stops on `vk_icdGetInstanceProcAddr`
-  and nothing else. Any other undefined symbol is a real bug.
+- **nxvk can't be fetched here** (GitHub release downloads are refused), so it
+  comes from the user as a file. With the stand-in the link stops on
+  `vk_icdGetInstanceProcAddr` and nothing else; any other undefined symbol is a
+  real bug.
+- **Disk.** A game build directory is 5-9 GB (Dawn's objects alone are most of
+  it). Two or three of them fill a session's allowance.
+- **NROs are big** (the synthetic game is 28 MB, Mega Man 9 is 65 MB), which is
+  over the 30 MB file-send limit; `xz -9` gets Mega Man 9 to 17 MB.
 - **Translated output records absolute paths.** Build a project where it was
   translated, or translate it again.
 - **`new-wad` names fewer functions than a committed project.** On Mega Man 9 it
@@ -100,6 +109,9 @@ nxvk and hardware; neither is available here.
 
 ## Troubleshooting
 
+- **`ar: unable to copy file ... No space left on device`**: the disk allowance is
+  full. Delete old build directories (`PROJECT/build`); deleting works even when
+  writing doesn't.
 - **`fatal: unable to access 'https://chromium.googlesource.com/...': CONNECT tunnel failed, response 403`**:
   a plain `git submodule update` in dawn-nx. Use `wiinx.sh setup`.
 - **`upload-pack: not our ref 2d78d7ce...`**: fetching Dawn's pinned abseil
