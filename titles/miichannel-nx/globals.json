@@ -23,7 +23,7 @@
  "dsp.__DSP_rude_task_pending": "0x803BDE88",
  "dsp.__DSP_tmp_task": "0x803BDE90",
  "dvd.WaitingQueue": "0x803B8C30",
- "dvd.dvdContexts": "0x803C0000",
+ "dvd.dvdContexts": "0x803B8EE0",
  "gx.CPUFifo": "0x8035D724",
  "gx.CPUFifoReady": "0x803BD9E8",
  "gx.DrawDone": "0x803BDA10",
