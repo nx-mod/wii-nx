@@ -58,6 +58,8 @@
  "gx.__savedGXdata": "0x80344110",
  "gx.gxData": "0x803437C0",
  "ipc.IPCBufferLo": "0x803867EC",
+ "nand.s_homeDir": "0x80346D20",
+ "nand.s_libState": "0x80386848",
  "os.PowerCallback": "0x80386948",
  "os.StmEhDesc": "0x8038693C",
  "os.StmEhRegistered": "0x80386940",
