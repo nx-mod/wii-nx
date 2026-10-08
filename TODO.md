@@ -20,6 +20,12 @@
       libdol-nx's `wiinx-fetch-nand`, `wiinx-install-title` and `wiinx-sysconf`
       already do; the NAND layer itself is libwii-nx's `src/nand` (its TODO lists
       the gaps)
+- [ ] Region-free Wii Menu: a runtime option (not a patch to the menu's code)
+      that lets the menu list and start titles of any region, as the
+      well-known System Menu mods do
+- [ ] TV format from the console's own settings: `VIGetTvFormat` answers NTSC,
+      so the menu called a PAL console "NTSC" - follow setting.txt's VIDEO and
+      SYSCONF (PAL, PAL60, NTSC)
 - [ ] The hidden system channels (`00010008`, region select and EULA among
       them), which the Wii Menu may ask for: not on the NAND yet
 - [ ] A downloads page per release
