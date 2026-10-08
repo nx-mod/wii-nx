@@ -15,6 +15,7 @@
  "ax.axDspResumeVector": "0x81699E22",
  "ax.axDspSlave": "0x81683FA0",
  "ax.axDspSlaveLength": "0x81699E24",
+ "debug.verbosity": "0x8169AC20",
  "dsp.__DSP_curr_task": "0x8169B394",
  "dsp.__DSP_first_task": "0x8169B390",
  "dsp.__DSP_init_flag": "0x8169B378",
