@@ -52,3 +52,7 @@ titles/*/title/
 # The Wii SD card image, beside the NAND: yours, never committed.
 /sd.img
 /sd/
+
+# Build and configure exit codes the title build scripts leave.
+titles/*/build.rc
+titles/*/configure.rc
