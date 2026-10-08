@@ -59,27 +59,4 @@ output:
   data_initializer: data_sections_init.cpp
   base_manifest: build/base/mkwii_base_manifest.json
 
-# Retro Rewind: this game's own mod, built as a second executable beside the
-# base game from the pack you installed. The paths are yours - nothing of the
-# pack is in this repository - and the product definition it links is
-# native/product/retro_rewind_product.cpp.
-profiles:
-  retro-rewind:
-    enabled: true
-    requires_game_id: RMCP01
-    requires_dol_sha256: 80d18895b39c63bd80f457398bfcbb91b7d16ac116a41a88967e954080155b05
-    code_pul: PulsarPacks/completed/RetroRewind/RetroRewind6/Binaries/Code.pul
-    mod_root: PulsarPacks/completed/RetroRewind/RetroRewind6
-    region: P
-    module_guest_base: 0x81800000
-    module_link_base: 0x803992E0
-    output: build/mods/retro_rewind_full_cpp
-    enable_retro_wfc: true
-    retro_wfc_payload: https://rwfc.net/api/wfc/payload?g=RMCPD00
-    retro_wfc_legacy_bootstrap_hook: 0x800ED6E8
-    riivolution:
-      xml: xml/RetroRewind6.xml
-      options:
-        - section: Retro Rewind
-          option: Pack
-          choice: 1
+# Retro Rewind is set aside for now: no profile, so only the base game builds.

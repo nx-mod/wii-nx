@@ -48,10 +48,10 @@ code signature instead.
 
 ## Retro Rewind
 
-The pack builds as a second executable beside the base game, from the copy you
-installed - none of it is in this repository. `recomp.yml`'s `retro-rewind`
-profile has the paths and the hooks; point `mod_root` at your `RetroRewind6`
-folder and translate with that profile.
+Set aside for now: `recomp.yml` has no `retro-rewind` profile, so only the base
+game builds. The product definition stays in `native/product/`, and the
+profile (pack paths, hooks, RetroWFC and Riivolution options) is in git history
+for when it comes back.
 
 libdol-nx supports mods without knowing this one: a product says whether it
 overlays the disc with its own files, and this game's product definition is the
