@@ -88,6 +88,7 @@
  "GX__SetDispCopyFrame2Field_8016f5f8": "0x81544FF8",
  "GX__SetDispCopyGamma_8016fc24": "0x81545598",
  "GX__SetDispCopySrc_8016f438": "0x81544E38",
+ "GX__SetDispCopyYScale_8016f8fc": "0x81545270",
  "GX__SetDither_80172930": "0x81547A18",
  "GX__SetDstAlpha_8017295c": "0x81547A44",
  "GX__SetFog_801722cc": "0x81547514",
