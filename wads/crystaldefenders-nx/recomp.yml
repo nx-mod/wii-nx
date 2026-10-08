@@ -9,6 +9,7 @@ project:
   display_name: CrystalDefendersR1
   title: Crystal Defenders          # what the launcher and the home menu show
   game_id: WCIE
+  title_id: 0001000157434945
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: crystaldefenders_base
