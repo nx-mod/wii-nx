@@ -1,0 +1,15 @@
+{
+  "program": "title/program.dol",
+  "out": "title/program.modules.dol",
+  "modules": [
+    {
+      "name": "wwwlib",
+      "content": "title/00000009.app",
+      "file": "wwwlib-rvl.lz7",
+      "sel": {"content": "title/0000009a.app", "file": "main.sel"},
+      "base": "0x80080420",
+      "bss": "0x80BE50E0",
+      "main": {"1": "0x81330000", "2": "0x81332120", "6": "0x81634360", "8": "0x81697EE0"}
+    }
+  ]
+}
