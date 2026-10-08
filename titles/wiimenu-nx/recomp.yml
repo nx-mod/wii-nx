@@ -28,10 +28,11 @@ translation:
     path: functions.map
   allow_unsupported_instructions: false
 
+# The program with the modules it loads at run time merged in (wwwlib, its web
+# engine): tools/wiinx-rso build writes it from modules.json, every translate.
 inputs:
   dol:
-    path: title/program.dol
-    sha256: 7529e4a4cc11196db12e671c11a708f56c290a38f8e75ae4a7f03b36f37638bd
+    path: title/program.modules.dol
 
 # Where libdol-nx is, relative to this folder.
 runtime:

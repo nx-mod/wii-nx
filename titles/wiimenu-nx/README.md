@@ -46,6 +46,17 @@ servers for it without naming one gets Korea's, which numbers highest.
 The other contents are U8 archives of fonts, icons and layouts, several
 ASH0-compressed; libdol-nx's `format/archive` expands those.
 
+One of them is code. Content `0x09` holds `wwwlib-rvl.lz7`, the menu's web
+engine (9.4 MB, LZ77): an RSO module the menu loads at `0x80080420` and links
+to itself by name through `main.sel` (content `0x9A`). Its first call stopped
+the menu, since only the program had been translated. `modules.json` says
+where it goes, and `tools/wiinx-rso build` (run by every translate) links it
+from the contents, merges it into `title/program.modules.dol` (the input
+`recomp.yml` names) and adds its 27,708 function starts to `functions.map`.
+The load address is the menu's heap at that point; it matched a memory dump
+of the real menu, but if a later build of it loads the module elsewhere, the
+menu's calls will miss.
+
 ## What it would need from the runtime
 
 Beyond the shared work (binding replacements by name, booting a NAND title):
