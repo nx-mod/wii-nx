@@ -6,7 +6,8 @@ workspace_root: .
 project:
   id: crystaldefenders2-unknown
   display_name: crystaldefenders2
-  game_id: unknown
+  game_id: WC2E
+  title_id: 0001000157433245
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: crystaldefenders2_base

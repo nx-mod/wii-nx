@@ -7,7 +7,8 @@ project:
   id: bombermanblast-unknown
   display_name: bombermanblast
   title: Bomberman Blast          # what the launcher and the home menu show
-  game_id: unknown
+  game_id: WM8E
+  title_id: 00010001574D3845
   region: E
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: bombermanblast_base
