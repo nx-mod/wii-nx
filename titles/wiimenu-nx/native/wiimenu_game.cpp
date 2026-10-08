@@ -14,6 +14,10 @@ RuntimeGuestOs::Layout GuestOsLayout() {
     layout.scheduler_disable_count = 0x8169AF20u;
     layout.default_thread = 0x811152D8u;
     layout.idle_thread = 0x811156F0u;
+    layout.switch_thread_callback_ptr = 0x81699D08u;
+    layout.interrupt_handler_table_ptr = 0x8169AF08u;
+    layout.alarm_queue_r13_offset = 0x00005020u;
+    layout.load_context = 0x8152E124u;
     return layout;
 }
 
