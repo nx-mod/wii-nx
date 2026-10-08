@@ -25,5 +25,8 @@ region from the fourth character of `game_id`, as every catalogue reads a disc
 id: E USA, P Europe, J Japan, K Korea, A all regions. So `game_id` must be the
 title's real id - a disc's from its boot.bin, a WAD's or channel's from the low
 four characters of its title id (`title_id`, from its TMD) - never `unknown`,
-and `region` must agree with it. libdol-nx reconfigures when `recomp.yml`
-changes, so a corrected id reaches the NRO on the next build.
+and `region` must agree with it. None of it is typed in: libdol-nx's
+`wiinx-identity` reads it from the title (the disc's boot.bin, the title's TMD
+in `title/` or `game/`) and corrects `recomp.yml`, and `wiinx-translate` and
+`wiinx-build` run it first. libdol-nx reconfigures when `recomp.yml` changes,
+so the NRO's name follows on the next build.
