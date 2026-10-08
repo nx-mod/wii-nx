@@ -26,8 +26,17 @@
 - [ ] TV format from the console's own settings: `VIGetTvFormat` answers NTSC,
       so the menu called a PAL console "NTSC" - follow setting.txt's VIDEO and
       SYSCONF (PAL, PAL60, NTSC)
-- [ ] The hidden system channels (`00010008`, region select and EULA among
-      them), which the Wii Menu may ask for: not on the NAND yet
+- [ ] A complete NAND setup script, the first piece of the NAND manager: one
+      command that builds a working NAND for the Wii Menu, channels and WADs -
+      fetch the system titles a console ships with (wiinx-fetch-nand, including
+      the hidden 00010008 ones: EULA HAK*, region select HAL*), install them
+      against the NAND's own shared1/content.map (wiinx-install-title), take
+      what only the console has from its BootMii backup (wiinx-nand-dump:
+      setting.txt, SYSCONF, saves), and check the result: every TMD's contents
+      present, no empty files where the menu keeps its own (iplsave.bin,
+      play_rec.dat). Done by hand on 2026-10-08 for the EUR menu.
+- [x] The hidden system channels (`00010008`): EULA and region select (EUR)
+      installed by hand on 2026-10-08
 - [ ] A downloads page per release
 - [x] One copy of the toolkit: `example-wii-nx` is gone, and libdol-nx's tools
       are what everything here calls
