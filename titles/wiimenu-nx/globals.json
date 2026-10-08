@@ -41,6 +41,7 @@
  "gx.gxData": "0x811164E0",
  "ipc.IPCBufferLo": "0x8169B3E4",
  "ipc.IPCInit": "0x81572254",
+ "isfs.ISFS_OpenLib": "0x8157446C",
  "nand.s_currentDir": "0x81687200",
  "nand.s_homeDir": "0x81131EA0",
  "nand.s_libState": "0x8169B3A8",

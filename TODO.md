@@ -35,6 +35,12 @@
       setting.txt, SYSCONF, saves), and check the result: every TMD's contents
       present, no empty files where the menu keeps its own (iplsave.bin,
       play_rec.dat). Done by hand on 2026-10-08 for the EUR menu.
+- [ ] A whole-NAND install, the way Dolphin's "Perform Online System Update"
+      makes one: every title a console of the region ships with, in one go,
+      rather than the parts we have so far. And every download option a user
+      may want beside it: region, a single title, IOS only, channels only,
+      the hidden 00010008 titles, an update to a newer System Menu. (After the
+      Wii Menu's ISFS start-up fix is confirmed on the console.)
 - [x] The hidden system channels (`00010008`): EULA and region select (EUR)
       installed by hand on 2026-10-08
 - [ ] A downloads page per release
