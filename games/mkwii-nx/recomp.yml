@@ -44,9 +44,9 @@ inputs:
 # Where libdol-nx is, relative to this folder: the natives translated
 # calls bind to. Change these two if you move either checkout.
 runtime:
-  native_registration_root: ../../libdol-nx/src
+  native_registration_root: ../../../libdol-nx/src
   native_abi_directories:
-    - ../../libdol-nx/src/platform/gx
+    - ../../../libdol-nx/src/platform/gx
   # This is the game libdol-nx's natives were written from, so the addresses
   # they are registered at are this game's own. Every other game names its own
   # table here instead (docs/signatures.md).
