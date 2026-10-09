@@ -66,10 +66,41 @@ uint32_t FindGlyphIndex(uint32_t map, uint32_t code) {
 }  // namespace
 
 // r3 = this, r4 = the CMAP block, r5 = the character code; the index in r3.
+// The font object as the menu's archive font lays it out: +20 its FINF, whose
+// +8 is the TGLP (glyph sheets); +24 the per-sheet index adjustment table that
+// GetGlyphFromIndex subtracts (0xFFFF = sheet not loaded).
+void DumpFontOnce(uint32_t font) {
+#if defined(__SWITCH__)
+    static bool done = false;
+    if (done || font < 0x80000000u) {
+        return;
+    }
+    done = true;
+    char line[200];
+    const uint32_t finf = Memory::Read32(font + 20);
+    const uint32_t tglp = Memory::Read32(finf + 8);
+    const uint32_t table = Memory::Read32(font + 24);
+    const uint32_t cols = Memory::Read16(tglp + 12), rows = Memory::Read16(tglp + 14);
+    const uint32_t sheets = Memory::Read16(tglp + 8);
+    std::snprintf(line, sizeof(line),
+                  "[font] object 0x%08X finf 0x%08X tglp 0x%08X: cell %ux%u sheetSize 0x%X sheets %u fmt 0x%X "
+                  "cols %u rows %u image 0x%08X alter %u table 0x%08X",
+                  font, finf, tglp, Memory::Read8(tglp), Memory::Read8(tglp + 1), Memory::Read32(tglp + 4), sheets,
+                  Memory::Read16(tglp + 10), cols, rows, Memory::Read32(tglp + 20), Memory::Read16(finf + 2), table);
+    SwitchBootLogExternal(line);
+#else
+    (void)font;
+#endif
+}
+
 extern "C" void Nw4rFindGlyphIndex_Cpu(CpuContext* ctx) {
     const uint32_t map = ctx->gpr[4];
     const uint32_t code = ctx->gpr[5] & 0xFFFFu;
     const uint32_t index = FindGlyphIndex(map, code);
+    try {
+        DumpFontOnce(ctx->gpr[3]);
+    } catch (const Memory::AccessViolation&) {
+    }
 #if defined(__SWITCH__)
     if (g_traced < kTraceLimit && index != kNoGlyph) {
         ++g_traced;
