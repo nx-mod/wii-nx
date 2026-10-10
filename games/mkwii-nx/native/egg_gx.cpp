@@ -1,5 +1,5 @@
 // gx_egg.cpp - EGG Library Helper Stubs
-#include "gx_internal.h"
+#include "gx/gx_internal.h"
 
 // Vertex helper declarations not used by the direct-call catalog.
 extern "C" void GX__SetArray_8016e32c(uint32_t a, uint32_t ba, uint32_t str);
