@@ -1,5 +1,18 @@
 # Status
 
+## 2026-10-12
+
+- **Mario Kart Wii** rebuilt on the current libraries: boots and gets through
+  the menus, about 11 fps, then crashes before a race starts. Six runtime fixes
+  on the way (native tables before guest code, natives across 1 MiB pages, EGG
+  natives registered, `_AS` self-bindings, exact decodeSZS bounds, include
+  paths). A new translation is done, not yet built.
+- **Wii Party** set up as game 2 (`games/wiiparty-nx`).
+- **Prior art:** [wiiparty-recomp](https://github.com/arelkair/wiiparty-recomp)
+  (native GX, recompiled DSP) and the
+  [Strikers fork](https://github.com/BlackAndBlue95/Strikers-WiiCompiled)
+  (translator fixes, ported) are both GPL-3.0, so their code can come here.
+
 2026-09-22. Measured on hardware (Switch, 1280x720 output) with Mario Kart Wii.
 
 ## Mario Kart Wii

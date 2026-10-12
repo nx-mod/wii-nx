@@ -64,6 +64,6 @@ project was moved out of, and builds against libdol-nx from this repository
 alone. Its shader pipelines are in `cache/`, untracked, so the first run after
 a build compiles none of them.
 
-It runs at roughly a quarter speed on hardware as of the last measurement,
-which is where the work is. Nothing built from libdol-nx has been on hardware
-yet.
+2026-10-12: rebuilt on the current libraries, it boots and gets through the
+menus, at about 11 fps. A new translation is done but not yet built: direct
+tail calls, plus the jump-table and GQR fixes ported from the Strikers fork.

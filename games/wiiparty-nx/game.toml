@@ -1,0 +1,7 @@
+# Read from the disc by tools/wiinx-new-game; do not edit by hand.
+name = "wiiparty-nx"
+title = "Wii Party"
+game_id = "SUPP01"
+revision = 0
+region = "PAL"          # P: the disc ID's fourth character
+dol_sha256 = "f8f46694f942ded88fa6952ca5f93701100d304d63407978d4c700c1bdceab6c"
