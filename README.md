@@ -37,7 +37,8 @@ game: see [docs/install.md](docs/install.md).
 
 | Game | Disc | State |
 |---|---|---|
-| Mario Kart Wii | `RMCP01` PAL | **Playable** — boots, menus, races, saves, with sound. About a quarter of full speed |
+| Mario Kart Wii | `RMCP01` PAL | **Playable** on the September build. Rebuilt on the current libraries, it gets through the menus (2026-10-12) |
+| Wii Party | `SUPP01` PAL | game 2: set up and scanned |
 | New Super Mario Bros. Wii | `SMNE01` NTSC-U | being translated |
 | Super Paper Mario | `R8PE01` NTSC-U | set up, not yet translated |
 | Punch-Out!! | `R7PE01` NTSC-U | set up, not yet translated |

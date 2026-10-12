@@ -6,6 +6,7 @@ never the game itself, which you build from your own dump.
 | Game | ID | Engine located | Notes |
 |---|---|---|---|
 | [mkwii-nx](mkwii-nx) | `RMCP01` | - | **Playable.** The game the engine was written against, so its addresses are the reference every other game is matched to |
+| [wiiparty-nx](wiiparty-nx) | `SUPP01` | 280 natives | **Game 2.** A PC port exists ([wiiparty-recomp](https://github.com/arelkair/wiiparty-recomp)): its native GX is the model for ours |
 | [nsmbwii-nx](nsmbwii-nx) | `SMNP01` | 342/574 (59.6%) | Second game; shares Mario Kart's middleware. One executable, no modules, and its own symbol map published per version |
 | [spmwii-nx](spmwii-nx) | `R8PE01` | 403/574 (70.2%) | Its own engine on a plain SDK |
 | [powii-nx](powii-nx) | `R7PE01` | 386/574 (67.2%) | Small, exclusive, never ported |

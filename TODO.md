@@ -7,7 +7,9 @@
 - [ ] The Wii Menu, which needs that and ASH decompression
 - [ ] Homebrew, built and included - the only thing here that can be handed out
       ready to run
-- [ ] A second game playable end to end
+- [ ] A second game playable end to end: Wii Party (`games/wiiparty-nx`),
+      with its PC port's GX brought to libdol-nx's native deko3d renderer
+- [ ] Mario Kart Wii: build the 2026-10-12 translation and measure menu fps
 - [ ] Mega Man 9 built: it is translated, and the build is the step left
 - [ ] More WiiWare set up in `wads/` - the ones that are ordinary Wii games
       under the wrapper, rather than the Virtual Console titles that are not
