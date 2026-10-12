@@ -9,7 +9,9 @@
       ready to run
 - [ ] A second game playable end to end: Wii Party (`games/wiiparty-nx`),
       with its PC port's GX brought to libdol-nx's native deko3d renderer
-- [ ] Mario Kart Wii: build the 2026-10-12 translation and measure menu fps
+- [ ] Mario Kart Wii at speed on the native renderer: about 20-26 fps in the
+      menus now (libdol-nx docs/deko3d.md, "What comes next")
+- [ ] The settings overlay drawn by deko3d (it is off on the native renderer)
 - [ ] Mega Man 9 built: it is translated, and the build is the step left
 - [ ] More WiiWare set up in `wads/` - the ones that are ordinary Wii games
       under the wrapper, rather than the Virtual Console titles that are not

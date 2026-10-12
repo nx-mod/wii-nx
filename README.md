@@ -94,7 +94,7 @@ The libraries live elsewhere, and each builds on its own:
 | [libdol-nx](https://github.com/nx-mod/libdol-nx) | everything the Wii and the GameCube share: the CPU, GX, the DSP, the SDK, the formats, the translator and the tools |
 | [libwii-nx](https://github.com/nx-mod/libwii-nx) | the Wii's own: IOS, the NAND, the Wii Remote, its settings |
 | [wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) | the engine this grew from |
-| [aurora-nx](https://github.com/nx-mod/aurora-nx), [dawn-nx](https://github.com/nx-mod/dawn-nx), [nxvk](https://github.com/nx-mod/nxvk), [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | graphics, and the storage under the shader cache |
+| [aurora-nx](https://github.com/nx-mod/aurora-nx), [dawn-nx](https://github.com/nx-mod/dawn-nx), [nxvk](https://github.com/nx-mod/nxvk), [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | Aurora's graphics stack and the shader cache's storage. Games draw with libdol's own deko3d renderer by default; Aurora and Dawn remain for that build and their headers |
 
 Nothing is built here: libdol-nx is the toolkit, and one command of its own
 turns your disc into a program. This repository holds the games, the console's
