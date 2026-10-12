@@ -10,7 +10,7 @@ The disc is never in this repository: you supply your own.
 | | |
 |---|---|
 | `game.toml`, `recomp.yml` | what the game is, and the translator project, both read from the disc |
-| `bindings.json` | the natives `wiinx-scan` found in this game: 280 |
+| `bindings.json` | the natives `wiinx-scan` found in this game: 311, 31 of them from signatures taken from its own code (`wiinx-near-map`) |
 | `functions.map` | 8,154 function starts from `wiinx-scan functions` |
 | `disc/` | your extracted disc, untracked. `disc/UPDATE/` holds the disc's update partition (system menu 4.2E, Mii Channel, IOS WADs) |
 
