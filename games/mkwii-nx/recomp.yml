@@ -51,6 +51,9 @@ runtime:
   # they are registered at are this game's own. Every other game names its own
   # table here instead (docs/signatures.md).
   native_bindings: bindings.json
+  # libdol's own deko3d renderer draws GX, not Aurora (libdol-nx docs/deko3d.md):
+  # the translator and the runtime build both read this.
+  defines: [WIINX_NATIVE_GX]
 
 output:
   root: generated
