@@ -12,7 +12,7 @@ published here either.
 ```sh
 git clone --recursive https://github.com/nx-mod/mkwii-nx
 cd mkwii-nx
-../../libdol-nx/tools/wiinx-build . --dawn ../dawn-nx --aurora ../aurora-nx
+../../../libdol-nx/tools/wiinx-build .
 ```
 
 which turns `disc/` into `build/mkwii-nx.nro` for `sdmc:/wii-nx/games/mkwii-nx/`.
@@ -64,6 +64,7 @@ project was moved out of, and builds against libdol-nx from this repository
 alone. Its shader pipelines are in `cache/`, untracked, so the first run after
 a build compiles none of them.
 
-2026-10-12: rebuilt on the current libraries, it boots and gets through the
-menus, at about 11 fps. A new translation is done but not yet built: direct
-tail calls, plus the jump-table and GQR fixes ported from the Strikers fork.
+2026-10-12: on libdol's native deko3d renderer (no Aurora), it boots and runs
+stably through the menus at about 20-26 fps. The translation has direct tail
+calls and the jump-table and GQR fixes from the Strikers fork. Not yet tried in
+a race.

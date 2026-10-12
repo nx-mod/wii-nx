@@ -1,5 +1,15 @@
 # Status
 
+## 2026-10-12, later: native
+
+- **Graphics are native.** libdol's deko3d renderer is the default; Aurora and
+  Dawn are no longer linked (Mario Kart Wii's NRO: 139 MB to 115 MB). The
+  game's own SDK code sets GX, libdol decodes it and draws.
+- **Mario Kart Wii on it:** stable through the menus, every draw accepted,
+  about 20-26 fps there. 82% of the time is the game's translated code, so
+  speed is next: the gather pipe, GX setter fast paths, then nw4r::g3d.
+- **What it took** is in libdol-nx's docs/deko3d.md, "Lessons from deko3d".
+
 ## 2026-10-12
 
 - **Mario Kart Wii** rebuilt on the current libraries: boots and gets through
