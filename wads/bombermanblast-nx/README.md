@@ -29,3 +29,14 @@ what this project translates.
 
 Nothing of the title is in this folder: `game/` holds what came out of your WAD
 and is not committed.
+
+## Wiimmfi
+
+`game/` carries the Wiimmfi patch (WiiWare Patcher's `wiiwarepatcher`, run on
+content 8, the compressed game code, before `payload.dol` was expanded from
+it): the online servers moved to wiimmfi.de and its security fix to the DWC
+code. The originals are kept beside them as `*.original.*`. `recomp.yml`'s
+hash is the patched executable's; no function or binding moved.
+
+The OS layout (`native/bombermanblast_game.cpp`) is from `wiinx-scan
+os-globals game/payload.dol` (2026-10-14).

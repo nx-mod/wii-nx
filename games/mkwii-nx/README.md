@@ -37,12 +37,16 @@ libdol-nx is the Wii; anything only Mario Kart Wii does lives here.
 | `mkwii_game.cpp` | its dynamic aspect handling, its [game hooks](https://github.com/nx-mod/libdol-nx/blob/main/docs/game-hooks.md), and where its copy of the Wii's OS keeps the scheduler's globals |
 | `mkwii_dynamic_aspect_records.h` | the screens and records that aspect handling knows |
 | `strap_scene.cpp` | the health-and-safety screen, replaced natively |
+| `egg_gx.cpp` | EGG's `DrawGX::SetVtxState` and `LightTexture::SetupTevFinish`, for Aurora's build only. Until 2026-10-13 the native-GX define did not reach this folder and both ran in the native build: EGG's vertex formats never arrived, and a LightTexture quad's vertices went into the FIFO with no draw command before them |
 | `mod_loader_hooks.cpp` | where mods attach |
 | `product/retro_rewind_product.cpp` | what a Retro Rewind build is: its name, that it overlays the disc, and the marker its code reads |
 
 This is also the game most of the libraries' natives were read from, so its
 `bindings.json` says each one is at its own reference address - which is just
-what is true of it. It binds through that table like every other game; nothing
+what is true of it. It is written by `tools/wiinx-reference-bindings --game .`
+(libdol-nx), which keeps only addresses this game's map has a function at:
+580 of 584 on 2026-10-13, the four left out read from other games or bound
+inside other functions here. It binds through that table like every other game; nothing
 in the build treats it differently. Any other game matches the same natives by
 code signature instead.
 
@@ -61,10 +65,11 @@ one that says yes.
 
 Translates to 29,637 functions, byte for byte the same as the build this
 project was moved out of, and builds against libdol-nx from this repository
-alone. Its shader pipelines are in `cache/`, untracked, so the first run after
-a build compiles none of them.
+alone.
 
-2026-10-12: on libdol's native deko3d renderer (no Aurora), it boots and runs
-stably through the menus at about 20-26 fps. The translation has direct tail
-calls and the jump-table and GQR fixes from the Strikers fork. Not yet tried in
-a race.
+Its compiled shaders are kept in `cache/shaders.pack` on the card, so a second
+run compiles only what it has not seen.
+
+2026-10-13, on libdol's native deko3d renderer: menus, the course flyover and
+races draw; races run about 12 fps. Miis (heads, faces) and the race minimap
+are broken; see wii-nx's [STATUS.md](../../STATUS.md).

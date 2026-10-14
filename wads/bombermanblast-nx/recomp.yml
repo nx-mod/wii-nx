@@ -29,7 +29,7 @@ translation:
 inputs:
   dol:
     path: game/payload.dol
-    sha256: b165ef4150094f24492f1bf6ccde524bd2118b4f168fd5b3473965ff00b4b5a7
+    sha256: 6da854b12a0f677587d7024fe3ca83757b58184fa7742c542c545434177e6397
 
 # Where libdol-nx is, relative to this folder.
 runtime:
