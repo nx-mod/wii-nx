@@ -7,16 +7,15 @@ runs natively, using your own disc for its files.
 
 ![Mario Kart Wii on Switch hardware, with the system monitor up](docs/images/mkwii-race.jpg)
 
-**This is a proof of concept, not a finished port.** One game is playable and
-runs at about a quarter speed; everything else here is in progress, and some of
+**This is a proof of concept, not a finished port.** One game is playable,
+with races at about a fifth of full speed; everything else here is in progress, and some of
 it does not run at all yet. The table below says which is which, and it is kept
 honest.
 
-The overlay in that shot is the state of things in one line: the first CPU core
-at 84% while the other three sit near idle, and the GPU at 73% of a 307 MHz
-clock. The game is waiting on translated code, not on graphics - which is why
-the work is native replacements for the libraries a game links rather than
-anything to do with the renderer.
+The limit is the CPU, not the GPU: the game's core is full while the GPU often
+idles. So the work is the runtime's own overheads, moving work to the idle
+cores and the GPU, and native replacements for the libraries a game links
+(libdol-nx [docs/performance.md](https://github.com/nx-mod/libdol-nx/blob/main/docs/performance.md)).
 
 ## What you need
 
@@ -37,7 +36,7 @@ game: see [docs/install.md](docs/install.md).
 
 | Game | Disc | State |
 |---|---|---|
-| Mario Kart Wii | `RMCP01` PAL | **Playable** on the September build. Rebuilt on the current libraries, it gets through the menus (2026-10-12) |
+| Mario Kart Wii | `RMCP01` PAL | **Playable** on native graphics: menus, the flyover, races. Miis and the race minimap are broken (2026-10-13) |
 | Wii Party | `SUPP01` PAL | game 2: set up and scanned |
 | New Super Mario Bros. Wii | `SMNE01` NTSC-U | being translated |
 | Super Paper Mario | `R8PE01` NTSC-U | set up, not yet translated |

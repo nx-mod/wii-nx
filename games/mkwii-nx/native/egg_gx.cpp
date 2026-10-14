@@ -1,5 +1,12 @@
-// gx_egg.cpp - EGG Library Helper Stubs
+// EGG::DrawGX and EGG::LightTexture helpers, for Aurora's build only. They set
+// GX through Aurora's bridge (GX__*), which natively goes nowhere: with native GX
+// the game's own EGG code runs instead. Until 2026-10-13 the define did not reach
+// this file, so both ran in the native build - SetVtxState's formats never
+// arrived, and SetupTevFinish wrote a quad's vertices into the FIFO with no draw
+// command in front of them.
 #include "gx/gx_internal.h"
+
+#if !defined(WIINX_NATIVE_GX)
 
 // Vertex helper declarations not used by the direct-call catalog.
 extern "C" void GX__SetArray_8016e32c(uint32_t a, uint32_t ba, uint32_t str);
@@ -68,10 +75,8 @@ static void EGG__DrawGX__SetVtxState_HLE(uint32_t state) {
     default: break;
     }
 }
-#if !defined(WIINX_NATIVE_GX)  // the game's own SDK code sets this (docs/deko3d.md)
 PPC_NATIVE_OVERRIDE_VOID(8021b344, EGG__DrawGX__SetVtxState_HLE, (uint32_t state), (state));
 PPC_NATIVE_OVERRIDE_VOID(8021b688, EGG__DrawGX__SetVtxState_HLE, (uint32_t state), (state));
-#endif
 
 extern "C" void EGG__LightTexture__SetupTevFinish_HLE_8022e2bc(CpuContext* ctx) {
     const uint32_t self = ctx->gpr[3];
@@ -110,6 +115,6 @@ extern "C" void EGG__LightTexture__SetupTevFinish_HLE_8022e2bc(CpuContext* ctx) 
 
     Memory::Write8(self + 0x74, 2);
 }
-#if !defined(WIINX_NATIVE_GX)  // the game's own SDK code sets this (docs/deko3d.md)
 PPC_NATIVE_OVERRIDE_VOID(8022e2bc, EGG__LightTexture__SetupTevFinish_HLE_8022e2bc, (CpuContext* ctx), (ctx));
-#endif
+
+#endif  // !WIINX_NATIVE_GX

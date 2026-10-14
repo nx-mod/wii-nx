@@ -1,79 +1,57 @@
 # Status
 
-## 2026-10-12, later: native
+## 2026-10-14: Mega Man 9 plays
 
-- **Graphics are native.** libdol's deko3d renderer is the default; Aurora and
-  Dawn are no longer linked (Mario Kart Wii's NRO: 139 MB to 115 MB). The
-  game's own SDK code sets GX, libdol decodes it and draws.
-- **Mario Kart Wii on it:** stable through the menus, every draw accepted,
-  about 20-26 fps there. 82% of the time is the game's translated code, so
-  speed is next: the gather pipe, GX setter fast paths, then nw4r::g3d.
-- **What it took** is in libdol-nx's docs/deko3d.md, "Lessons from deko3d".
+The second title on native graphics, and the first WAD: start-up, menus and
+stages at 57-59 fps. What it needed is in
+[wads/megaman9-nx/README.md](wads/megaman9-nx/README.md); every fix is in the
+libraries, so the other titles get them too:
+- **Translator:** native register contracts were keyed by Mario Kart Wii's
+  addresses. Each title's own functions at those addresses were translated as
+  the native (1 to 15 functions per title). Every title needs a retranslate.
+- **Graphics:** presented at the flip (no flicker when a game copies twice a
+  frame), line width and point size applied, the next frame's EFB clear follows
+  the copy's flag.
+- **OS:** interrupts restored per thread on a fiber switch; `/dev/es` and
+  `NANDInit` set up for real.
 
-## 2026-10-12
+Bomberman Blast (USA) is translated with the Wiimmfi patch, not built yet.
 
-- **Mario Kart Wii** rebuilt on the current libraries: boots and gets through
-  the menus, about 11 fps, then crashes before a race starts. Six runtime fixes
-  on the way (native tables before guest code, natives across 1 MiB pages, EGG
-  natives registered, `_AS` self-bindings, exact decodeSZS bounds, include
-  paths). A new translation is done, not yet built.
-- **Wii Party** set up as game 2 (`games/wiiparty-nx`).
-- **Prior art:** [wiiparty-recomp](https://github.com/arelkair/wiiparty-recomp)
-  (native GX, recompiled DSP) and the
-  [Strikers fork](https://github.com/BlackAndBlue95/Strikers-WiiCompiled)
-  (translator fixes, ported) are both GPL-3.0, so their code can come here.
+## 2026-10-13: Mario Kart Wii on native graphics
 
-2026-09-22. Measured on hardware (Switch, 1280x720 output) with Mario Kart Wii.
-
-## Mario Kart Wii
+libdol-nx's deko3d renderer is the default; Aurora and Dawn are not linked.
 
 | | |
 |---|---|
-| Runs | boots, menus, races, saves, music and sound |
-| Menus | ~30-40 fps plain; ~15 fps on screens with movie buttons and glow |
-| Races | ~13 fps: a 77 ms frame against 16.7 ms for 60 |
-| Where the frame goes | the CPU: the GPU waits ~3 µs a frame for work |
-| Known issues | occasional audio static, lag on animated-button screens |
+| Runs | boots, menus, the course flyover, races, saves, music and sound |
+| Speed | menus faster but not 60; races about 12 fps (an ~80 ms frame) |
+| Broken | Miis (no heads; the face texture loses its eyes and mouth), the race minimap |
+| Off | async disc reads (a hang between menus, not found yet) |
 
-Of a race frame, ~45 ms is the game's own translated code, ~13 ms is graphics
-command handling on the game's core (Aurora building ~480 draws, the runtime
-walking display lists), ~6 ms audio and idle work.
+Fixed since 2026-10-12:
+- **Models, flyover and race intro:** natives that end a batch of GX state now
+  run the SDK's dirty-state flush, and an EFB copy clears only its source
+  rectangle, through the update masks, as the hardware does.
+- **Black bars:** the display copy's 608x456 source is stretched to the screen.
+- **Faster:** a render thread on its own core; draws merged into indexed
+  lists; register writes that change nothing skipped; compiled shaders kept on
+  the card (`cache/shaders.pack`); boot's disc scan from 4.8 s to 0.13 s; the
+  log buffered.
 
-## What changed today
+In build 52, under test:
+- guest memory accesses inlined (~15% of a race frame went to out-of-line
+  checked calls), audio output on core 1, threads placed on fixed cores,
+  diagnostics off, a frame-rate overlay (top left).
 
-- **Threaded GX decode** (`[video] threaded_gx`, off by default): graphics
-  decoding on its own core. Works through menus and races, but still waits on
-  the decoder ~90 times a frame and runs slower than inline decode, with
-  occasional audio static. Stays off until those syncs are gone.
-- **Profiling that sees everything**: a sampler records the game thread's real
-  program counter every millisecond, and the decode worker's call stack once a
-  second (`logs/pcsamples.bin`), resolved offline against the ELF.
-- **Faster draws**: Aurora's pipeline lookup no longer re-reads a 2.7 KB config
-  per draw (~2 ms a race frame, ~3 MB of RAM back).
-- **`example-wii-nx/scripts/translate`**: translates a game from its own
-  folder in one command - Mario Kart Wii in about 2 minutes. Every game's
-  `recomp.yml` (and `new-game`'s template) had its workspace one folder too
-  high; fixed.
-- **libwii-nx**, the Wii as a library: staged, with its core and the first two
-  natives ported, each for every library build that needs it. About a tenth
-  written; its platform layer still lives in the engine.
-- **Credits**: libjpeg (IJG), and the decompilations the natives follow
-  (pikmin2, ogws, mkw), are attributed in each repository.
+Where a race frame goes, and what is next: libdol-nx
+[docs/performance.md](https://github.com/nx-mod/libdol-nx/blob/main/docs/performance.md).
+The renderer and what is open in it:
+[docs/deko3d.md](https://github.com/nx-mod/libdol-nx/blob/main/docs/deko3d.md).
 
-## Commits
+## Other titles
 
-| Repository | Commit | |
-|---|---|---|
-| [wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) | `e85c6cb` | Credit the sources the natives follow |
-| | `d4ab0f3` | Threaded GX decode (experimental, off), a real CPU profiler, faster draws |
-| [libwii-nx](https://github.com/nx-mod/libwii-nx) | `ea571ed` | Stage libwii-nx: core, READMEs and notices |
-| | `f7b0e3b` | Port the first natives: nw4r lyt Pane::CalculateMtx and RVL SDK THP |
-| wii-nx | this commit | STATUS.md, `translate`, `recomp.yml` fixes, READMEs, engine at `d4ab0f3` |
-
-## Next
-
-1. The ~90 remaining syncs a frame in threaded decode: find their call sites
-   and move them into the command stream, then turn it on by default.
-2. From the profiler: the hottest game functions, as natives in libwii-nx
-   (g3d `CalcWorld` / `CalcView` are located in Mario Kart Wii).
-3. libwii-nx: its build scanner, then the platform layer ported in.
+- **Wii Party** is set up as game 2 (`games/wiiparty-nx`).
+- **Prior art:** [wiiparty-recomp](https://github.com/arelkair/wiiparty-recomp)
+  (native GX, recompiled DSP) and the
+  [Strikers fork](https://github.com/BlackAndBlue95/Strikers-WiiCompiled)
+  (translator fixes) are GPL-3.0, so their code can come here.
