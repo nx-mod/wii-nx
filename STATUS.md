@@ -1,5 +1,27 @@
 # Status
 
+## 2026-10-15: the Mii Channel makes Miis
+
+The first title that is not a game boots, formats its Mii database, and makes
+and saves Miis. Every fix is in the libraries:
+- **NAND:** an async call with a callback now returns OK and reports its result
+  through the callback alone, as on the console. Returning it both ways made
+  RFL retry twice, and its database format failed on its own scratch file.
+- **Mii database:** `RFL_DB.dat` is 0xBE6C0 bytes; the Mii Channel calls a
+  shorter one corrupt. New NANDs get the channel's own empty database, byte for
+  byte.
+- **Pointer:** the right stick moves the Wii Remote's pointer, and a touch on
+  the handheld screen points and presses A. It hides after 15 s unused.
+- **Exit:** every exit crashed the homebrew loader (2347-0026): the audio
+  buffers in `.bss` stayed lent to the audio renderer. Older builds still do.
+- **Boot ROM fonts:** EXI reads of the boot ROM are served from the SD card
+  (`system/ipl.bin`, or Dolphin's `font_western.bin` and `font_japanese.bin`).
+- **Fibers:** a NAND callback that switched threads on its scratch context
+  corrupted the thread it interrupted (Mario Kart Wii's Mii load crash).
+
+Open: Mii heads still draw nothing (the renderer bug Mario Kart Wii has), and
+the channel runs slowly. Bomberman Blast is past two hangs; test pending.
+
 ## 2026-10-14: Mega Man 9 plays
 
 The second title on native graphics, and the first WAD: start-up, menus and
@@ -14,8 +36,6 @@ libraries, so the other titles get them too:
   the copy's flag.
 - **OS:** interrupts restored per thread on a fiber switch; `/dev/es` and
   `NANDInit` set up for real.
-
-Bomberman Blast (USA) is translated with the Wiimmfi patch, not built yet.
 
 ## 2026-10-13: Mario Kart Wii on native graphics
 

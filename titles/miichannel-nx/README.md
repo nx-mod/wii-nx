@@ -39,15 +39,18 @@ what `fetch-title` picks:
 
 ## Status
 
-Translated (72 shards, about a minute), not yet built or booted.
+2026-10-15: boots from the shared NAND, formats a damaged Mii database, makes
+and saves Miis.
 
-- 311 natives bound, 57 SDK variables named in `globals.json`, the scheduler
-  layout in `native/miichannel_game.cpp`.
-- ES reports its own title id (`project.title_id`), so saves and `data/` land
-  in `/title/00010002/48414341/`.
-- Installed into the shared NAND (`/system/`) with `wiinx-install-title`.
-
-What remains is booting from the NAND: the runtime starts from a disc today.
+- Point with the right stick, or touch the screen in handheld (a touch also
+  presses A). The format prompt can't be answered without the pointer.
+- Mii heads draw nothing, as in Mario Kart Wii: the renderer's bug, not this
+  title's. The channel runs slowly.
+- After a format the channel resets itself; from the homebrew menu it starts
+  again, otherwise it closes.
+- 311 natives bound, the SDK variables in `globals.json`, the scheduler layout
+  in `native/miichannel_game.cpp`. ES reports its own title id, so `data/` is
+  `/title/00010002/48414341/`.
 
 ## Related
 
