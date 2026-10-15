@@ -3,18 +3,38 @@
 - [ ] The launcher: it lists games, WiiWare and system titles and starts them
       (libdol-nx `src/launcher`). Still to do: tiles with each title's own
       banner, rather than a list of names
-- [ ] The Mii Channel, which needs a title to be launchable from the NAND
-- [ ] The Wii Menu, which needs that and ASH decompression
+- [x] The Mii Channel boots, formats its database, makes and saves Miis
+      (2026-10-15). Open: heads (below), speed, and starting it from the NAND
+- [ ] The Wii Menu, next (2026-10-15): retranslate it on phone 2 (it needs
+      more than the 2.5 GB heap this phone allows), then ASH decompression and
+      launching titles from it
+- [ ] Bomberman Blast: past the boot ROM font hang and panic, test pending
+- [ ] Retranslate every title for libdol-nx 4816d5b (native register contracts
+      by each title's own addresses) and the removed content natives: Wii
+      Sports, Wii Party, Mega Man 10, Excitebike, both Crystal Defenders - each
+      after the per-title native check against a running title
+- [ ] `exi.Ecb` found by `wiinx-find-globals`: six titles lack it (Wii Sports,
+      Wii Party, Mega Man 10, Excitebike, both Crystal Defenders), and without
+      it an EXI lock is never released (Bomberman hung on its ROM font)
+- [ ] Reset that restarts the title wherever it was started from: after
+      `OSResetSystem` it starts again only from the homebrew menu
 - [ ] Homebrew, built and included - the only thing here that can be handed out
       ready to run
 - [ ] A second game playable end to end: Wii Party (`games/wiiparty-nx`),
       with its PC port's GX brought to libdol-nx's native deko3d renderer
 - [ ] Mario Kart Wii at speed on the native renderer: races about 12 fps
-      (libdol-nx docs/performance.md, "What would move it next")
-- [ ] Mario Kart Wii's Miis and race minimap (libdol-nx docs/deko3d.md,
-      "Where it stands")
+      (libdol-nx docs/performance.md, "What would move it next"). Profile the
+      host first; then a flat guest memory on Switch: one 1 GB window with
+      `addr & 0x3FFFFFFF` (no mirrors to alias), mapped as haloce-nx maps its
+      memory (svcMapMemory in the stack region, or svcMapProcessCodeMemory with
+      hbloader's process handle)
+- [ ] Miis in every title - no heads in the Mii Channel or Mario Kart Wii, the
+      face texture loses its eyes and mouth - and Mario Kart Wii's race minimap
+      (libdol-nx docs/deko3d.md, "Where it stands"). The Mii Channel is the
+      best test: nearly everything it draws is a Mii
 - [ ] The settings overlay drawn by deko3d (it is off on the native renderer)
-- [ ] Mega Man 9 built: it is translated, and the build is the step left
+- [x] Mega Man 9 plays (2026-10-14). Open: rows of pixels in its text, and
+      a per-game button layout for its Classic Controller reads
 - [ ] More WiiWare set up in `wads/` - the ones that are ordinary Wii games
       under the wrapper, rather than the Virtual Console titles that are not
 - [ ] Wii Remote motion, which Wii Sports needs

@@ -71,7 +71,7 @@ because it contains nothing Nintendo made.
 ```
 sdmc:/wii-nx/
 ├── config/     settings shared by every game
-├── system/     the Wii itself: one NAND for all of them
+├── system/     the Wii itself: one NAND for all of them, and the boot ROM's fonts
 └── games/      one folder per game: the program, your disc, saves, shaders
 ```
 

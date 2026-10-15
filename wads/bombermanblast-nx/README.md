@@ -40,3 +40,13 @@ hash is the patched executable's; no function or binding moved.
 
 The OS layout (`native/bombermanblast_game.cpp`) is from `wiinx-scan
 os-globals game/payload.dol` (2026-10-14).
+
+## Status
+
+2026-10-15: builds, 346 natives bound (10 more than the signatures found, from
+the per-title check). Past two hangs, test pending:
+- the boot ROM font read spun on EXI channel 0's lock: `globals.json` lacked
+  `exi.Ecb` (0x80427F80, read from `EXILock`), so the native unlock could not
+  clear it;
+- the font then came back empty and NW4R's `CharWriter` panicked: the fonts now
+  come from the SD card (libwii-nx `system/rom.h`).

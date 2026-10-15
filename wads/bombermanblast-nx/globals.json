@@ -24,6 +24,7 @@
  "dsp.__DSP_tmp_task": "0x8046BD48",
  "dvd.WaitingQueue": "0x80427B30",
  "dvd.dvdContexts": "0x80427DE0",
+ "exi.Ecb": "0x80427F80",
  "gx.CPUFifo": "0x804286E4",
  "gx.CPUFifoReady": "0x8046BEC8",
  "gx.DrawDone": "0x8046BEF0",
