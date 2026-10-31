@@ -19,7 +19,10 @@
 - [ ] Reset that restarts the title wherever it was started from: after
       `OSResetSystem` it starts again only from the homebrew menu
 - [ ] Homebrew, built and included - the only thing here that can be handed out
-      ready to run
+      ready to run: translated from each release DOL, on a `homebrew/` shelf the
+      launcher lists, in order - devkitPro/wii-examples, SaveGame Manager GX,
+      modmii/YAWM-ModMii-Edition, SuperFromND/rfl_mii_extractor, WiiXplorer,
+      dborth/wiimc, dborth/smw-wii; the GX emulators as stress tests only
 - [ ] Riivolution for every title, independent of the NAND: libdol-nx already
       replaces a disc's files and redirects saves from Riivolution XMLs
       (src/platform/fs/riivolution.cpp). Still to do: one shared

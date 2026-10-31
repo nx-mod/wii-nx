@@ -44,6 +44,11 @@ These five are the test suite: every library change is checked against them befo
 4. **The Wii Menu booting**, then ASH decompression and launching titles from it.
 5. **Mega Man 9's glitches**: rows of pixels in its text.
 6. Wii Party as the second disc game, end to end.
+7. **Homebrew**, translated from each release DOL as a WAD is (libdol-nx docs/homebrew.md, path 2), on a
+   `homebrew/` shelf the launcher lists: devkitPro's wii-examples first (each libogc feature alone), then
+   SaveGame Manager GX and YAWM ModMii Edition (both on the shared NAND), rfl_mii_extractor, WiiXplorer,
+   WiiMC and Super Mario War. The GX emulators (Snes9x GX and its kin) only as stress tests.
+8. **Riivolution** for every title from one shared folder, options chosen in the launcher ([TODO.md](TODO.md)).
 
 ## Open questions
 
