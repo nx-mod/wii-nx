@@ -20,6 +20,15 @@
       `OSResetSystem` it starts again only from the homebrew menu
 - [ ] Homebrew, built and included - the only thing here that can be handed out
       ready to run
+- [ ] Riivolution for every title, independent of the NAND: libdol-nx already
+      replaces a disc's files and redirects saves from Riivolution XMLs
+      (src/platform/fs/riivolution.cpp). Still to do: one shared
+      `sdmc:/wii-nx/riivolution/` that every title reads, laid out as on a Wii's
+      SD; the launcher listing a title's patches and options before it starts
+      (writing `riivolution/config/<ID>.xml`); `<memory>` data patches at run
+      time; code patches (Gecko, injected loaders such as Retro Rewind's)
+      applied by `wiinx-build` to the DOL/REL before translating, one NRO per
+      patch set; macros
 - [ ] A second game playable end to end: Wii Party (`games/wiiparty-nx`),
       with its PC port's GX brought to libdol-nx's native deko3d renderer
 - [ ] Mario Kart Wii and Bomberman Blast at speed on the native renderer:
