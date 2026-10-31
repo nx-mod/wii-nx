@@ -64,7 +64,7 @@ would have - and then translate the same way.
 | [Mega Man 9](wads/megaman9-nx) | `00010001/57523945` (USA) | **Plays** well; some visual glitches remain |
 | [Bomberman Blast](wads/bombermanblast-nx) | USA, with the Wiimmfi patch | **Runs**; very slow in game, and it cannot create its save data yet |
 
-<!-- ![Mega Man 9](docs/images/megaman9.jpg) -->
+![Mega Man 9 on Switch hardware, in a stage at 56 fps](docs/images/megaman9.jpg)
 <!-- ![Bomberman Blast](docs/images/bombermanblast.jpg) -->
 
 From your WAD, with libdol-nx beside this checkout:
