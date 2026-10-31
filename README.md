@@ -84,7 +84,7 @@ Mii made once shows up everywhere. They are in [titles](titles).
 | [Mii Channel](titles/miichannel-nx) | `00010002/48414341` | **Runs** pretty well; Mii heads are missing |
 | [Wii Menu](titles/wiimenu-nx) | `00000001/00000002` (4.3E) | Builds; does not boot yet |
 
-<!-- ![Mii Channel](docs/images/miichannel.jpg) -->
+![The Mii Channel on Switch hardware: the plaza at 30 fps, its Mii still without a head](docs/images/miichannel.jpg)
 <!-- ![Wii Menu](docs/images/wiimenu.jpg) -->
 
 Each title comes from your own console's NAND (or a Dolphin NAND of it), or is
