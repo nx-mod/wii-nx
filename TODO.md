@@ -32,7 +32,11 @@
 - [ ] Miis in every title - no heads in the Mii Channel or Mario Kart Wii, the
       face texture loses its eyes and mouth - and Mario Kart Wii's race minimap
       (libdol-nx docs/deko3d.md, "Where it stands"). The Mii Channel is the
-      best test: nearly everything it draws is a Mii
+      best test: nearly everything it draws is a Mii. Not the matrix index (masked to six bits, 2026-10-31: no change)
+- [ ] The Mii Channel's exit hangs (2026-10-31): after `VISetBlack(1)` the game
+      thread polls a global in its own `0x800AD6F4` (OSGetCurrentThread, then
+      OSDisableInterrupts/OSLockMutex in a loop) that nothing sets; audio and
+      retraces go on. Not yet known whether the native-only build caused it
 - [ ] The settings overlay drawn by deko3d (it is off on the native renderer)
 - [x] Mega Man 9 plays (2026-10-14). Open: rows of pixels in its text, and
       a per-game button layout for its Classic Controller reads

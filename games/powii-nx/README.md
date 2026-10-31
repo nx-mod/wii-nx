@@ -10,7 +10,7 @@ disc by libdol-nx's tools, with nothing typed by hand.
 git clone --recursive https://github.com/nx-mod/powii-nx
 cd powii-nx
 ../../libdol-nx/tools/wiinx-new-game "Punch-Out!!.iso" .
-../../libdol-nx/tools/wiinx-build . --aurora ../aurora-nx
+../../libdol-nx/tools/wiinx-build . --aurora ../aurora-wiicompiled
 ```
 
 ## What is here

@@ -10,7 +10,7 @@ was read from it by libdol-nx's tools, with nothing typed by hand.
 git clone --recursive https://github.com/nx-mod/nsmbwii-nx
 cd nsmbwii-nx
 ../../libdol-nx/tools/wiinx-new-game "New Super Mario Bros. Wii.iso" .
-../../libdol-nx/tools/wiinx-build . --aurora ../aurora-nx
+../../libdol-nx/tools/wiinx-build . --aurora ../aurora-wiicompiled
 ```
 
 ## What is here

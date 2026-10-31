@@ -62,7 +62,7 @@ What it took, all in the libraries:
 - **OS layout** (`native/megaman9_game.cpp`) from `wiinx-scan os-globals
   game/payload.dol`, with the interrupt table, alarm queue and `OSLoadContext`.
 - **Build** with the Aurora tree named, where several are checked out (its headers only):
-  `wiinx-build . --aurora ../../../aurora-nx`.
+  `wiinx-build . --aurora ../../../aurora-wiicompiled`.
 - **On the card** it lives in `sdmc:/wii-nx/wads/megaman9-nx/`, and reads its
   contents from the NAND (`title/00010001/57523945`).
 
