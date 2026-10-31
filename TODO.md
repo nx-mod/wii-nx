@@ -5,10 +5,10 @@
       banner, rather than a list of names
 - [x] The Mii Channel boots, formats its database, makes and saves Miis
       (2026-10-15). Open: heads (below), speed, and starting it from the NAND
-- [ ] The Wii Menu, next (2026-10-15): retranslate it on phone 2 (it needs
-      more than the 2.5 GB heap this phone allows), then ASH decompression and
-      launching titles from it
-- [ ] Bomberman Blast: past the boot ROM font hang and panic, test pending
+- [ ] The Wii Menu: it builds but does not boot yet (2026-10-31); then ASH
+      decompression and launching titles from it
+- [ ] Bomberman Blast: runs (2026-10-31), but cannot create its save data, and
+      is very slow in game
 - [ ] Retranslate every title for libdol-nx 4816d5b (native register contracts
       by each title's own addresses) and the removed content natives: Wii
       Sports, Wii Party, Mega Man 10, Excitebike, both Crystal Defenders - each
@@ -22,7 +22,8 @@
       ready to run
 - [ ] A second game playable end to end: Wii Party (`games/wiiparty-nx`),
       with its PC port's GX brought to libdol-nx's native deko3d renderer
-- [ ] Mario Kart Wii at speed on the native renderer: races about 12 fps
+- [ ] Mario Kart Wii and Bomberman Blast at speed on the native renderer:
+      both very slow in game; Mario Kart Wii's races about 12 fps
       (libdol-nx docs/performance.md, "What would move it next"). Profile the
       host first; then a flat guest memory on Switch: one 1 GB window with
       `addr & 0x3FFFFFFF` (no mirrors to alias), mapped as haloce-nx maps its
@@ -76,3 +77,4 @@
       repository of its own that drifts from it
 - [x] No build of its own: libdol-nx builds a game, and the libraries are
       checked out beside it rather than pinned here
+- [x] Native only: no Dawn, no Aurora build; Aurora's headers only (2026-10-31)

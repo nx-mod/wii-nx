@@ -69,9 +69,11 @@ That reads your disc, translates the game, builds it, and leaves
 above.
 
 It needs devkitPro's Switch toolchain with deko3d, a UAM build for the shader
-compiler (libdol-nx docs/deko3d.md), and aurora-nx and dawn-nx checked out
-beside libdol-nx for their headers - `wiinx-build` says which are missing and
-where it looked. A second machine can share the compile: `--distcc
+compiler (libdol-nx docs/deko3d.md), the .NET 8 SDK for the translator, and
+aurora-nx checked out beside libdol-nx for its headers - `wiinx-build` says
+what is missing and where it looked. Nothing draws through Aurora or Dawn:
+graphics are libdol's own deko3d renderer, and Dawn is not needed at all.
+A second machine can share the compile: `--distcc
 "host:3632/4"` (libdol-nx docs/distcc.md).
 
 ## Adding a game that is not listed

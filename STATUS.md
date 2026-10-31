@@ -1,5 +1,23 @@
 # Status
 
+## 2026-10-31: native only, and the test suite
+
+libdol-nx builds a title with no Dawn and no Aurora build: Aurora is read for its headers alone, and
+the Aurora, Dawn and desktop builds are commented out in its CMake. Everything builds on the phone.
+
+| Title | State |
+|---|---|
+| Mario Kart Wii | runs; very slow in a race; Miis and the race minimap broken |
+| Mega Man 9 | plays well; some visual glitches remain |
+| Bomberman Blast | runs; very slow in game; cannot create its save data |
+| Mii Channel | runs pretty well; Mii heads missing |
+| Wii Menu 4.3E | builds; does not boot yet |
+
+- **Symbol maps** are optional: Mario Kart Wii builds from its scanned `functions.map` plus the
+  addresses in `bindings.json`, so the community map is no longer needed.
+- **System titles from a Dolphin NAND:** the Mii Channel and the Wii Menu, with the Wii Menu's
+  shared `wwwlib` content found in `shared1/` by its SHA-1 ([titles/README.md](titles/README.md)).
+
 ## 2026-10-15: the Mii Channel makes Miis
 
 The first title that is not a game boots, formats its Mii database, and makes

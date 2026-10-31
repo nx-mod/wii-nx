@@ -5,18 +5,18 @@ your own disc with [libdol-nx](https://github.com/nx-mod/libdol-nx).
 
 No game code or data is in this repository. What is here is the project that
 describes the game and the few functions this game needs of its own. The disc
-is yours, and so is the symbol map: it came from the Mario Kart Wii
-decompilation community, under no licence anyone recorded, so it is not
-published here either.
+is yours. A symbol map is optional: `MAP.txt` can be the decompilation
+community's (21,033 named functions, under no licence anyone recorded, so it is
+not published here), or the function starts `wiinx-build` scans from your own
+disc into `functions.map`, plus the addresses `bindings.json` binds.
 
 ```sh
-git clone --recursive https://github.com/nx-mod/mkwii-nx
-cd mkwii-nx
+cd wii-nx/games/mkwii-nx
 ../../../libdol-nx/tools/wiinx-build .
 ```
 
 which turns `disc/` into `build/mkwii-nx.nro` for `sdmc:/wii-nx/games/mkwii-nx/`.
-Supply the disc first: `../../libdol-nx/tools/wiinx-new-game <your dump> .`
+Supply the disc first: `../../../libdol-nx/tools/wiinx-new-game <your dump> .`
 
 ## What is here
 
@@ -24,7 +24,7 @@ Supply the disc first: `../../libdol-nx/tools/wiinx-new-game <your dump> .`
 |---|---|
 | `recomp.yml` | the translation project: entry point, small-data bases, the REL, where libdol-nx is |
 | `game.toml` | what the disc says it is: ID, revision, region, title |
-| `MAP.txt` | the symbol map, which you supply: 21,033 named functions. Not in this repository |
+| `MAP.txt` | the function map `recomp.yml` reads: the community's symbol map, or your scanned `functions.map` with `bindings.json`'s addresses added. Not in this repository |
 | `native/` | this game's own code, compiled into its build only |
 
 
@@ -37,7 +37,7 @@ libdol-nx is the Wii; anything only Mario Kart Wii does lives here.
 | `mkwii_game.cpp` | its dynamic aspect handling, its [game hooks](https://github.com/nx-mod/libdol-nx/blob/main/docs/game-hooks.md), and where its copy of the Wii's OS keeps the scheduler's globals |
 | `mkwii_dynamic_aspect_records.h` | the screens and records that aspect handling knows |
 | `strap_scene.cpp` | the health-and-safety screen, replaced natively |
-| `egg_gx.cpp` | EGG's `DrawGX::SetVtxState` and `LightTexture::SetupTevFinish`, for Aurora's build only. Until 2026-10-13 the native-GX define did not reach this folder and both ran in the native build: EGG's vertex formats never arrived, and a LightTexture quad's vertices went into the FIFO with no draw command before them |
+| `egg_gx.cpp` | EGG's `DrawGX::SetVtxState` and `LightTexture::SetupTevFinish`, for the (now commented out) Aurora build only. Until 2026-10-13 the native-GX define did not reach this folder and both ran in the native build: EGG's vertex formats never arrived, and a LightTexture quad's vertices went into the FIFO with no draw command before them |
 | `mod_loader_hooks.cpp` | where mods attach |
 | `product/retro_rewind_product.cpp` | what a Retro Rewind build is: its name, that it overlays the disc, and the marker its code reads |
 

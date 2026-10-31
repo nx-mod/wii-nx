@@ -11,7 +11,7 @@ decompilation's symbol map for this revision.
 git clone --recursive https://github.com/nx-mod/wiisports-nx
 cd wiisports-nx
 ../../libdol-nx/tools/wiinx-new-game "Wii Sports (USA) (Rev 1).rvz" .   # .rvz, .iso, .wbfs all work
-../../libdol-nx/tools/wiinx-build . --dawn ../dawn-nx --aurora ../aurora-nx
+../../libdol-nx/tools/wiinx-build . --aurora ../aurora-nx
 ```
 
 ## What is here

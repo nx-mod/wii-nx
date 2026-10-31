@@ -36,8 +36,9 @@ game: see [docs/install.md](docs/install.md).
 
 | Game | Disc | State |
 |---|---|---|
-| Mario Kart Wii | `RMCP01` PAL | **Playable** on native graphics: menus, the flyover, races. Miis and the race minimap are broken (2026-10-13) |
+| Mario Kart Wii | `RMCP01` PAL | **Runs** on native graphics: menus, the flyover, races. In a race it is very slow; Miis and the race minimap are broken |
 | Wii Party | `SUPP01` PAL | game 2: set up and scanned |
+<!--
 | New Super Mario Bros. Wii | `SMNE01` NTSC-U | being translated |
 | Super Paper Mario | `R8PE01` NTSC-U | set up, not yet translated |
 | Punch-Out!! | `R7PE01` NTSC-U | set up, not yet translated |
@@ -45,21 +46,50 @@ game: see [docs/install.md](docs/install.md).
 | Pikmin 2 | `R92E01` NTSC-U | set up, not yet translated |
 | Wii Sports | `RSPE01` NTSC-U | set up, not yet translated |
 | Wii Sports + Resort | `SP2E01` NTSC-U | set up, not yet translated |
+-->
 
 Each game is a folder in [games](games), holding what that game needs and never
 the game itself.
+
+<!-- ![Mario Kart Wii](docs/images/mkwii.jpg) -->
 
 ## WiiWare and Virtual Console
 
 Titles you own as WADs are in [wads](wads), one folder each. They take two steps
 a disc game does not - decrypting the WAD, and expanding the content its loader
-would have - and then translate the same way. Mega Man 9 is the first.
+would have - and then translate the same way.
+
+| Title | Title ID | State |
+|---|---|---|
+| [Mega Man 9](wads/megaman9-nx) | `00010001/57523945` (USA) | **Plays** well; some visual glitches remain |
+| [Bomberman Blast](wads/bombermanblast-nx) | USA, with the Wiimmfi patch | **Runs**; very slow in game, and it cannot create its save data yet |
+
+<!-- ![Mega Man 9](docs/images/megaman9.jpg) -->
+<!-- ![Bomberman Blast](docs/images/bombermanblast.jpg) -->
+
+From your WAD, with libdol-nx beside this checkout:
+
+```sh
+../libdol-nx/tools/wiinx-wad "<your title>.wad" wads/<title>/game/
+../libdol-nx/tools/wiinx-build wads/<title>
+```
 
 ## The Wii's own screens
 
 The console's own titles run here too, from a NAND shared by every game — so a
-Mii made once shows up everywhere. They are in [titles](titles): the Mii Channel
-first, then the Wii Menu.
+Mii made once shows up everywhere. They are in [titles](titles).
+
+| Title | Title ID | State |
+|---|---|---|
+| [Mii Channel](titles/miichannel-nx) | `00010002/48414341` | **Runs** pretty well; Mii heads are missing |
+| [Wii Menu](titles/wiimenu-nx) | `00000001/00000002` (4.3E) | Builds; does not boot yet |
+
+<!-- ![Mii Channel](docs/images/miichannel.jpg) -->
+<!-- ![Wii Menu](docs/images/wiimenu.jpg) -->
+
+Each title comes from your own console's NAND (or a Dolphin NAND of it), or is
+downloaded from Nintendo the way a console does. [titles/README.md](titles/README.md)
+says how.
 
 ## Homebrew
 
@@ -93,7 +123,7 @@ The libraries live elsewhere, and each builds on its own:
 | [libdol-nx](https://github.com/nx-mod/libdol-nx) | everything the Wii and the GameCube share: the CPU, GX, the DSP, the SDK, the formats, the translator and the tools |
 | [libwii-nx](https://github.com/nx-mod/libwii-nx) | the Wii's own: IOS, the NAND, the Wii Remote, its settings |
 | [wiicompiled-nx](https://github.com/nx-mod/wiicompiled-nx) | the engine this grew from |
-| [aurora-nx](https://github.com/nx-mod/aurora-nx), [dawn-nx](https://github.com/nx-mod/dawn-nx), [nxvk](https://github.com/nx-mod/nxvk), [sqlite-nx](https://github.com/nx-mod/sqlite-nx) | Aurora's graphics stack and the shader cache's storage. Games draw with libdol's own deko3d renderer by default; Aurora and Dawn remain for that build and their headers |
+| [aurora-nx](https://github.com/nx-mod/aurora-nx) | headers only: games draw with libdol's own deko3d renderer, and nothing of Aurora, Dawn or Vulkan is built or linked |
 
 Nothing is built here: libdol-nx is the toolkit, and one command of its own
 turns your disc into a program. This repository holds the games, the console's

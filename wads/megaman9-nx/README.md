@@ -61,8 +61,8 @@ What it took, all in the libraries:
 - **Globals:** `wiinx-find-globals . --out globals.json` finds 63 of them.
 - **OS layout** (`native/megaman9_game.cpp`) from `wiinx-scan os-globals
   game/payload.dol`, with the interrupt table, alarm queue and `OSLoadContext`.
-- **Build** with the Dawn and Aurora trees named, where several are checked out:
-  `wiinx-build . --dawn ../../../dawn --aurora ../../../wiicompiled/aurora-main`.
+- **Build** with the Aurora tree named, where several are checked out (its headers only):
+  `wiinx-build . --aurora ../../../aurora-nx`.
 - **On the card** it lives in `sdmc:/wii-nx/wads/megaman9-nx/`, and reads its
   contents from the NAND (`title/00010001/57523945`).
 
