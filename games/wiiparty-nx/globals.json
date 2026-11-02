@@ -15,6 +15,7 @@
  "ax.axDspResumeVector": "0x802F5992",
  "ax.axDspSlave": "0x80223EC0",
  "ax.axDspSlaveLength": "0x802F5994",
+ "btm.devState": "0x802EAE26",
  "dsp.__DSP_curr_task": "0x802F6644",
  "dsp.__DSP_first_task": "0x802F6640",
  "dsp.__DSP_init_flag": "0x802F6628",
