@@ -55,6 +55,10 @@
 - [ ] More WiiWare set up in `wads/` - the ones that are ordinary Wii games
       under the wrapper, rather than the Virtual Console titles that are not
 - [ ] Wii Remote motion, which Wii Sports needs
+- [ ] Install and uninstall titles from the NAND on the console itself: the
+      user picks a WAD (or a title) and it is installed whole - ticket, TMD,
+      contents, shared contents into `shared1/content.map` - or removed whole,
+      as a console's Data Management does; no hand-copying files on a PC
 - [ ] A NAND manager app: one place to build and look after the shared NAND
       (`sdmc:/wii-nx/system/nand`) that the Wii Menu, channels, discs and WADs
       all use - install a title or WAD, list what is installed, edit SYSCONF,
@@ -63,9 +67,25 @@
       libdol-nx's `wiinx-fetch-nand`, `wiinx-install-title` and `wiinx-sysconf`
       already do; the NAND layer itself is libwii-nx's `src/nand` (its TODO lists
       the gaps)
-- [ ] Region-free Wii Menu: a runtime option (not a patch to the menu's code)
-      that lets the menu list and start titles of any region, as the
-      well-known System Menu mods do
+- [ ] IOS reloads: a title that switches IOS (`IOS_ReloadIOS`,
+      `ES_LaunchTitle` - some games, and the Wii Menu for every channel it
+      starts) gets the new IOS's version and memory values from libdol-nx's
+      table (src/platform/system/ios_versions.h), not the one it was built with
+- [ ] IOS behaviour by version: where real IOSes differ (which ES calls exist,
+      IOS58's USB 2.0 for homebrew, IPC details), libwii-nx answers as the
+      title's own IOS would, the way Dolphin's IOS emulation does. No patched
+      IOS (cIOS, Trucha) is needed: signatures are never checked here
+- [ ] Wii Menu hacks from Priiloader (DacoTaco/priiloader, GPL-2.0,
+      `hacks_hash.ini`): applied to the menu's program before it is translated,
+      keyed by menu version - Region Free EVERYTHING, Skip / Auto-Press A at the
+      Health Screen, Block Disc / Online Updates, the 480p fix, Remove NoCopy,
+      Move Disc Channel. (Its Wiimmfi hack patches games as they boot, so it
+      cannot reach translated code: games get Wiimmfi below.)
+- [ ] Wiimmfi for disc titles: Wiimm's `wit --wiimmfi` (wiimms-iso-tools
+      `patch.c`, GPL-2.0) over the extracted `main.dol` and every REL - URL and
+      domain rewrites, its per-game tables, its security fix - picked by
+      `wiinx-build` when `recomp.yml` says `wiimmfi: true` on a disc title. WAD
+      titles already get KcrPL's WiiWare-Patcher (libdol-nx `wiinx-wiimmfi`)
 - [ ] TV format from the console's own settings: `VIGetTvFormat` answers NTSC,
       so the menu called a PAL console "NTSC" - follow setting.txt's VIDEO and
       SYSCONF (PAL, PAL60, NTSC)

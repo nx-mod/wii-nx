@@ -10,6 +10,8 @@ project:
   game_id: WM8E
   title_id: 00010001574D3845
   region: E
+  ios: 36                  # what the TMD asks for
+  remote: sideways         # the game asks for the Wii Remote held sideways
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: bombermanblast_base
 
@@ -30,6 +32,7 @@ inputs:
   dol:
     path: game/payload.dol
     sha256: 6da854b12a0f677587d7024fe3ca83757b58184fa7742c542c545434177e6397
+    wiimmfi: true             # Wiimmfi-patched before translating (libdol-nx tools/wiinx-wiimmfi)
 
 # Where libdol-nx is, relative to this folder.
 runtime:

@@ -7,6 +7,7 @@ project:
   display_name: Wii Party
   game_id: SUPP01            # PAL, revision 0
   region: P
+  ios: 56                  # what the TMD asks for
 
 memory:
   base: 0x80000000

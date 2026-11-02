@@ -50,3 +50,12 @@ the per-title check). Past two hangs, test pending:
   clear it;
 - the font then came back empty and NW4R's `CharWriter` panicked: the fonts now
   come from the SD card (libwii-nx `system/rom.h`).
+
+2026-11-02: plays, held sideways (`remote: sideways`), slowly: 8 fps in an
+eight-player battle, a third of the time in its software reverb. It needs:
+- guest setjmp/longjmp through the runtime: its task system switches stacks
+  with them (libdol-nx `guest_jmp`);
+- a Wii Remote reply after the call, as on hardware: `WPADGetInfo` slept for one
+  that had already come, after the Mii database loaded.
+
+It still cannot create its save data.

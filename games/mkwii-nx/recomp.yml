@@ -8,6 +8,8 @@ project:
   title: Mario Kart Wii          # the name its own banner carries
   game_id: RMCP01            # PAL, revision 0
   region: P
+  ios: 36                  # what the TMD asks for
+  console: ndev            # its larger heap takes the development-console path
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: mkwii_base
 

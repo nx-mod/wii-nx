@@ -11,6 +11,7 @@ project:
   game_id: HACA
   title_id: 0001000248414341
   region: A                   # the title serves every region
+  ios: 31                  # what the TMD asks for
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: miichannel_base
 

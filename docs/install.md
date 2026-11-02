@@ -36,6 +36,22 @@ Menu lists it:
 ../libdol-nx/tools/wiinx-install-title "<title>.wad" system/
 ```
 
+## Controls
+
+A Switch controller is a Wii Remote with a Classic Controller attached: a game
+that reads the Classic Controller gets the whole pad, and one that reads the
+remote gets A, B, 1 (X), 2 (Y), +, - and the D-pad.
+
+A game played with the remote held sideways (Bomberman Blast) has
+the controls turned to match: the D-pad and left stick move as you see them,
+A and B are 2 and 1, X and Y are the remote's A and B. The game's project says
+which way it holds the remote; `config.toml` can change it:
+
+```toml
+[controller]
+wii_remote_sideways = true
+```
+
 ## The SD card
 
 The Wii's SD slot reads `sd.img`, a FAT32 image, one card for every title. With
@@ -84,6 +100,11 @@ A second machine can share the compile: `--distcc
 
 That reads the disc and writes the whole project: what the game is, where its
 code starts, and how to prepare it.
+
+`recomp.yml`'s `project` also holds what the title expects of the console,
+read from the title where it can be: `ios` (its TMD's IOS), `console: ndev` for
+a development console, and `remote: sideways` for a game played with the Wii
+Remote held sideways.
 
 ## Saves
 

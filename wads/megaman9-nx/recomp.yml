@@ -10,6 +10,7 @@ project:
   game_id: WR9E
   title_id: 0001000157523945
   region: E
+  ios: 37                  # what the TMD asks for
   base_manifest_format: mkwii-recomp-base-manifest
   base_manifest_stem: megaman9_base
 
