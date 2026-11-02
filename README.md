@@ -5,8 +5,6 @@
 Not emulated. Each game is translated into a Switch program ahead of time and
 runs natively, using your own disc for its files.
 
-![Mario Kart Wii on Switch hardware, with the system monitor up](docs/images/mkwii-race.jpg)
-
 **This is a proof of concept, not a finished port.** One game is playable,
 with races at about a fifth of full speed; everything else here is in progress, and some of
 it does not run at all yet. The table below says which is which, and it is kept
@@ -48,10 +46,10 @@ game: see [docs/install.md](docs/install.md).
 | Wii Sports + Resort | `SP2E01` NTSC-U | set up, not yet translated |
 -->
 
+![Mario Kart Wii on Switch hardware, with the system monitor up](docs/images/mkwii-race.jpg)
+
 Each game is a folder in [games](games), holding what that game needs and never
 the game itself.
-
-<!-- ![Mario Kart Wii](docs/images/mkwii.jpg) -->
 
 ## WiiWare and Virtual Console
 
