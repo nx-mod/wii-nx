@@ -1,0 +1,44 @@
+schema_version: 1
+workspace_root: .
+
+# HTRE, a title installed from a WAD rather than played off a disc.
+# Everything below was read out of its own executable.
+project:
+  id: triangle-htre
+  display_name: triangle
+  game_id: HTRE
+  region: E
+  base_manifest_format: mkwii-recomp-base-manifest
+  base_manifest_stem: triangle_base
+
+memory:
+  base: 0x80000000
+  size: 0x01800000
+  sda_base: 0x8005EC20
+  sda2_base: 0x80051790
+
+translation:
+  entry_points:
+    - 0x80003F00
+  function_map:
+    path: functions.map
+  allow_unsupported_instructions: false
+
+inputs:
+  dol:
+    path: game/main.dol
+    sha256: 3941c4ab8cd4663cc905a1ad6d152ab402b7c974dcb4f4dcac82d4244899c266
+
+# Where libdol-nx is, relative to this folder.
+runtime:
+  native_registration_root: ../../../libdol-nx/src
+  native_abi_directories:
+    - ../../../libdol-nx/src/platform/gx
+  native_bindings: bindings.json
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: build/base/triangle_base_manifest.json
