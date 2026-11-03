@@ -367,6 +367,8 @@
  "nw4r::lyt::Pane::Animate": "0x802A6C80",
  "nw4r::lyt::Pane::AnimateSelf": "0x802A6D0C",
  "nw4r::lyt::Pane::CalculateMtx": "0x802A6900",
+ "nw4r::lyt::detail::DrawQuad(const nw4r::math::VEC2&, const nw4r::lyt::Size&, unsigned char, const nw4r::math::VEC2[4]*, const nw4r::ut::Color*)": "0x802B1FCC",
+ "nw4r::ut::CharWriter::PrintGlyph": "0x802DBEE4",
  "strcat": "0x8018032C",
  "strchr": "0x80180500",
  "strcmp": "0x801803A4",

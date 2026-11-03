@@ -56,6 +56,7 @@
  "os.__OSFpscrEnableBits": "0x8046AC68",
  "rfl.sRFLManager": "0x8046BA98",
  "sc.productCode": "0x8046C0F0",
+ "ut.CharWriter_loadingTexture": "0x80467778",
  "vi.CurrTvMode": "0x8046C190",
  "vi.HorVer": "0x80434D90",
  "vi.IsInitialized": "0x8046C120",
