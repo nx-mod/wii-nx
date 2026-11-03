@@ -7,8 +7,8 @@
       (2026-10-15). Open: heads (below), speed, and starting it from the NAND
 - [ ] The Wii Menu: it builds but does not boot yet (2026-10-31); then ASH
       decompression and launching titles from it
-- [ ] Bomberman Blast: runs (2026-10-31), but cannot create its save data, and
-      is very slow in game
+- [ ] Bomberman Blast: plays and saves (2026-11-02); slow in battle (14 fps) and
+      in its Characters menu (17): nw4r layout animation and g3d need natives
 - [ ] Retranslate every title for libdol-nx 4816d5b (native register contracts
       by each title's own addresses) and the removed content natives: Wii
       Sports, Wii Party, Mega Man 10, Excitebike, both Crystal Defenders - each

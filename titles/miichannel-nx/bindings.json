@@ -7,6 +7,7 @@
  "AIInit_801240b0": "0x801A2204",
  "AIRegisterDMACallback_80123f88": "0x801A20F0",
  "AIStartDMA_80124048": "0x801A21B0",
+ "AXFXReverbHiCallback_801bd694": "0x801A6E20",
  "BTM_IsDeviceUp_HLE_8013a300": "0x801B37D4",
  "ConsoleWrite_HLE_80015500": "0x8015A118",
  "DCFlushRangeNoSync_801a168c": "0x80189C18",
@@ -46,6 +47,10 @@
  "EXIUnlock_80169260": "0x80174130",
  "Exit_801AE58C": "0x80195354",
  "GKI_delay_HLE_801301b4": "0x801A9694",
+ "GXInitTexObj": "0x8017B0E4",
+ "GXInitTexObjCI": "0x8017B2F0",
+ "GXLoadTexObj": "0x8017B710",
+ "GXLoadTexObjPreLoaded": "0x8017B5AC",
  "GX__BeginDisplayList_80172e00": "0x8017E524",
  "GX__Begin_8016f0f0": "0x80179B20",
  "GX__CallDisplayList_80172f64": "0x8017E688",
@@ -59,6 +64,7 @@
  "GX__EndDisplayList_80172eb4": "0x8017E5D8",
  "GX__FinishInterruptHandler_8016ed94": "0x801797C4",
  "GX__Flush_8016e654": "0x80179084",
+ "GX__GetCPUFifo_8016cf10": "0x80177AD4",
  "GX__GetProjectionv_801730cc": "0x8017E7F0",
  "GX__GetTexObjLODAll_80170cbc": "0x8017B4C8",
  "GX__GetViewportv_801733e0": "0x8017EB04",
@@ -336,6 +342,10 @@
  "memcmp": "0x80154AA4",
  "memcpy": "0x80004000",
  "memmove": "0x80154980",
+ "strcat": "0x801575FC",
  "strcmp": "0x80157674",
- "strncmp": "0x80157790"
+ "strcpy": "0x801574F8",
+ "strlen": "0x801520E8",
+ "strncmp": "0x80157790",
+ "strncpy": "0x801575B8"
 }

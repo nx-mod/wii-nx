@@ -5,7 +5,7 @@ workspace_root: .
 # example-wii-nx's extract-dol + inspect-dol.
 project:
   id: metroidprime3-rm3e01
-  display_name: Metroid Prime 3: Corruption
+  display_name: "Metroid Prime 3: Corruption"
   game_id: RM3E01             # NTSC-U, revision 0
   region: E
 

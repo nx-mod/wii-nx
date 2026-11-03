@@ -58,4 +58,7 @@ eight-player battle, a third of the time in its software reverb. It needs:
 - a Wii Remote reply after the call, as on hardware: `WPADGetInfo` slept for one
   that had already come, after the Mii database loaded.
 
-It still cannot create its save data.
+2026-11-02, later: saves (libwii-nx: `ISFS_GetUsage` counts the folder asked
+about as an inode, as IOS does; an empty data folder left it no inodes). 14 fps
+in a battle with the native `AXFXReverbHiCallback`; menus 60 fps except the
+Characters menu (17), whose time goes to nw4r layout animation and 3D models.

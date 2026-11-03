@@ -60,7 +60,7 @@ would have - and then translate the same way.
 | Title | Title ID | State |
 |---|---|---|
 | [Mega Man 9](wads/megaman9-nx) | `00010001/57523945` (USA) | **Plays** well; some visual glitches remain |
-| [Bomberman Blast](wads/bombermanblast-nx) | USA, with the Wiimmfi patch | **Plays**, slowly (8 fps in a battle); it cannot create its save data yet |
+| [Bomberman Blast](wads/bombermanblast-nx) | USA, with the Wiimmfi patch | **Plays** and saves; slow where it draws 3D models and animated layouts (14 fps in a battle) |
 
 ![Mega Man 9 on Switch hardware, in a stage at 56 fps](docs/images/megaman9.jpg)
 ![Bomberman Blast on Switch hardware, an eight-player battle at 8 fps](docs/images/bombermanblast.jpg)

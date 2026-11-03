@@ -7,6 +7,7 @@
  "AIInit_801240b0": "0x81551D1C",
  "AIRegisterDMACallback_80123f88": "0x81551BFC",
  "AIStartDMA_80124048": "0x81551CBC",
+ "AXFXReverbHiCallback_801bd694": "0x815560C4",
  "AXFXReverbStdExpCallback_8012b830": "0x81558730",
  "BTM_IsDeviceUp_HLE_8013a300": "0x8159A924",
  "ConsoleWrite_HLE_80015500": "0x81608B5C",
@@ -42,6 +43,10 @@
  "EXIUnlock_80169260": "0x81539C60",
  "Exit_801AE58C": "0x8153876C",
  "GKI_delay_HLE_801301b4": "0x815907D8",
+ "GXInitTexObj": "0x81545D6C",
+ "GXInitTexObjCI": "0x81545F78",
+ "GXLoadTexObj": "0x815462A8",
+ "GXLoadTexObjPreLoaded": "0x81546144",
  "GX__BeginDisplayList_80172e00": "0x81547B18",
  "GX__Begin_8016f0f0": "0x81544AF0",
  "GX__CallDisplayList_80172f64": "0x81547C74",
@@ -287,6 +292,7 @@
  "__GX__SetSUTexRegs_801712f0": "0x8154658C",
  "__GX__SetTmemConfig_80171458": "0x815466F4",
  "__OSInitSTM_HLE_801ab848": "0x815368A0",
+ "__OSSetInterruptHandler_801a65f8_hle": "0x815309CC",
  "__OSUnmaskInterrupts_801a69bc_hle": "0x81530D90",
  "__VIInit_HLE_801b9294": "0x8153C98C",
  "__init_hardware_80006348": "0x813301D8",
@@ -320,6 +326,10 @@
  "memcmp": "0x815FE42C",
  "memcpy": "0x81330230",
  "memmove": "0x815FE308",
+ "strcat": "0x81602660",
  "strcmp": "0x816026D8",
- "strncmp": "0x816027F4"
+ "strcpy": "0x8160255C",
+ "strlen": "0x815F9154",
+ "strncmp": "0x816027F4",
+ "strncpy": "0x8160261C"
 }
